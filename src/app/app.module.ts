@@ -11,19 +11,22 @@ import { HeaderComponent } from './components/header/header.component';
 
 // Pages:
 import { UnauthHomePageComponent } from './pages/unauth-home-page/unauth-home-page.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    UnauthHomePageComponent
+    UnauthHomePageComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      { path: '', component: UnauthHomePageComponent }
+      { path: '', component: UnauthHomePageComponent },
+      { path: 'register', component: RegisterComponent }
     ])
   ],
   providers: [],
