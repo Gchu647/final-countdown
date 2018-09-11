@@ -1,0 +1,44 @@
+.unauth-homepage {
+  display: flex;
+  flex-direction: column;
+
+  .unauth-homepage-splash {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 138px);
+    background-image: url('https://s3-us-west-2.amazonaws.com/dl23-final-countdown/resources/romello-williams-384006-unsplash.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    .unauth-homepage-splash-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 64, 128, 0.33);
+    }
+
+    .unauth-homepage-splash-button {
+      z-index: 1;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      padding: 20px;
+      border-radius: 2%;
+      border: 1px solid #fbfbfb;
+      color: #fbfbfb;
+      background-color: rgba(0, 0, 0, 0.2);
+      box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .unauth-homepage-info {
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 200%;
+    padding: 30px;
+  }
+}
