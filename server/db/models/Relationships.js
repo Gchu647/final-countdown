@@ -10,6 +10,10 @@ class Relationship extends bookshelf.Model {
   get hasTimestamps() {
     return true;
   }
+
+  recipients() {
+    this.hasMany('Recipient', 'relationship_id');
+  }
 }
 
 module.exports = bookshelf.model('Relationship', Relationship);

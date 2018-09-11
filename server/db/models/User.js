@@ -14,6 +14,14 @@ class User extends bookshelf.Model {
   triggers() {
     this.hasMany('Trigger', 'user_id');
   }
+
+  recipients() {
+    this.hasMany('Recipient', 'sender_id');
+  }
+
+  packages() {
+    this.hasMany('Package', 'package_maker_id');
+  }
 }
 
 module.exports = bookshelf.model('User', User);
