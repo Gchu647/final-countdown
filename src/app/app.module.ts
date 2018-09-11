@@ -12,13 +12,15 @@ import { HeaderComponent } from './components/header/header.component';
 // Pages:
 import { UnauthHomePageComponent } from './pages/unauth-home-page/unauth-home-page.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     UnauthHomePageComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +28,8 @@ import { RegisterComponent } from './pages/register/register.component';
     HttpClientModule,
     RouterModule.forRoot([
       { path: '', component: UnauthHomePageComponent },
-      { path: 'register', component: RegisterComponent }
+      { path: 'register', component: RegisterComponent },
+      { path: 'login', component: LoginComponent }
     ])
   ],
   providers: [],
