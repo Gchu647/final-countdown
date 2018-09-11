@@ -13,6 +13,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { UnauthHomePageComponent } from './pages/unauth-home-page/unauth-home-page.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
+import { AuthHomePageComponent } from './pages/auth-home-page/auth-home-page.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { LoginComponent } from './pages/login/login.component';
     HeaderComponent,
     UnauthHomePageComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    AuthHomePageComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +31,8 @@ import { LoginComponent } from './pages/login/login.component';
     RouterModule.forRoot([
       { path: '', component: UnauthHomePageComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'login', component: LoginComponent }
+      { path: 'login', component: LoginComponent },
+      { path: 'home', component: AuthHomePageComponent }
     ])
   ],
   providers: [],
