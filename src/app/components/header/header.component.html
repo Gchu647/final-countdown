@@ -2,8 +2,19 @@
   <div class="header-title">
     FINAL&nbsp;&nbsp;COUNTDOWN
   </div>
-  <div class="header-options">
+
+  <div class="header-options" *ngIf="!_router.url.includes('home')">
     <div class="header-options-login" routerLink="/login">LOG IN</div>
     <div class="header-options-signup" routerLink="/register">SIGN UP</div>
+  </div>
+
+  <div class="header-auth-options" *ngIf="_router.url.includes('home')">
+    <div class="header-auth-options-home" routerLink="/home">HOME</div>
+    <span>•</span>
+    <div class="header-auth-options-recipients" routerLink="/recipients">RECIPIENTS</div>
+    <span>•</span>
+    <div class="header-auth-options-profile" routerLink="/profile">PROFILE</div>
+    <span>•</span>
+    <div class="header-auth-options-logout" routerLink="/logout">LOGOUT</div>
   </div>
 </div>
