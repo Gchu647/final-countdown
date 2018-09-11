@@ -10,6 +10,10 @@ class User extends bookshelf.Model {
   get hasTimestamps() {
     return true;
   }
+
+  triggers() {
+    this.hasMany('Trigger', 'user_id');
+  }
 }
 
 module.exports = bookshelf.model('User', User);
