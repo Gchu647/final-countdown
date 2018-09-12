@@ -16,6 +16,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { AuthHomePageComponent } from './pages/auth-home-page/auth-home-page.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { MessageNewComponent } from './pages/message-new/message-new.component';
+import { RecipientNewComponent } from './pages/recipient-new/recipient-new.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MessageNewComponent } from './pages/message-new/message-new.component';
     LoginComponent,
     AuthHomePageComponent,
     ProfileComponent,
-    MessageNewComponent
+    MessageNewComponent,
+    RecipientNewComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +40,8 @@ import { MessageNewComponent } from './pages/message-new/message-new.component';
       { path: 'login', component: LoginComponent },
       { path: 'home', component: AuthHomePageComponent },
       { path: 'profile', component: ProfileComponent },
-      { path: 'messages/new', component: MessageNewComponent }
+      { path: 'messages/new', component: MessageNewComponent },
+      { path: 'recipients/new', component: RecipientNewComponent }
     ])
   ],
   providers: [],
