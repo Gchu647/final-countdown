@@ -9,9 +9,10 @@ exports.up = function(knex, Promise) {
     table.string('dob');
     table.string('country');
     table.string('state');
-    table.string('address');
+    table.string('city');
     table.string('phone_num');
     table.integer('default_countdown').notNullable();
+    table.timestamps(true, true);
   });
 };
 

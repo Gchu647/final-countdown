@@ -32,7 +32,7 @@ app.use(passport.session());
 passport.serializeUser((user, done) => {
   return done(null, {
     id: user.id,
-    username: user.username
+    email: user.email
   });
 });
 
@@ -44,7 +44,7 @@ passport.deserializeUser((user, done) => {
       return done(null, {
         // You can get more data from DB:
         id: user.id,
-        username: user.username
+        email: user.email
       });
     })
     .catch(err => {
@@ -54,12 +54,12 @@ passport.deserializeUser((user, done) => {
 });
 
 passport.use(
-  new LocalStrategy(function(username, password, done) {
-    return new User({ username: username })
+  new LocalStrategy(function(email, password, done) {
+    return new User({ email: email })
       .fetch()
       .then(user => {
         if (!user) {
-          return done({ message: 'Wrong Username' });
+          return done({ message: 'Wrong email' });
         } else {
           user = user.toJSON();
           bcrypt.compare(password, user.password).then(samePassword => {

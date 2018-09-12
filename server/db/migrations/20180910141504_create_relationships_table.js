@@ -4,6 +4,7 @@ exports.up = function(knex, Promise) {
     table.increments();
     table.string('name').notNullable();
     table.integer('rank').notNullable();
+    table.timestamps(true, true);
   });
 };
 

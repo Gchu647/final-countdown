@@ -8,6 +8,7 @@ exports.up = function(knex, Promise) {
     table.string('phone_num');
     table.integer('sender_id').references('users.id').notNullable();
     table.integer('relationship_id').references('relationships.id').notNullable();
+    table.timestamps(true, true);
   });
 };
 
