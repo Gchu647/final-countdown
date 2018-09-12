@@ -6,6 +6,7 @@ const User = require('../db/models/User');
 const saltedRounds = 12;
 
 router.post('/register', (req, res) => {
+  console.log('request to register', req.body);
   // taking out info from incoming request
   let { email, password, fName, lName } = req.body;
   // setting a default count down timer
