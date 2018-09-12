@@ -41,8 +41,31 @@ router.post('/register', (req, res) => {
   });
 });
 
-router.get('/login', (req, res) => {
-  res.send('auth.js smoke test!');
-})
+// Login in with a username(the email) and password
+router.post('/login', (req, res, next) => {
+  // If user is logged in, then instruct the user to log out first:
+  if (req.user) {
+    res
+      .status(400)
+      .json({ message: `${req.user.email} is already logged in` });
+  } else {
+    passport.authenticate('local', (err, user) => {
+      if (err) {
+        return res.status(400).json({ message: err.message });
+      } else {
+        req.login(user, err => {
+          if (err) {
+            return next(err);
+          } else {
+            res.json({
+              email: user.email,
+              id: req.user.id
+            });
+          }
+        });
+      }
+    })(req, res, next);
+  }
+});
 
 module.exports = router;

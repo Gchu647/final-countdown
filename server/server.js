@@ -54,10 +54,12 @@ passport.deserializeUser((user, done) => {
 });
 
 passport.use(
-  new LocalStrategy(function(email, password, done) {
-    return new User({ email: email })
+  // Your req.body to login has to have a username for LocalStrategy to work
+  new LocalStrategy(function(username, password, done) {
+    return new User({ email: username })
       .fetch()
       .then(user => {
+        console.log('localStrategy: ', user.attributes);
         if (!user) {
           return done({ message: 'Wrong email' });
         } else {
