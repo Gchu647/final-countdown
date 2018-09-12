@@ -1,4 +1,4 @@
-// id, f_name, l_name, email, password, dob, country, state, address, phone_num, default_countdown(int), decrypt_key
+
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('users', table => {
     table.increments();
@@ -7,8 +7,8 @@ exports.up = function(knex, Promise) {
     table.string('f_name').notNullable();
     table.string('l_name').notNullable();
     table.string('dob');
-    table.string('country');
-    table.string('state');
+    table.integer('country').references('countries.id');
+    table.integer('state').references('states.id');
     table.string('city');
     table.string('phone_num');
     table.integer('default_countdown').notNullable();
