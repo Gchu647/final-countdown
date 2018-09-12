@@ -16,5 +16,11 @@ exports.seed = function(knex, Promise) {
     })
     .then(function() { // Remove all user entries
       return knex('users').del()
-    });
+    })
+    .then(function() { // Remove all state entries
+      return knex('states').del()
+    })
+    .then(function() { // Remove all country entries
+      return knex('countries').del()
+    })
 };
