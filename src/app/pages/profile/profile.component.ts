@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
+  // Temporary variables (until database integrated):
   countries: object[] = [
     { id: 1, name: 'Afghanistan' },
     { id: 2, name: 'Albania' },
@@ -256,22 +257,6 @@ export class ProfileComponent {
     { id: 49, name: 'Wisconsin' },
     { id: 50, name: 'Wyoming' }
   ];
-
-  toggleDropdown(event) {
-    event.preventDefault();
-
-    const dropdown = document.getElementsByClassName(
-      'profile-form-inner-input-country'
-    )[0];
-
-    if (dropdown['size'] === 0) {
-      dropdown['size'] = 10;
-    } else {
-      dropdown['size'] = 0;
-    }
-
-    console.dir(dropdown);
-  }
 
   constructor() {}
 }
