@@ -1,14 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-// const routes = require('./routes');
+const routes = require('./routes');
 const PORT = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.send('server.js smoke test!');
-})
+// app.get('/', (req, res) => {
+//   res.send('server.js smoke test!');
+// })
+
+app.use('/api', routes);
 
 // 404 Handler:
 app.get('*', (req, res) => {
