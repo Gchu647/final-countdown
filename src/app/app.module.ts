@@ -14,6 +14,7 @@ import { UnauthHomePageComponent } from './pages/unauth-home-page/unauth-home-pa
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthHomePageComponent } from './pages/auth-home-page/auth-home-page.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AuthHomePageComponent } from './pages/auth-home-page/auth-home-page.com
     UnauthHomePageComponent,
     RegisterComponent,
     LoginComponent,
-    AuthHomePageComponent
+    AuthHomePageComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,8 @@ import { AuthHomePageComponent } from './pages/auth-home-page/auth-home-page.com
       { path: '', component: UnauthHomePageComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'home', component: AuthHomePageComponent }
+      { path: 'home', component: AuthHomePageComponent },
+      { path: 'profile', component: ProfileComponent }
     ])
   ],
   providers: [],
