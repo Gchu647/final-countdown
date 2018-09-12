@@ -6,46 +6,46 @@
   <div class="profile-form">
     <form class="profile-form-inner">
       <div class="profile-form-inner-input">
-        <label for="email">EMAIL: </label>
+        <label for="email">Email: </label>
         <input type="email" name="email" class="profile-form-inner-input-email" value="user@example.com" disabled>
       </div>
 
       <div class="profile-form-inner-input">
-        <label for="first-name">FIRST NAME: </label>
+        <label for="first-name">First Name: </label>
         <input type="text" name="first-name" class="profile-form-inner-input-first-name" required>
       </div>
 
       <div class="profile-form-inner-input">
-        <label for="last-name">LAST NAME: </label>
+        <label for="last-name">Last Name: </label>
         <input type="text" name="last-name" class="profile-form-inner-input-last-name" required>
       </div>
 
       <div class="profile-form-inner-input">
-        <label for="date-of-birth">DATE OF BIRTH: </label>
+        <label for="date-of-birth">Date of Birth: </label>
         <input type="date" name="date-of-birth" class="profile-form-inner-input-date-of-birth" required>
       </div>
 
       <div class="profile-form-inner-input">
-        <label for="country">COUNTRY: </label>
+        <label for="country">Country: </label>
         <select name="country" class="profile-form-inner-input-country">
           <option *ngFor="let country of countries" value="{{country.id}}">{{country.name}}</option>
         </select>
       </div>
 
       <div class="profile-form-inner-input">
-        <label for="state">STATE: </label>
+        <label for="state">State: </label>
         <select name="state" class="profile-form-inner-input-state">
           <option *ngFor="let state of states" value="{{state.id}}">{{state.name}}</option>
         </select>
       </div>
 
       <div class="profile-form-inner-input">
-        <label for="city">CITY: </label>
+        <label for="city">City: </label>
         <input type="text" name="city" class="profile-form-inner-input-city">
       </div>
 
       <div class="profile-form-inner-input">
-        <label for="phone">PHONE NUMBER: </label>
+        <label for="phone">Phone Number: </label>
         <input type="tel" name="phone" class="profile-form-inner-input-phone">
       </div>
 
