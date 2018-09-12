@@ -15,6 +15,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthHomePageComponent } from './pages/auth-home-page/auth-home-page.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { MessageNewComponent } from './pages/message-new/message-new.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
     RegisterComponent,
     LoginComponent,
     AuthHomePageComponent,
-    ProfileComponent
+    ProfileComponent,
+    MessageNewComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
       { path: 'home', component: AuthHomePageComponent },
-      { path: 'profile', component: ProfileComponent }
+      { path: 'profile', component: ProfileComponent },
+      { path: 'messages/new', component: MessageNewComponent }
     ])
   ],
   providers: [],
