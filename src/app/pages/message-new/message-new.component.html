@@ -1,0 +1,39 @@
+<div class="message-new">
+  <div class="message-new-title">
+    NEW MESSAGE
+  </div>
+
+  <div class="message-new-form">
+    <form class="message-new-form-inner">
+
+      <div class="message-new-form-inner-input">
+        <span>CHOOSE A RECIPIENT</span>
+
+        <label for="individual">Individual: </label>
+        <select name="individual" class="message-new-form-inner-input-individual">
+          <option value="-1" class="message-new-form-inner-input-individual-blank">---</option>
+          <option *ngFor="let recipientIndividual of recipientIndividuals" value="{{recipientIndividual.id}}">{{recipientIndividual.first_name}} {{recipientIndividual.last_name}}</option>
+          <option value="-2">+ NEW RECIPIENT</option>
+        </select>
+
+        <span>OR</span>
+
+        <label for="group">Group: </label>
+        <select name="group" class="message-new-form-inner-input-group">
+          <option value="-1" class="message-new-form-inner-input-group-blank">---</option>
+          <option *ngFor="let recipientGroup of recipientGroups" value="{{recipientGroup.id}}">{{recipientGroup.name}}</option>
+        </select>
+
+      </div>
+
+      <div class="message-new-form-inner-input">
+        <span>WRITE A MESSAGE</span>
+
+        <label for="message">Message: </label>
+        <textarea rows="16" name="message" class="message-new-form-inner-input-message"></textarea>
+      </div>
+
+      <button type="submit" class="message-new-form-inner-save">SAVE MESSAGE</button>
+    </form>
+  </div>
+</div>
