@@ -1,0 +1,86 @@
+.recipient-new {
+  display: flex;
+  flex-direction: column;
+
+  .recipient-new-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+    text-align: center;
+    height: 60px;
+    width: 100%;
+    background-color: #478585;
+    color: #fbfbfb;
+  }
+
+  .recipient-new-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 45px 0;
+
+    .recipient-new-form-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+
+      .recipient-new-form-inner-input {
+        display: flex;
+        flex-direction: column;
+        letter-spacing: 1px;
+        width: 90%;
+        padding-bottom: 15px;
+
+        label {
+          padding-bottom: 7.5px;
+          color: #666;
+        }
+
+        input {
+          font-size: 1rem;
+          letter-spacing: 1px;
+          padding: 15px;
+          border-radius: 2px;
+          border: 1px solid #206060;
+        }
+
+        select {
+          font-size: 1rem;
+          letter-spacing: 1px;
+          padding: 15px;
+          border-radius: 2px;
+          border: 1px solid #206060;
+        }
+
+        .recipient-new-form-inner-input-email {
+          color: #b2b2b2;
+        }
+
+        .recipient-new-form-inner-input-date-of-birth {
+          font-family: 'Lato', sans-serif;
+          font-size: 16px;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #666;
+        }
+      }
+
+      .recipient-new-form-inner-save {
+        z-index: 1;
+        font-size: 1.25rem;
+        line-height: 1.25rem;
+        letter-spacing: 2px;
+        margin-top: 30px;
+        padding: 15px 30px;
+        border: 0;
+        border-radius: 2%;
+        color: #fbfbfb;
+        background-color: #478585;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+      }
+    }
+  }
+}
