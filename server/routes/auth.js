@@ -5,6 +5,7 @@ const router = express.Router();
 const User = require('../db/models/User');
 const saltedRounds = 12;
 
+// Register new user
 router.post('/register', (req, res) => {
   console.log('request to register', req.body);
   // taking out info from incoming request
@@ -66,6 +67,12 @@ router.post('/login', (req, res, next) => {
       }
     })(req, res, next);
   }
+});
+
+// Logout user
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.json({ success: true });
 });
 
 module.exports = router;
