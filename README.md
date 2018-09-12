@@ -68,5 +68,5 @@ ___
 ## Contributors
 
 * George Chu
-* Isaiah Harris
+* Jesus Gonzalez
 * Bronson Avila
