@@ -59,7 +59,6 @@ passport.use(
     return new User({ email: username })
       .fetch()
       .then(user => {
-        console.log('localStrategy: ', user.attributes);
         if (!user) {
           return done({ message: 'Wrong email' });
         } else {

@@ -25,19 +25,18 @@ router.post('/register', (req, res) => {
       }
       // Needs email(unique) and password to register:
       return new User({
-        email,
+        email: email ? email.trim() : null,
         password: hashedPassword,
-        f_name: fName,
-        l_name: lName,
-        default_countdown: defaultCountDown,
+        f_name: fName ? fName.trim() : null,
+        l_name: lName ? lName.trim() : null,
+        default_countdown: Number(defaultCountDown),
       })
         .save()
         .then(result => {
           res.json(result.attributes.email);
         })
         .catch(err => {
-          console.log('err.message', err.message);
-          res.status(400).json({ message: 'email already exists' });
+          res.status(400).json({ message: err.message });
         });
     });
   });

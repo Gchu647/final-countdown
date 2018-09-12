@@ -21,9 +21,8 @@ router.route('/:id')
     const userId = req.params.id;
     // Initailize edited info
     const userInput = {
-      email: req.body.email ? req.body.email.trim() : null,
       f_name: req.body.fName ? req.body.fName.trim() : null,
-      l_name: req.body.lName ? req.body.lName : null,
+      l_name: req.body.lName ? req.body.lName.trim() : null,
     };
 
     // Edit using bookshelf
