@@ -1,27 +1,72 @@
-# FinalCountdown
+# Final Countdown
+> An app for those you leave behind
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.4.
+___
 
-## Development server
+## Installation
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```
 
-## Code scaffolding
+npm install
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
 
-## Build
+___
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Database Setup
+1. Install [PostgreSQL](https://www.postgresql.org/download/)
 
-## Running unit tests
+2. Replace ```your_db_user``` and ```your_password``` with custom values in the code block below, and run the following commands to create your database:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```
 
-## Running end-to-end tests
+# From the terminal:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+psql
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+# From the PostgreSQL CLI:
+
+DROP DATABASE IF EXISTS fn_countdown_db;
+DROP USER IF EXISTS your_db_user;
+CREATE USER your_db_user WITH PASSWORD 'your_password';
+CREATE DATABASE fn_countdown_db WITH OWNER your_db_user;
+
+```
+
+3. Create and populate your database tables by running the following commands in the terminal from the project root directory:
+
+```
+
+# Create database tables:
+
+./node_modules/.bin/knex migrate:latest
+
+
+# Seed database tables:
+
+./node_modules/.bin/knex seed:run
+
+```
+
+___
+
+## Environment Configuration
+
+1. Copy the contents of ```.env.example``` into a file named ```.env``` by running the following command from the project root directory:
+
+```
+
+cp .env.example .env
+
+```
+
+2. Replace ```username```, ```password```, ```secret``` in the newly created ```.env``` file with the values  previously assigned in Step 2 of "Database Setup" to ```your_db_user``` and ```your_password```, respectively.
+
+___
+
+## Contributors
+
+* George Chu
+* Isaiah Harris
+* Bronson Avila
