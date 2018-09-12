@@ -1,3 +1,4 @@
+// This route is reponsible for registration, login, and logout
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
