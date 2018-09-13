@@ -287,4 +287,15 @@ export class ProfileComponent implements DoCheck {
       ? (this.showStates = true)
       : (this.showStates = false);
   }
+
+  validatePhoneNumber(phoneNumber) {
+    // Source: www.w3resource.com/javascript/form/phone-no-validation.php
+    const validRegexNumbers: any[] = [
+      /^\d{10}$/,
+      /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
+      /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/
+    ];
+
+    return validRegexNumbers.some(regex => regex.test(phoneNumber));
+  }
 }
