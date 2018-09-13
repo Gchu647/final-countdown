@@ -36,11 +36,14 @@
 
         span {
           text-align: center;
+          font-weight: bold;
           padding: 0 0 15px;
         }
 
         span:nth-of-type(2) {
           padding: 15px 0 7.5px;
+          font-weight: initial;
+          color: #666;
         }
 
         label {
