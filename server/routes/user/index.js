@@ -2,9 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const trigger = require('./trigger');
+const recipients = require('./recipients');
 const User = require('../../db/models/User');
 
 router.use('/user', trigger); // user's trigger
+router.use('/user', recipients); // user's recipients
 
 router.route('/user/:id')
   .get((req, res) => { // fetches user information by id
@@ -20,7 +22,7 @@ router.route('/user/:id')
         return res.status(400).json({ message: err.message });
       });
   })
-  .put((req, res) => {
+  .put((req, res) => { // edits user information by id
     const userId = req.params.id;
     // Initailize edited info
     const userInput = {
