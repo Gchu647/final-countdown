@@ -30,14 +30,45 @@ ActiveTriggerQueue.prototype.search = userId => {
   return currentTrigger;
 };
 
-/*** Active Trigger Edit: This function edits an active trigger modifying 
+/*** Active Trigger Search Previous: This function searches the structure
+ * for a specific user's trigger and returns the previous trigger. Uses the userId field to find
+ * the trigger.***/
+ActiveTriggerQueue.prototype.searchPrevious = userId => {
+  let previousTrigger = '';
+  let currentTrigger = this.head;
+  while (currentTrigger) {
+    if (currentTrigger.value['userId'] === userId) {
+      return currentTrigger;
+    } else {
+      previousTrigger = currentTrigger;
+      currentTrigger = currentTrigger.next;
+    }
+  }
+  //This will return a trigger or ''
+  return previousTrigger;
+};
+
+/*** Active Trigger Edit: This function edits an active trigger modifying
  * the timeToExecute. It returns true if edit was successful else false***/
 ActiveTriggerQueue.prototype.edit = (userId, newTimeToExecute) => {
   let triggerBeingEdited = this.search(userId);
-  if(triggerBeingEdited){
+  if (triggerBeingEdited) {
     triggerBeingEdited.value['timeToExecute'] = newTimeToExecute;
   }
   return triggerBeingEdited ? true : false;
+};
+
+/*** Active Trigger Delete: This function deletes an active trigger.
+ * It returns true if delete was successful else false***/
+ActiveTriggerQueue.prototype.delete = userId => {
+  let success = false;
+  let precedingTrigger = this.searchPrevious(userId);
+  if (precedingTrigger) {
+    precedingTrigger = precedingTrigger.next.next;
+    success = true;
+  }
+
+  return success;
 };
 
 /*** Active Trigger Insert: This function inserts a new trigger into
