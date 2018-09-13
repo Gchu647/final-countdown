@@ -12,5 +12,3 @@ exports.seed = function(knex, Promise) {
       {id: 3, user_id: 3, countdown: time},
     ]);
 };
-
-// how do i add in timestamps now + more?

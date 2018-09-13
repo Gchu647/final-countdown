@@ -6,6 +6,7 @@ exports.up = function(knex, Promise) {
     table.integer('recipient_id').references('recipients.id').notNullable();
     table.string('access_url');
     table.timestamps(true, true);
+    table.timestamp('deleted_at');
   });
 };
 
