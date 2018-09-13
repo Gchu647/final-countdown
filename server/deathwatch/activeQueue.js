@@ -10,11 +10,14 @@ function ActiveTrigger(value, next) {
   this.next = next;
 }
 
-// ActiveTriggerQueue.prototype.search = value => {
-//   let currentTrigger = this.head;
-  
-
-// }
+ActiveTriggerQueue.prototype.search = value => {
+  let currentTrigger = this.head;
+  while (currentTrigger) {
+    if (currentTrigger.value['userId'] === value['userId']) {
+      return currentTrigger;
+    }
+  }
+};
 
 ActiveTriggerQueue.prototype.insertToQueue = value => {
   let previousTrigger = '';
