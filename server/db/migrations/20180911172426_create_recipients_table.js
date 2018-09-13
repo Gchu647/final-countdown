@@ -9,6 +9,7 @@ exports.up = function(knex, Promise) {
     table.integer('sender_id').references('users.id').notNullable();
     table.integer('relationship_id').references('relationships.id').notNullable();
     table.timestamps(true, true);
+    table.timestamp('deleted_at');
   });
 };
 

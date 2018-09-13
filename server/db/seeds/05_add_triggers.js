@@ -1,9 +1,14 @@
 
 exports.seed = function(knex, Promise) {
+    let time = new Date();
+    time.setDate(time.getDate()+14);
+    time = time.toLocaleString();
+    console.log('time: ', time);
+
     // Inserts trigger entries
     return knex('triggers').insert([
-      {id: 1, user_id: 1, custom_countdown: 30},
-      {id: 2, user_id: 2, custom_countdown: 20},
-      {id: 3, user_id: 3, custom_countdown: 7}
+      {id: 1, user_id: 1, countdown: time},
+      {id: 2, user_id: 2, countdown: time},
+      {id: 3, user_id: 3, countdown: time},
     ]);
 };

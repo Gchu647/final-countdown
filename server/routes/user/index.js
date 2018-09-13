@@ -1,7 +1,10 @@
 // This route is for getting user profile information
 const express = require('express');
 const router = express.Router();
-const User = require('../db/models/User');
+const trigger = require('./trigger');
+const User = require('../../db/models/User');
+
+router.use('/:id/trigger', trigger); // user's trigger
 
 router.route('/:id')
   .get((req, res) => { // fetches user information by id

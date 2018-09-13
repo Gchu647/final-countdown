@@ -29,7 +29,7 @@ router.post('/register', (req, res) => {
         password: hashedPassword,
         f_name: fName ? fName.trim() : null,
         l_name: lName ? lName.trim() : null,
-        default_countdown: Number(defaultCountDown),
+        default_timer: 604800, // 7 days
       })
         .save()
         .then(result => {
