@@ -33,7 +33,6 @@ router.route('/user/:id')
       .where({ 'id': userId })
       .save(userInput, { patch: true })
       .then(response => {
-        console.log('Edited user', response);
         return response.refresh();
       })
       .then(user => {
