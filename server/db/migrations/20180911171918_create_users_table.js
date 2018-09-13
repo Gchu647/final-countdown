@@ -11,7 +11,7 @@ exports.up = function(knex, Promise) {
     table.integer('state').references('states.id');
     table.string('city');
     table.string('phone_num');
-    table.integer('default_countdown').notNullable();
+    table.integer('default_timer').notNullable(); // Seconds for now presentation
     table.timestamps(true, true);
   });
 };
