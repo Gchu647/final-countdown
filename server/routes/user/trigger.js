@@ -22,40 +22,32 @@ router.route('/')
       user_id: userId ? userId.trim() : null,
       countdown: time.toUTCString(),
     }
-    console.log('delete route', checkFlagged(userId));
 
+    // Checks if all old triggers are deleted before creating a new one
     new Trigger()
-    .query(qb => {
+    .query(qb => { // First check if all old triggers are deleted
       qb.whereNot({ countdown: null })
         .andWhere({ user_id: userId });
     })
     .fetch()
     .then( trigger => {
       console.log('checkedFlagged', trigger);
-      if(!trigger) {
+      if(trigger !== null) {
         throw new Error('You already set up a trigger!');
       } else {
-
+        // Save trigger if all old triggers are deleted
+        return new Trigger()
+        .save(triggerInput)
+        .then(trigger => {
+          console.log('trigger', trigger);
+          return res.json(trigger);
+        })
       }
     })
     .catch(err => {
-      return res.status(400).json({ error: 'You already set up a trigger!'});
+      return res.status(400).json({ error: err.message});
     });
 
-    // if(!checkFlagged(userId)) {
-    //   // saves the trigger input
-    //   return new Trigger()
-    //   .save(triggerInput)
-    //   .then(trigger => {
-    //     console.log('trigger', trigger);
-    //     return res.json(trigger);
-    //   })
-    //   .catch(err => {
-    //     return res.status(400).json({ error: err.message });
-    //   });
-    // } else {
-    //   return res.status(400).json({ error: 'You already set up a trigger!'});
-    // }
   })
   .delete((req, res) => {
     const userId = req.body.userId;

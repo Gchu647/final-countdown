@@ -41,7 +41,7 @@ router.route('/:id')
       })
       .catch(err => {
         console.log(err.message);
-        return res.json({ 'error': err.message });
+        return res.status(400).json({ 'error': err.message });
       });
   })
 
