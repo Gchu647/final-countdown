@@ -5,7 +5,7 @@ const user = require('./user');
 const relationships = require('./relationships');
 
 router.use('/', auth);
-router.use('/user', user);
+router.use('/', user);
 router.use('/relationships', relationships);
 
 module.exports = router;
