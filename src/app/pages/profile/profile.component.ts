@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, DoCheck } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent {
+export class ProfileComponent implements DoCheck {
   // Temporary variables (until database integrated):
   countries: object[] = [
     { id: 1, name: 'Afghanistan' },
@@ -269,5 +269,22 @@ export class ProfileComponent {
     phoneNumber: '808-999-9999'
   };
 
+  showStates: boolean = false;
+
   constructor() {}
+
+  ngDoCheck() {
+    this.toggleStates();
+  }
+
+  toggleStates() {
+    const countryInput = document.getElementsByClassName(
+      'profile-form-inner-input-country'
+    )[0];
+
+    // "187" is the value assigned to the United States:
+    Number(countryInput['value']) === 187
+      ? (this.showStates = true)
+      : (this.showStates = false);
+  }
 }
