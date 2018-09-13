@@ -1,11 +1,12 @@
 // This routes lets user post a trigger or flags a trigger
 const express = require('express');
 const router = express.Router();
+const isAuthenticated = require('../../middleware/isAuthenticated');
 const Trigger = require('../../db/models/Trigger');
 
 // Posting and flagging user triggers
 router.route('/:id/trigger')
-  .post((req, res) => {
+  .post(isAuthenticated, (req, res) => {
     const userId = req.params.id;
     const customTimer = req.body.customTimer; // Currently in seconds
     let time = new Date();
@@ -46,7 +47,7 @@ router.route('/:id/trigger')
     });
 
   })
-  .delete((req, res) => {
+  .delete(isAuthenticated, (req, res) => {
    const userId = req.params.id;;
 
     // flags the trigger input

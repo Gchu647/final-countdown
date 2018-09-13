@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const knex = require('../../db/knex');
+const isAuthenticated = require('../../middleware/isAuthenticated');
 const Recipient = require('../../db/models/Recipient');
 
 router.route('/:id/recipients')
-  .get((req, res) => { // fetchs all recipients from a user
+  .get(isAuthenticated, (req, res) => { // fetchs all recipients from a user
     const userId = req.params.id;
 
     return new Recipient()
@@ -20,7 +21,7 @@ router.route('/:id/recipients')
         return res.status(400).json({ message: err.message });
       });
   })
-  .post((req, res) => {
+  .post(isAuthenticated, (req, res) => {
     const userId = req.params.id;
     // Initailize recipient info
     const recipientInput = {
@@ -49,7 +50,7 @@ router.route('/:id/recipients')
   })
 
   router.route('/:id/recipients/:recipientId')
-  .get((req, res) => { // fetches one recipient of a user
+  .get(isAuthenticated, (req, res) => { // fetches one recipient of a user
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
 
@@ -67,7 +68,7 @@ router.route('/:id/recipients')
         return res.status(400).json({ message: err.message });
       });
   })
-  .put((req, res) => { // edit recipient's info
+  .put(isAuthenticated, (req, res) => { // edit recipient's info
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
     // Initailize edited info
@@ -100,7 +101,7 @@ router.route('/:id/recipients')
         return res.status(400).json({ 'error': err.message });
       });
   })
-  .delete((req, res) => {
+  .delete(isAuthenticated, (req, res) => {
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
  
