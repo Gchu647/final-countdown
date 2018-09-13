@@ -16,6 +16,14 @@
       </div>
 
       <div class="recipient-new-form-inner-input">
+        <label for="relationship">Relationship: </label>
+        <select name="relationship" class="recipient-new-form-inner-input-relationship">
+          <option value="-1" class="recipient-new-form-inner-input-relationship-blank">---</option>
+          <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
+        </select>
+      </div>
+
+      <div class="recipient-new-form-inner-input">
         <label for="email">Email: </label>
         <input type="email" name="email" class="recipient-new-form-inner-input-email" required>
       </div>

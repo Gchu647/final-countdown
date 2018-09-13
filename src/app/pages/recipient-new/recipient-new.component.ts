@@ -6,6 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./recipient-new.component.scss']
 })
 export class RecipientNewComponent implements OnInit {
+  // Temporary variable (until database integrated):
+  relationships: object[] = [
+    { id: 1, name: 'Family' },
+    { id: 2, name: 'Friend' },
+    { id: 3, name: 'Hater' }
+  ];
 
   constructor() { }
 
