@@ -4,11 +4,17 @@
       RECIPIENTS
     </div>
 
-    <div class="recipients-contents-individuals">
-      <span class="emphasis">INDIVIDUALS</span>
+    <div class="recipients-contents-filter">
+      <label for="relationship">Filter: </label>
+      <select name="relationship" class="recipients-contents-filter-relationship">
+        <option value="0" class="recipients-contents-filter-relationship-all">Show All</option>
+        <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
+      </select>
+    </div>
 
-      <div *ngFor="let recipientIndividual of recipientIndividuals" class="recipients-contents-individuals-individual"
-        routerLink="/recipients/{{recipientIndividual.id}}">
+    <div class="recipients-contents-individuals">
+      <div *ngFor="let recipient of recipients" class="recipients-contents-individuals-individual"
+        routerLink="/recipients/{{recipient.id}}">
         <div class="recipients-contents-individuals-individual-envelope">
           <!-- Source: Jam Icons (ENVELOPE) -->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -5 24 24" width="24" height="24" preserveAspectRatio="xMinYMin"
@@ -17,35 +23,18 @@
         </div>
 
         <div class="recipients-contents-individuals-individual-name">
-          {{recipientIndividual.first_name}} {{recipientIndividual.last_name}}
-        </div>
-      </div>
-
-      <button type="button" class="recipients-contents-individuals-new-recipient" routerLink="/recipients/new">
-        <!-- Source: Jam Icons (PLUS) -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4.5 -4.5 24 24" width="24" height="24" preserveAspectRatio="xMinYMin">
-          <path d='M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z' />
-        </svg>
-
-        <span>NEW RECIPIENT</span>
-      </button>
-    </div>
-
-    <div class="recipients-contents-groups">
-      <span class="emphasis">GROUPS</span>
-
-      <div *ngFor="let recipientGroup of recipientGroups" class="recipients-contents-groups-group">
-        <div class="recipients-contents-groups-group-number">
-          <div class="recipients-contents-groups-group-number-inner">
-            88
-          </div>
-        </div>
-
-        <div class="recipients-contents-groups-group-name">
-          {{recipientGroup.name.toUpperCase()}}
+          {{recipient.first_name}} {{recipient.last_name}}
         </div>
       </div>
     </div>
 
+    <button type="button" class="recipients-contents-new-recipient" routerLink="/recipients/new">
+      <!-- Source: Jam Icons (PLUS) -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4.5 -4.5 24 24" width="24" height="24" preserveAspectRatio="xMinYMin">
+        <path d='M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z' />
+      </svg>
+
+      <span>NEW RECIPIENT</span>
+    </button>
   </div>
 </div>
