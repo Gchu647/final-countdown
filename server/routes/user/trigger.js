@@ -3,11 +3,11 @@ const express = require('express');
 const router = express.Router();
 const Trigger = require('../../db/models/Trigger');
 
-// WORKING on
-router.route('/')
+// Posting and flagging user triggers
+router.route('/:id/trigger')
   .post((req, res) => {
     // also need a customTimer
-    const userId = req.body.userId;
+    const userId = req.params.id;
     const customTimer = req.body.customTimer; // Currently in seconds
     let time = new Date();
 
@@ -50,7 +50,7 @@ router.route('/')
 
   })
   .delete((req, res) => {
-    const userId = req.body.userId;
+   const userId = req.params.id;;
 
     // flags the trigger input
     return new Trigger()
