@@ -8,7 +8,10 @@ router.route('/:id/recipients')
     const userId = req.params.id;
 
     return new Recipient()
-      .where({ 'sender_id': userId })
+      .query(qb => {
+        qb.where({ 'sender_id': userId })
+          .andWhere({'deleted_at': null});
+      })
       .fetchAll()
       .then(recipients => {
         return res.json(recipients);
@@ -53,7 +56,8 @@ router.route('/:id/recipients')
     return new Recipient()
       .query(qb => {
         qb.where({ 'id': recipientId })
-          .andWhere({ 'sender_id': userId });
+          .andWhere({ 'sender_id': userId })
+          .andWhere({'deleted_at': null});
       })
       .fetch()
       .then(recipient => {
@@ -81,7 +85,8 @@ router.route('/:id/recipients')
     return new Recipient()
       .query(qb => {
         qb.where({ 'id': recipientId })
-          .andWhere({ 'sender_id': userId });
+          .andWhere({ 'sender_id': userId })
+          .andWhere({'deleted_at': null});
       })
       .save(recipientInput, { patch: true })
       .then(response => {
