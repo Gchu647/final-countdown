@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const knex = require('../../db/knex');
 const Recipient = require('../../db/models/Recipient');
 
 router.route('/:id/recipients')
@@ -62,7 +63,7 @@ router.route('/:id/recipients')
         return res.status(400).json({ message: err.message });
       });
   })
-  .put((req, res) => {
+  .put((req, res) => { // edit recipient's info
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
     // Initailize edited info
@@ -94,5 +95,27 @@ router.route('/:id/recipients')
         return res.status(400).json({ 'error': err.message });
       });
   })
+  .delete((req, res) => {
+    const userId = req.params.id;
+    const recipientId = req.params.recipientId;
+ 
+     // flags the trigger input
+     return new Recipient()
+     .query(qb => {
+       qb.where({ 'id': recipientId })
+         .andWhere({ 'sender_id': userId });
+     })
+     .save({'deleted_at': knex.fn.now()}, { patch: true })
+     .then(response => {
+       return response.refresh();
+     })
+     .then(recipient => {
+       return res.json({'message': 'recipient deleted'});
+     })
+     .catch(err => {
+       console.log(err.message);
+       return res.status(400).json({ 'error': err.message });
+     });
+   })
 
 module.exports = router;
