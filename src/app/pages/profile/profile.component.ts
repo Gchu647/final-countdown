@@ -257,6 +257,17 @@ export class ProfileComponent {
     { id: 49, name: 'Wisconsin' },
     { id: 50, name: 'Wyoming' }
   ];
+  formData: object = {
+    id: 1,
+    email: 'oscar@example.com',
+    firstName: 'Oscar',
+    lastName: 'Omega',
+    dateOfBirth: '1977-11-11',
+    countryId: 187,
+    stateId: 11,
+    city: 'Honolulu',
+    phoneNumber: '808-999-9999'
+  };
 
   constructor() {}
 }

@@ -7,46 +7,49 @@
     <form class="profile-form-inner">
       <div class="profile-form-inner-input">
         <label for="email">Email: </label>
-        <input type="email" name="email" class="profile-form-inner-input-email" value="user@example.com" disabled>
+        <input type="email" name="email" class="profile-form-inner-input-email" [(ngModel)]="formData.email" disabled>
       </div>
 
       <div class="profile-form-inner-input">
         <label for="first-name">First Name: </label>
-        <input type="text" name="first-name" class="profile-form-inner-input-first-name" required>
+        <input type="text" name="first-name" class="profile-form-inner-input-first-name" [(ngModel)]="formData.firstName"
+          required>
       </div>
 
       <div class="profile-form-inner-input">
         <label for="last-name">Last Name: </label>
-        <input type="text" name="last-name" class="profile-form-inner-input-last-name" required>
+        <input type="text" name="last-name" class="profile-form-inner-input-last-name" [(ngModel)]="formData.lastName"
+          required>
       </div>
 
       <div class="profile-form-inner-input">
         <label for="date-of-birth">Date of Birth: </label>
-        <input type="date" name="date-of-birth" class="profile-form-inner-input-date-of-birth" required>
+        <input type="date" name="date-of-birth" class="profile-form-inner-input-date-of-birth" [(ngModel)]="formData.dateOfBirth"
+          required>
       </div>
 
       <div class="profile-form-inner-input">
         <label for="country">Country: </label>
-        <select name="country" class="profile-form-inner-input-country">
+        <select name="country" class="profile-form-inner-input-country" [(ngModel)]="formData.countryId">
           <option *ngFor="let country of countries" value="{{country.id}}">{{country.name}}</option>
         </select>
       </div>
 
       <div class="profile-form-inner-input">
         <label for="state">State: </label>
-        <select name="state" class="profile-form-inner-input-state">
+        <select name="state" class="profile-form-inner-input-state" [(ngModel)]="formData.stateId">
           <option *ngFor="let state of states" value="{{state.id}}">{{state.name}}</option>
         </select>
       </div>
 
       <div class="profile-form-inner-input">
         <label for="city">City: </label>
-        <input type="text" name="city" class="profile-form-inner-input-city">
+        <input type="text" name="city" class="profile-form-inner-input-city" [(ngModel)]="formData.city">
       </div>
 
       <div class="profile-form-inner-input">
         <label for="phone">Phone Number: </label>
-        <input type="tel" name="phone" class="profile-form-inner-input-phone">
+        <input type="tel" name="phone" class="profile-form-inner-input-phone" [(ngModel)]="formData.phoneNumber">
       </div>
 
       <button type="button" class="profile-form-inner-save">SAVE CHANGES</button>
