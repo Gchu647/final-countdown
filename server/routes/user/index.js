@@ -3,11 +3,13 @@ const express = require('express');
 const router = express.Router();
 const trigger = require('./trigger');
 const recipients = require('./recipients');
+const packages = require('./packages');
 const isAuthenticated = require('../../middleware/isAuthenticated');
 const User = require('../../db/models/User');
 
 router.use('/user', trigger); // user's trigger
 router.use('/user', recipients); // user's recipients
+router.use('/user', packages); //user's packages
 
 router.route('/user/:id')
   .get(isAuthenticated, (req, res) => { // fetches user information by id
