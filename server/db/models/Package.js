@@ -16,7 +16,11 @@ class Package extends bookshelf.Model {
   }
 
   recipient() {
-    this.belongsTo('Package', 'recipient_id ');
+    this.belongsTo('Recipient', 'recipient_id ');
+  }
+
+  file() {
+    this.hasOne('EncryptedFile', 'packages_id');
   }
 }
 
