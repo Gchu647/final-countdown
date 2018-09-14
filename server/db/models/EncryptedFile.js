@@ -12,7 +12,7 @@ class EncryptedFile extends bookshelf.Model {
   }
 
   package() {
-    this.belongsTo('Package', 'packages_id');
+    return this.belongsTo('Package', 'packages_id');
   }
 }
 

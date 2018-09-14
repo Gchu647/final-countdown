@@ -12,7 +12,7 @@ class Relationship extends bookshelf.Model {
   }
 
   recipients() {
-    this.hasMany('Recipient', 'relationship_id');
+    return this.hasMany('Recipient', 'relationship_id');
   }
 }
 
