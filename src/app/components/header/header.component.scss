@@ -42,6 +42,10 @@
 
     * {
       padding: 15px 0;
+
+      &:focus {
+        outline: none;
+      }
     }
   }
 }
