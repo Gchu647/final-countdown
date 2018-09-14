@@ -2,15 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss']
 })
-export class AppComponent {
-  title = 'final-countdown';
-
+export class HeaderComponent {
   // Source (Stack Overflow): https://goo.gl/ozCQCt
-  // Used in hiding header on registration/login page:
+  // Used in displaying specific header links for authenticated users:
   router: string;
 
   constructor(
