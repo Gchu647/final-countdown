@@ -6,7 +6,7 @@ const Package = require('../../db/models/Package');
 const EncryptedFile = require('../../db/models/EncryptedFile');
 
 router.route('/:id/packages')
-  .get((req, res) => {
+  .get((req, res) => { // Fetching all the packages of a user
     const userId = req.params.id;
 
     return new Package()
@@ -58,6 +58,24 @@ router.route('/:id/packages')
       return res.status(400).json({ 'error': err.message });
     });
   })
+
+  router.route('/:id/packages/:packageId')
+    .get((req, res) => {
+      const packageId = req.params.packageId;
+
+      return new Package()
+      .query(qb => {
+        qb.where({ 'id': packageId })
+          .andWhere({'deleted_at': null});
+      })
+      .fetch({ 'withRelated': ['file'] })
+      .then(packages => {
+        return res.json(packages);
+      })
+      .catch(err => {
+        return res.status(400).json({ message: err.message });
+      });
+    })
 
 
 module.exports = router;
