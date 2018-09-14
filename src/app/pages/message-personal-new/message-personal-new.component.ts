@@ -6,30 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./message-personal-new.component.scss']
 })
 export class MessagePersonalNewComponent {
-  // Temporary variables (until database integrated):
-  recipientIndividuals: object[] = [
-    { id: 1, first_name: 'Adam', last_name: 'Alpha' },
-    { id: 2, first_name: 'Ben', last_name: 'Beta' },
-    { id: 3, first_name: 'Greg', last_name: 'Gamma' }
-  ];
-  recipientGroups: object[] = [
+  // Temporary variable(s) (until database integrated):
+  relationships: object[] = [
     { id: 1, name: 'Family' },
     { id: 2, name: 'Friends' },
     { id: 3, name: 'Haters' }
   ];
 
-  showNewRecipientForm: boolean = false;
-
   constructor() {}
-
-  toggleNewRecipientForm() {
-    const scrollArea = document.getElementsByClassName('message-new')[0];
-
-    this.showNewRecipientForm
-      ? (this.showNewRecipientForm = false)
-      : (this.showNewRecipientForm = true);
-
-    // Force view to return to the top of the page after toggling form:
-    scrollArea.scrollTop = 0;
-  }
 }

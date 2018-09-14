@@ -31,56 +31,6 @@
         box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
       }
 
-      .message-new-existing-recipient {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 45px 0;
-        width: 100%;
-
-        .message-new-existing-recipient-form {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 100%;
-
-          span {
-            text-align: center;
-            font-weight: bold;
-            padding: 0 0 15px;
-          }
-
-          span:nth-of-type(2) {
-            padding: 15px 0;
-            font-weight: initial;
-            color: #666;
-          }
-
-          select {
-            font-size: 1rem;
-            letter-spacing: 1px;
-            padding: 15px;
-            min-width: 232.25px;
-            max-width: 90%;
-            border-radius: 2px;
-            border: 1px solid #206060;
-          }
-
-          button {
-            z-index: 1;
-            font-size: 1.25rem;
-            line-height: 1.25rem;
-            letter-spacing: 2px;
-            padding: 15px 30px;
-            border: 0;
-            border-radius: 2px;
-            color: #fbfbfb;
-            background-color: #478585;
-            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
-          }
-        }
-      }
-
       .message-new-add-recipient {
         display: flex;
         flex-direction: column;
@@ -95,8 +45,9 @@
 
           span {
             text-align: center;
+            letter-spacing: 1px;
             font-weight: bold;
-            padding: 0 0 15px;
+            padding: 0 0 30px;
           }
 
           button {
@@ -139,32 +90,6 @@
               border-radius: 2px;
               border: 1px solid #206060;
             }
-
-            .message-new-add-recipient-form-input-email {
-              color: #b2b2b2;
-            }
-
-            .message-new-add-recipient-form-input-date-of-birth {
-              font-family: 'Lato', sans-serif;
-              font-size: 16px;
-              letter-spacing: 1px;
-              text-transform: uppercase;
-              color: #666;
-            }
-          }
-
-          .message-new-add-recipient-form-save {
-            z-index: 1;
-            font-size: 1.25rem;
-            line-height: 1.25rem;
-            letter-spacing: 2px;
-            margin-top: 30px;
-            padding: 15px 30px;
-            border: 0;
-            border-radius: 2px;
-            color: #fbfbfb;
-            background-color: #478585;
-            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
           }
         }
       }
@@ -173,7 +98,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 60px 0 45px;
+        margin: 0 0 45px;
         width: 100%;
 
         .message-new-text-form {
@@ -185,8 +110,9 @@
 
           span {
             text-align: center;
+            letter-spacing: 1px;
             font-weight: bold;
-            padding: 0 0 15px;
+            padding: 0 0 30px;
           }
 
           label {

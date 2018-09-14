@@ -5,41 +5,22 @@
         NEW MESSAGE
       </div>
 
-      <!-- Show if user chooses to write a message for an existing recipient -->
-      <div class="message-new-existing-recipient" *ngIf="!showNewRecipientForm">
-        <form class="message-new-existing-recipient-form">
-          <span>CHOOSE A RECIPIENT</span>
-
-          <select name="individual" class="message-new-existing-recipient-form-select">
-            <option value="-1">---</option>
-            <option *ngFor="let recipientIndividual of recipientIndividuals" value="{{recipientIndividual.id}}">{{recipientIndividual.first_name}}
-              {{recipientIndividual.last_name}}</option>
-          </select>
-
-          <span>OR</span>
-
-          <button type="button" class="message-new-form-inner-input-button" *ngIf="!showNewRecipientForm" (click)="toggleNewRecipientForm()">NEW
-            RECIPIENT</button>
-        </form>
-      </div>
-
-      <!-- Show if user chooses to write a message to a new recipient -->
-      <div class="message-new-add-recipient" *ngIf="showNewRecipientForm">
+      <div class="message-new-add-recipient">
         <form class="message-new-add-recipient-form">
-          <span>ADD A NEW RECIPIENT</span>
+          <span>ADD RECIPIENT DETAILS</span>
 
           <div class="message-new-add-recipient-form-input">
-            <label for="first-name">First Name: </label>
+            <label for="first-name">First Name:</label>
             <input type="text" name="first-name" class="message-new-add-recipient-form-input-first-name" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
-            <label for="last-name">Last Name: </label>
+            <label for="last-name">Last Name:</label>
             <input type="text" name="last-name" class="message-new-add-recipient-form-input-last-name" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
-            <label for="relationship">Relationship: </label>
+            <label for="relationship">Relationship:</label>
             <select name="relationship" class="message-new-add-recipient-form-input-relationship">
               <option value="-1" class="message-new-add-recipient-form-input-relationship-blank">---</option>
               <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
@@ -47,28 +28,25 @@
           </div>
 
           <div class="message-new-add-recipient-form-input">
-            <label for="email">Email: </label>
+            <label for="email">Email:</label>
             <input type="email" name="email" class="message-new-add-recipient-form-input-email" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
-            <label for="phone">Phone Number: </label>
+            <label for="phone">Phone Number:</label>
             <input type="tel" name="phone" class="message-new-add-recipient-form-input-phone">
           </div>
-
-          <button type="button" class="message-new-add-recipient-form-cancel" (click)="toggleNewRecipientForm()">BACK</button>
         </form>
       </div>
 
-      <!-- Message input (used for either existing or new recipient) -->
       <div class="message-new-text">
         <form class="message-new-text-form">
           <span>WRITE A MESSAGE</span>
 
-          <label for="message">Message: </label>
+          <label for="message">Message:</label>
           <textarea rows="16" name="message"></textarea>
 
-          <button type="button" class="message-new-text-button">SAVE MESSAGE</button>
+          <button type="button" class="message-new-text-button">SUBMIT</button>
         </form>
       </div>
     </div>
