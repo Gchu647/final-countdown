@@ -89,7 +89,7 @@ router.route('/:id/recipients')
           .andWhere({ 'sender_id': userId })
           .andWhere({'deleted_at': null});
       })
-      .save(recipientInput, { patch: true })
+      .save(recipientInput, { 'patch': true })
       .then(response => {
         return response.refresh();
       })
