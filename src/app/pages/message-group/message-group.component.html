@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="container-inner">
+    <div class="group-message">
+      <div class="group-message-title">
+        MESSAGE TO {{getGroupNameById(messageGroupId)}}
+      </div>
+
+      <div class="group-message-view-members">
+        <span>VIEW GROUP MEMBERS</span>
+
+        <select name="individual" class="group-message-view-members-select">
+          <option value="-1">---</option>
+          <option *ngFor="let recipientIndividual of recipientIndividuals" value="{{recipientIndividual.id}}">{{recipientIndividual.first_name}}
+            {{recipientIndividual.last_name}}</option>
+        </select>
+      </div>
+
+      <form class="group-message-text-form">
+        <span>WRITE A GROUP MESSAGE</span>
+
+        <label for="message">Message: </label>
+        <textarea rows="16" name="message">{{message}}</textarea>
+
+        <button type="button" class="group-message-text-form-button">SAVE MESSAGE</button>
+      </form>
+    </div>
+  </div>
+</div>
