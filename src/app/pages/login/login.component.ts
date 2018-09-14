@@ -23,5 +23,8 @@ export class LoginComponent {
     .then((response) => {
       console.log('auth got response from server login: ', response);
     })
+    .catch(response => {
+      console.log(response.error.message);
+    })
   }
 }
