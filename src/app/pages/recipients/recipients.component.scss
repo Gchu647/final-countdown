@@ -1,17 +1,17 @@
 .container {
   display: flex;
+  justify-content: center;
   width: 100%;
   height: 100%;
   max-height: calc(100vh - 134px);
-  justify-content: center;
 
   .recipients {
-    box-sizing: border-box;
-    width: 100%;
-    align-self: center;
     display: flex;
     flex-flow: column;
+    align-self: center;
+    width: 100%;
     max-height: calc(100vh - 134px);
+    box-sizing: border-box;
 
     .recipients-contents {
       flex: 1;
@@ -71,6 +71,7 @@
           border: 1px solid #206060;
           color: #666;
           box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.125);
+          background-color: #fff;
 
           .recipients-contents-individuals-individual-envelope {
             position: relative;
@@ -99,6 +100,7 @@
 
       .recipients-contents-new-recipient {
         display: flex;
+        justify-content: center;
         align-items: center;
         z-index: 1;
         font-size: 1.25rem;
@@ -108,7 +110,7 @@
         margin: 0 auto 45px;
         padding: 15px 30px;
         border: 0;
-        border-radius: 2%;
+        border-radius: 2px;
         color: #fbfbfb;
         background-color: #478585;
         box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
@@ -121,10 +123,6 @@
             fill: #fbfbfb;
             stroke-width: 1px;
           }
-        }
-
-        span {
-          padding-left: 7.5px;
         }
       }
     }
