@@ -1,39 +1,43 @@
-<div class="recipient-new">
-  <div class="recipient-new-title">
-    NEW RECIPIENT
-  </div>
-
-  <div class="recipient-new-form">
-    <form class="recipient-new-form-inner">
-      <div class="recipient-new-form-inner-input">
-        <label for="first-name">First Name: </label>
-        <input type="text" name="first-name" class="recipient-new-form-inner-input-first-name" required>
+<div class="container">
+  <div class="container-inner">
+    <div class="recipient-new">
+      <div class="recipient-new-title">
+        NEW RECIPIENT
       </div>
 
-      <div class="recipient-new-form-inner-input">
-        <label for="last-name">Last Name: </label>
-        <input type="text" name="last-name" class="recipient-new-form-inner-input-last-name" required>
-      </div>
+      <div class="recipient-new-form">
+        <form class="recipient-new-form-inner">
+          <div class="recipient-new-form-inner-input">
+            <label for="first-name">First Name: </label>
+            <input type="text" name="first-name" class="recipient-new-form-inner-input-first-name" required>
+          </div>
 
-      <div class="recipient-new-form-inner-input">
-        <label for="relationship">Relationship: </label>
-        <select name="relationship" class="recipient-new-form-inner-input-relationship">
-          <option value="-1" class="recipient-new-form-inner-input-relationship-blank">---</option>
-          <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
-        </select>
-      </div>
+          <div class="recipient-new-form-inner-input">
+            <label for="last-name">Last Name: </label>
+            <input type="text" name="last-name" class="recipient-new-form-inner-input-last-name" required>
+          </div>
 
-      <div class="recipient-new-form-inner-input">
-        <label for="email">Email: </label>
-        <input type="email" name="email" class="recipient-new-form-inner-input-email" required>
-      </div>
+          <div class="recipient-new-form-inner-input">
+            <label for="relationship">Relationship: </label>
+            <select name="relationship" class="recipient-new-form-inner-input-relationship">
+              <option value="-1" class="recipient-new-form-inner-input-relationship-blank">---</option>
+              <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
+            </select>
+          </div>
 
-      <div class="recipient-new-form-inner-input">
-        <label for="phone">Phone Number: </label>
-        <input type="tel" name="phone" class="recipient-new-form-inner-input-phone">
-      </div>
+          <div class="recipient-new-form-inner-input">
+            <label for="email">Email: </label>
+            <input type="email" name="email" class="recipient-new-form-inner-input-email" required>
+          </div>
 
-      <button type="button" class="recipient-new-form-inner-save">SAVE&nbsp;&nbsp;CHANGES</button>
-    </form>
+          <div class="recipient-new-form-inner-input">
+            <label for="phone">Phone Number: </label>
+            <input type="tel" name="phone" class="recipient-new-form-inner-input-phone">
+          </div>
+
+          <button type="button" class="recipient-new-form-inner-save">SAVE&nbsp;&nbsp;CHANGES</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
