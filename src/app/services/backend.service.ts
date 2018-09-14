@@ -13,10 +13,14 @@ export class BackendService {
   }
 
   login(data) { // data has to be username and password
-    // const loginUrl = this.url + 'login';
-    // return this.http.post(loginUrl, data).toPromise();
+    const loginUrl = this.url + 'login';
+    const input = {
+      username: data.email,
+      password: data.password
+    }
+
     console.log('backend service login', data);
-    return Promise.resolve({});
+    return this.http.post(loginUrl, input).toPromise();
   }
 
   // logout() {
