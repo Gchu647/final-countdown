@@ -12,7 +12,7 @@ class Trigger extends bookshelf.Model {
   }
 
   user() {
-    this.belongsTo('User', 'user_id');
+    return this.belongsTo('User', 'user_id');
   }
 }
 
