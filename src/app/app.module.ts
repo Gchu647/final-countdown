@@ -17,8 +17,6 @@ import { AuthHomePageComponent } from './pages/auth-home-page/auth-home-page.com
 import { ProfileComponent } from './pages/profile/profile.component';
 import { MessagePersonalNewComponent } from './pages/message-personal-new/message-personal-new.component';
 import { MessageGroupComponent } from './pages/message-group/message-group.component';
-import { RecipientsComponent } from './pages/recipients/recipients.component';
-import { RecipientNewComponent } from './pages/recipient-new/recipient-new.component';
 import { RecipientViewComponent } from './pages/recipient-view/recipient-view.component';
 
 @NgModule({
@@ -32,8 +30,6 @@ import { RecipientViewComponent } from './pages/recipient-view/recipient-view.co
     ProfileComponent,
     MessagePersonalNewComponent,
     MessageGroupComponent,
-    RecipientsComponent,
-    RecipientNewComponent,
     RecipientViewComponent
   ],
   imports: [
