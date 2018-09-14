@@ -22,6 +22,30 @@ router.route('/:id/packages')
         return res.status(400).json({ message: err.message });
       });
   })
+  .post((req, res) => {
+    // req.body is going to come in with a recipient_id and a message
+    // we can make our own name for messages
+    const userId = req.params.id;
+    const recipientId = req.body.recipientId;
+
+    const packageInput = {
+      'package_maker_id': userId,
+      'recipient_id': recipientId,
+    };
+
+    return new Package()
+    .save(packageInput)
+    .then(response => {
+      return response.refresh();
+    })
+    .then(package => {
+      return res.json(package);
+    })
+    .catch(err => {
+      console.log(err.message);
+      return res.status(400).json({ 'error': err.message });
+    });
+  })
 
 
 module.exports = router;
