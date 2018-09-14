@@ -60,7 +60,7 @@ router.route('/:id/packages')
   })
 
   router.route('/:id/packages/:packageId')
-    .get((req, res) => {
+    .get((req, res) => { // fetches a package by id 
       const packageId = req.params.packageId;
 
       return new Package()
@@ -74,6 +74,21 @@ router.route('/:id/packages')
       })
       .catch(err => {
         return res.status(400).json({ message: err.message });
+      });
+    })
+    .put((req, res) => { // edits a encrypted file by packageId
+      const packageId = req.params.packageId;
+
+      return new EncryptedFile()
+      .where({'packages_id': packageId})
+      .save({
+        'aws_url': req.body.message
+      }, { 'patch': true })
+      .then(() => {
+        res.json({'message': 'message has being edited' });
+      })
+      .catch(err => {
+        return res.status(400).json({ 'error': err.message });
       });
     })
 
