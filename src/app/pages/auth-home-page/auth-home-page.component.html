@@ -25,13 +25,8 @@
           </div>
         </div>
 
-        <button class="auth-home-contents-personal-new-message" routerLink="/messages/new">
-          <!-- Source: Jam Icons (PLUS) -->
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4.5 -4.5 24 24" width="24" height="24" preserveAspectRatio="xMinYMin">
-            <path d='M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z' />
-          </svg>
-
-          <span>NEW MESSAGE</span>
+        <button class="auth-home-contents-personal-new-message" routerLink="/messages/personal/new">
+          NEW MESSAGE
         </button>
       </div>
 
@@ -41,7 +36,7 @@
         </div>
 
         <div class="auth-home-contents-group-list">
-          <div *ngFor="let relationship of relationships" class="auth-home-contents-group-list-item">
+          <div *ngFor="let relationship of relationships" class="auth-home-contents-group-list-item" routerLink="/messages/group/{{relationship.id}}">
             <div class="auth-home-contents-group-list-item-number">
               <div class="auth-home-contents-group-list-item-number-inner">
                 88
