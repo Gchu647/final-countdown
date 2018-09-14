@@ -23,8 +23,7 @@ router.route('/:id/packages')
       });
   })
   .post((req, res) => {
-    // req.body is going to come in with a recipient_id and a message
-    // we can make our own name for messages
+    // req.body is going to come in with a recipientId and a message
     const userId = req.params.id;
     const recipientId = req.body.recipientId;
 
@@ -33,13 +32,26 @@ router.route('/:id/packages')
       'recipient_id': recipientId,
     };
 
+    // First we make a package
     return new Package()
     .save(packageInput)
     .then(response => {
       return response.refresh();
     })
-    .then(package => {
-      return res.json(package);
+    .then( package => {
+      // Second we make a encrypted_file using the package id as foreign key
+      return new EncryptedFile()
+        .save({
+          'name': 'Message',
+          'aws_url': req.body.message,
+          'packages_id': package.attributes.id,
+        })
+        .then(response => {
+          return response.refresh();
+        })
+        .then(() => {
+          res.json({'message': 'message saved'});
+        })
     })
     .catch(err => {
       console.log(err.message);
