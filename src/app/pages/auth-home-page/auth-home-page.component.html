@@ -10,6 +10,14 @@
           PERSONAL
         </div>
 
+        <div class="auth-home-contents-personal-filter">
+          <label for="relationship">Filter: </label>
+          <select name="relationship" class="auth-home-contents-personal-filter-relationship">
+            <option value="0" class="auth-home-contents-personal-filter-relationship-all">Show All</option>
+            <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
+          </select>
+        </div>
+
         <div class="auth-home-contents-personal-list">
           <div *ngFor="let recipient of recipients" class="auth-home-contents-personal-list-recipient" routerLink="/recipients/{{recipient.id}}">
             <div class="auth-home-contents-personal-list-recipient-envelope">
