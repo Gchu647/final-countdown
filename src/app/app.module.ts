@@ -44,13 +44,11 @@ import { RecipientViewComponent } from './pages/recipient-view/recipient-view.co
       { path: '', component: UnauthHomePageComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'home', component: AuthHomePageComponent },
       { path: 'profile', component: ProfileComponent },
-      { path: 'messages/personal/new', component: MessagePersonalNewComponent },
       { path: 'messages/group/:id', component: MessageGroupComponent },
-      { path: 'recipients', component: RecipientsComponent },
-      { path: 'recipients/new', component: RecipientNewComponent },
-      { path: 'recipients/:id', component: RecipientViewComponent }
+      { path: 'messages/personal/new', component: MessagePersonalNewComponent },
+      { path: 'messages/personal/:id', component: RecipientViewComponent },
+      { path: 'messages', component: AuthHomePageComponent }
     ])
   ],
   providers: [],
