@@ -39,3 +39,7 @@ testem.log
 Thumbs.db
 .env
 /config
+
+
+#DB Setup
+db_setup.sql
