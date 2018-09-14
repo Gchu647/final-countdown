@@ -2,8 +2,7 @@
 exports.seed = function(knex, Promise) {
     let time = new Date();
     time.setDate(time.getDate()+14);
-    time = time.toLocaleString();
-    console.log('time: ', time);
+    time = time.toUTCString();
 
     // Inserts trigger entries
     return knex('triggers').insert([

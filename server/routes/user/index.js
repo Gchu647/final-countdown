@@ -4,9 +4,9 @@ const router = express.Router();
 const trigger = require('./trigger');
 const User = require('../../db/models/User');
 
-router.use('/:id/trigger', trigger); // user's trigger
+router.use('/user', trigger); // user's trigger
 
-router.route('/:id')
+router.route('/user/:id')
   .get((req, res) => { // fetches user information by id
     const userId = req.params.id;
 
@@ -41,7 +41,7 @@ router.route('/:id')
       })
       .catch(err => {
         console.log(err.message);
-        return res.json({ 'error': err.message });
+        return res.status(400).json({ 'error': err.message });
       });
   })
 
