@@ -6,7 +6,26 @@ class ActiveTriggerQueue {
     this.head = null;
     this.tail = null;
   }
-
+  /** Active Trigger getExecutableTriggers: This function searchs the
+   * linkedlist and returns an array of the triggers to execute **/
+  getExecutableTriggers() {
+    let executableTriggers = [];
+    if (!this.head) {
+      return null;
+    }
+    console.log(
+      'head v now',
+      this.head.value.timeToExecute,
+      moment.utc(Date.now()).format()
+    );
+    if (this.head.value.timeToExecute < moment.utc(Date.now()).format()) {
+      let temp = this.head;
+      this.delete(this.head.value.userId);
+      return temp.value;
+    } else {
+      return null;
+    }
+  }
   /*** Active Trigger Search: This function searches the structure
    * for a specific user's trigger. Uses the userId field to find
    * the trigger.***/
@@ -44,7 +63,7 @@ class ActiveTriggerQueue {
    * the timeToExecute. It returns true if edit was successful else false***/
   edit(userId, newTimeToExecute) {
     this.delete(userId);
-    return this.insertToQueue({userId, timeToExecute: newTimeToExecute});
+    return this.insertToQueue({ userId, timeToExecute: newTimeToExecute });
   }
   /*** Active Trigger Delete: This function deletes an active trigger.
    * It returns true if delete was successful else false***/
@@ -60,11 +79,11 @@ class ActiveTriggerQueue {
     if (this.tail === precedingTrigger.next) {
       this.tail = precedingTrigger;
       this.tail.next = null;
-      return success = true;
+      return (success = true);
     }
 
     precedingTrigger = precedingTrigger.next.next;
-    success = precedingTrigger ? true: false;
+    success = precedingTrigger ? true : false;
 
     return success;
   }
@@ -132,4 +151,6 @@ function ActiveTrigger(value, next) {
   this.next = next;
 }
 
-module.exports = { ActiveTriggerQueue };
+let queue = new ActiveTriggerQueue();
+
+module.exports = queue;

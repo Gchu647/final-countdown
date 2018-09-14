@@ -1,6 +1,40 @@
-const { ActiveTriggerQueue } = require('./activeQueue');
+require('dotenv').config();
+const triggerQueue = require('./test.js');
+const schedule = require('node-schedule');
+const mailgun = require('mailgun.js');
+const mg = mailgun.client({
+  key: process.env.MAILGUN_KEY,
+  username: process.env.MAILGUN_USERNAME,
+  domain: process.env.MAILGUN_DOMAIN
+});
 
+let count = 0;
+let recipientArr;
+const deathWatch = schedule.scheduleJob('* * * * * *', function() {
+  // console.log(triggerQueue);
+  recipientArr = triggerQueue.getExecutableTriggers();
+  console.log('count: ', count, 'triggers', recipientArr);
+  console.log('executeableTrigger', recipientArr);
+  if (recipientArr !== null) {
+    console.log('if recip');
+    sendMessages(recipientArr);
+  }
+  count += 1;
+});
 
+const sendMessages = function(recipientArray) {
+  console.log('send triggered')
+  return mg.messages
+    .create(process.env.MAILGUN_DOMAIN, {
+      from: process.env.MAILGUN_NOREPLY,
+      to: 'jeg6@hawaii.edu',
+      subject: `Hello ${recipientArray.userId}`,
+      text: 'I am probably dead!',
+      html: `<h1>Probably a test: ${recipientArray.timeToExecute}! </h1>`
+    })
+    .then(msg => console.log(msg))
+    .catch(err => console.log(err));
+};
 /* Basic Functionality tests to be converted to chai and mocha */
 // let queue = new ActiveTriggerQueue();
 // console.log('Initial', queue);

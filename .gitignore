@@ -43,3 +43,4 @@ Thumbs.db
 
 #DB Setup
 db_setup.sql
+.eslintrc.js
