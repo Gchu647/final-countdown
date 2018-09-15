@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="container-inner">
+    <div class="message-new">
+      <div class="message-new-title">
+        NEW MESSAGE
+      </div>
+
+      <div class="message-new-add-recipient">
+        <form class="message-new-add-recipient-form">
+          <span>ADD RECIPIENT DETAILS</span>
+
+          <div class="message-new-add-recipient-form-input">
+            <label for="first-name">First Name:</label>
+            <input type="text" name="first-name" class="message-new-add-recipient-form-input-first-name" required>
+          </div>
+
+          <div class="message-new-add-recipient-form-input">
+            <label for="last-name">Last Name:</label>
+            <input type="text" name="last-name" class="message-new-add-recipient-form-input-last-name" required>
+          </div>
+
+          <div class="message-new-add-recipient-form-input">
+            <label for="relationship">Relationship:</label>
+            <select name="relationship" class="message-new-add-recipient-form-input-relationship">
+              <option value="-1" class="message-new-add-recipient-form-input-relationship-blank">---</option>
+              <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
+            </select>
+          </div>
+
+          <div class="message-new-add-recipient-form-input">
+            <label for="email">Email:</label>
+            <input type="email" name="email" class="message-new-add-recipient-form-input-email" required>
+          </div>
+
+          <div class="message-new-add-recipient-form-input">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" name="phone" class="message-new-add-recipient-form-input-phone">
+          </div>
+        </form>
+      </div>
+
+      <div class="message-new-text">
+        <form class="message-new-text-form">
+          <span>WRITE A MESSAGE</span>
+
+          <label for="message">Message:</label>
+          <textarea rows="16" name="message"></textarea>
+
+          <button type="button" class="message-new-text-button">SUBMIT</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

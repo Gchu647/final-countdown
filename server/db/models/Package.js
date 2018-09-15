@@ -12,11 +12,15 @@ class Package extends bookshelf.Model {
   }
 
   maker() {
-    this.belongsTo('User', 'package_maker_id');
+    return this.belongsTo('User', 'package_maker_id');
   }
 
   recipient() {
-    this.belongsTo('Package', 'recipient_id ');
+    return this.belongsTo('Recipient', 'recipient_id ');
+  }
+
+  file() {
+    return this.hasOne('EncryptedFile', 'packages_id');
   }
 }
 

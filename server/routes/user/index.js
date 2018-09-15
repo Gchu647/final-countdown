@@ -2,12 +2,17 @@
 const express = require('express');
 const router = express.Router();
 const trigger = require('./trigger');
+const recipients = require('./recipients');
+const packages = require('./packages');
+const isAuthenticated = require('../../middleware/isAuthenticated');
 const User = require('../../db/models/User');
 
 router.use('/user', trigger); // user's trigger
+router.use('/user', recipients); // user's recipients
+router.use('/user', packages); //user's packages
 
 router.route('/user/:id')
-  .get((req, res) => { // fetches user information by id
+  .get(isAuthenticated, (req, res) => { // fetches user information by id
     const userId = req.params.id;
 
     return new User()
@@ -20,7 +25,7 @@ router.route('/user/:id')
         return res.status(400).json({ message: err.message });
       });
   })
-  .put((req, res) => {
+  .put(isAuthenticated, (req, res) => { // edits user information by id
     const userId = req.params.id;
     // Initailize edited info
     const userInput = {
@@ -33,7 +38,6 @@ router.route('/user/:id')
       .where({ 'id': userId })
       .save(userInput, { patch: true })
       .then(response => {
-        console.log('Edited user', response);
         return response.refresh();
       })
       .then(user => {

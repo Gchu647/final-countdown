@@ -1,12 +1,12 @@
 // This routes lets user post a trigger or flags a trigger
 const express = require('express');
 const router = express.Router();
+const isAuthenticated = require('../../middleware/isAuthenticated');
 const Trigger = require('../../db/models/Trigger');
 
 // Posting and flagging user triggers
 router.route('/:id/trigger')
-  .post((req, res) => {
-    // also need a customTimer
+  .post(isAuthenticated, (req, res) => {
     const userId = req.params.id;
     const customTimer = req.body.customTimer; // Currently in seconds
     let time = new Date();
@@ -31,7 +31,6 @@ router.route('/:id/trigger')
     })
     .fetch()
     .then( trigger => {
-      console.log('checkedFlagged', trigger);
       if(trigger !== null) {
         throw new Error('You already set up a trigger!');
       } else {
@@ -39,7 +38,6 @@ router.route('/:id/trigger')
         return new Trigger()
         .save(triggerInput)
         .then(trigger => {
-          console.log('trigger', trigger);
           return res.json(trigger);
         })
       }
@@ -49,7 +47,7 @@ router.route('/:id/trigger')
     });
 
   })
-  .delete((req, res) => {
+  .delete(isAuthenticated, (req, res) => {
    const userId = req.params.id;;
 
     // flags the trigger input
@@ -59,7 +57,6 @@ router.route('/:id/trigger')
       countdown: null
     }, { patch: true })
     .then(trigger => {
-      console.log('trigger', trigger);
       return res.json(trigger);
     })
     .catch(err => {

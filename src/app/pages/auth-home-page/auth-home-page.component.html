@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="auth-home">
+    <div class="auth-home-contents">
+      <div class="auth-home-contents-title">
+        MESSAGES
+      </div>
+
+      <div class="auth-home-contents-personal">
+        <div class="auth-home-contents-personal-title">
+          PERSONAL
+        </div>
+
+        <div class="auth-home-contents-personal-filter">
+          <label for="relationship">Filter: </label>
+          <select name="relationship" class="auth-home-contents-personal-filter-relationship" [(ngModel)]="relationshipToFilter" (ngModelChange)="setRelationshipToFilter($event)">
+            <option [value]="0" class="auth-home-contents-personal-filter-relationship-all">Show All</option>
+            <option *ngFor="let relationship of relationships" [value]="relationship.id">{{relationship.name}}</option>
+          </select>
+        </div>
+
+        <div class="auth-home-contents-personal-list">
+          <div *ngFor="let recipient of displayedRecipients" class="auth-home-contents-personal-list-recipient" routerLink="/messages/personal/{{recipient.id}}">
+            <div class="auth-home-contents-personal-list-recipient-envelope">
+              <!-- Source: Jam Icons (ENVELOPE) -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -5 24 24" width="24" height="24" preserveAspectRatio="xMinYMin"
+                class="jam jam-envelope-f">
+                <path d='M18.572.083L10.676 7.12a1 1 0 0 1-1.331 0L1.416.087A2 2 0 0 1 2 0h16a2 2 0 0 1 .572.083zm1.356 1.385c.047.17.072.348.072.532v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2c0-.185.025-.364.072-.534l7.942 7.148a3 3 0 0 0 3.992 0l7.922-7.146z' /></svg>
+            </div>
+
+            <div class="auth-home-contents-personal-list-recipient-name">
+              {{recipient.first_name}} {{recipient.last_name}}
+            </div>
+          </div>
+        </div>
+
+        <button class="auth-home-contents-personal-new-message" routerLink="/messages/personal/new">
+          NEW MESSAGE
+        </button>
+      </div>
+
+      <div class="auth-home-contents-group">
+        <div class="auth-home-contents-group-title">
+          GROUP
+        </div>
+
+        <div class="auth-home-contents-group-list">
+          <div *ngFor="let relationship of relationships" class="auth-home-contents-group-list-item" routerLink="/messages/group/{{relationship.id}}">
+            <div class="auth-home-contents-group-list-item-number">
+              <div class="auth-home-contents-group-list-item-number-inner">
+                88
+              </div>
+            </div>
+
+            <div class="auth-home-contents-group-list-item-name">
+              {{relationship.name.toUpperCase()}}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="auth-home-footer">
+      <button class="auth-home-footer-toggle-countdown">
+        <!-- Source: Jam Icons (ALERT) -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" height="24" preserveAspectRatio="xMinYMin">
+          <path d='M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-13a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1zm0 10a1 1 0 1 1 0-2 1 1 0 0 1 0 2z' />
+        </svg>
+
+        <span>ACTIVATE COUNTDOWN</span>
+
+        <!-- Source: Jam Icons (ALERT) -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" height="24" preserveAspectRatio="xMinYMin">
+          <path d='M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-13a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1zm0 10a1 1 0 1 1 0-2 1 1 0 0 1 0 2z' />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
