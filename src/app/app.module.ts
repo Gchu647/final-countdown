@@ -23,6 +23,8 @@ import { RecipientViewComponent } from './pages/recipient-view/recipient-view.co
 
 // Services:
 import { BackendService } from './services/backend.service';
+import { SessionsService } from './services/sessions.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { BackendService } from './services/backend.service';
     ])
   ],
   providers: [
-    BackendService
+    BackendService,
+    SessionsService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })
