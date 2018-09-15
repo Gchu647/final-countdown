@@ -5,15 +5,15 @@ const isAuthenticated = require('../../middleware/isAuthenticated');
 const Recipient = require('../../db/models/Recipient');
 
 router.route('/:id/recipients')
-  .get(isAuthenticated, (req, res) => { // fetchs all recipients from a user
+  .get(isAuthenticated, (req, res) => {
+    // fetchs all recipients from a user
     const userId = req.params.id;
 
     return new Recipient()
       .query(qb => {
-        qb.where({ 'sender_id': userId })
-          .andWhere({'deleted_at': null});
+        qb.where({ sender_id: userId }).andWhere({ deleted_at: null });
       })
-      .fetchAll()
+      .fetchAll({ withRelated: ['package.file'] })
       .then(recipients => {
         return res.json(recipients);
       })
@@ -30,8 +30,7 @@ router.route('/:id/recipients')
       l_name: req.body.lName ? req.body.lName.trim() : null,
       phone_num: req.body.phoneNum ? req.body.phoneNum.trim() : null,
       sender_id: Number(userId),
-      relationship_id: Number(req.body.relationshipId),
-
+      relationship_id: Number(req.body.relationshipId)
     };
 
     // Save using bookshelf
@@ -45,20 +44,21 @@ router.route('/:id/recipients')
       })
       .catch(err => {
         console.log(err.message);
-        return res.status(400).json({ 'error': err.message });
+        return res.status(400).json({ error: err.message });
       });
-  })
+  });
 
-  router.route('/:id/recipients/:recipientId')
-  .get(isAuthenticated, (req, res) => { // fetches one recipient of a user
+router.route('/:id/recipients/:recipientId')
+  .get(isAuthenticated, (req, res) => {
+    // fetches one recipient of a user
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
 
     return new Recipient()
       .query(qb => {
-        qb.where({ 'id': recipientId })
-          .andWhere({ 'sender_id': userId })
-          .andWhere({'deleted_at': null});
+        qb.where({ id: recipientId })
+          .andWhere({ sender_id: userId })
+          .andWhere({ deleted_at: null });
       })
       .fetch()
       .then(recipient => {
@@ -68,7 +68,8 @@ router.route('/:id/recipients')
         return res.status(400).json({ message: err.message });
       });
   })
-  .put(isAuthenticated, (req, res) => { // edit recipient's info
+  .put(isAuthenticated, (req, res) => {
+    // edit recipient's info
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
     // Initailize edited info
@@ -78,18 +79,17 @@ router.route('/:id/recipients')
       l_name: req.body.lName ? req.body.lName.trim() : null,
       phone_num: req.body.phoneNum ? req.body.phoneNum.trim() : null,
       sender_id: Number(userId),
-      relationship_id: Number(req.body.relationshipId),
-
+      relationship_id: Number(req.body.relationshipId)
     };
 
     // Edit using bookshelf
     return new Recipient()
       .query(qb => {
-        qb.where({ 'id': recipientId })
-          .andWhere({ 'sender_id': userId })
-          .andWhere({'deleted_at': null});
+        qb.where({ id: recipientId })
+          .andWhere({ sender_id: userId })
+          .andWhere({ deleted_at: null });
       })
-      .save(recipientInput, { 'patch': true })
+      .save(recipientInput, { patch: true })
       .then(response => {
         return response.refresh();
       })
@@ -98,30 +98,49 @@ router.route('/:id/recipients')
       })
       .catch(err => {
         console.log(err.message);
-        return res.status(400).json({ 'error': err.message });
+        return res.status(400).json({ error: err.message });
       });
   })
   .delete(isAuthenticated, (req, res) => {
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
- 
-     // flags the trigger input
-     return new Recipient()
-     .query(qb => {
-       qb.where({ 'id': recipientId })
-         .andWhere({ 'sender_id': userId });
-     })
-     .save({'deleted_at': knex.fn.now()}, { patch: true })
-     .then(response => {
-       return response.refresh();
-     })
-     .then(recipient => {
-       return res.json({'message': 'recipient deleted'});
-     })
-     .catch(err => {
-       console.log(err.message);
-       return res.status(400).json({ 'error': err.message });
-     });
-   })
+
+    // flags the trigger input
+    return new Recipient()
+      .query(qb => {
+        qb.where({ id: recipientId }).andWhere({ sender_id: userId });
+      })
+      .save({ deleted_at: knex.fn.now() }, { patch: true })
+      .then(response => {
+        return response.refresh();
+      })
+      .then(recipient => {
+        return res.json({ message: 'recipient deleted' });
+      })
+      .catch(err => {
+        console.log(err.message);
+        return res.status(400).json({ error: err.message });
+      });
+  });
+
+router.route('/:id/recipients/:recipientId/package')
+  .get(isAuthenticated, (req, res) => {
+    const userId = req.params.id;
+    const recipientId = req.params.recipientId;
+
+    return new Recipient()
+      .query(qb => {
+        qb.where({ id: recipientId })
+          .andWhere({ sender_id: userId })
+          .andWhere({ deleted_at: null });
+      })
+      .fetch({ withRelated: ['package.file'] })
+      .then(recipient => {
+        return res.json(recipient);
+      })
+      .catch(err => {
+        return res.status(400).json({ message: err.message });
+      });
+  });
 
 module.exports = router;
