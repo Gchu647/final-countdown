@@ -8,15 +8,15 @@
     <form class="login-form-inner">
       <div class="login-form-inner-input">
         <label for="email">Email: </label>
-        <input type="email" name="email" class="login-form-inner-input-email" required>
+        <input type="email" name="email" class="login-form-inner-input-email" [(ngModel)]='loginFormData.email'required>
       </div>
 
       <div class="login-form-inner-input">
         <label for="password">Password: </label>
-        <input type="password" name="password" class="login-form-inner-input-password" required>
+        <input type="password" name="password" class="login-form-inner-input-password" [(ngModel)]='loginFormData.password' required>
       </div>
 
-      <button type="button" class="login-form-inner-submit">LOGIN</button>
+      <button type="button" class="login-form-inner-submit" (click)='login()'>LOGIN</button>
     </form>
   </div>
 

@@ -45,6 +45,7 @@ router.post('/register', (req, res) => {
 // Login in with a username(the email) and password
 router.post('/login', (req, res, next) => {
   // If user is logged in, then instruct the user to log out first:
+  console.log('login in server!');
   if (req.user) {
     res
       .status(400)
@@ -71,6 +72,7 @@ router.post('/login', (req, res, next) => {
 
 // Logout user
 router.get('/logout', (req, res) => {
+  console.log('logging out in server!');
   req.logout();
   res.json({ success: true });
 });
