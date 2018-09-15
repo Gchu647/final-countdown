@@ -12,14 +12,14 @@
 
         <div class="auth-home-contents-personal-filter">
           <label for="relationship">Filter: </label>
-          <select name="relationship" class="auth-home-contents-personal-filter-relationship">
-            <option value="0" class="auth-home-contents-personal-filter-relationship-all">Show All</option>
-            <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
+          <select name="relationship" class="auth-home-contents-personal-filter-relationship" [(ngModel)]="relationshipToFilter" (ngModelChange)="setRelationshipToFilter($event)">
+            <option [value]="0" class="auth-home-contents-personal-filter-relationship-all">Show All</option>
+            <option *ngFor="let relationship of relationships" [value]="relationship.id">{{relationship.name}}</option>
           </select>
         </div>
 
         <div class="auth-home-contents-personal-list">
-          <div *ngFor="let recipient of recipients" class="auth-home-contents-personal-list-recipient" routerLink="/messages/personal/{{recipient.id}}">
+          <div *ngFor="let recipient of displayedRecipients" class="auth-home-contents-personal-list-recipient" routerLink="/messages/personal/{{recipient.id}}">
             <div class="auth-home-contents-personal-list-recipient-envelope">
               <!-- Source: Jam Icons (ENVELOPE) -->
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -5 24 24" width="24" height="24" preserveAspectRatio="xMinYMin"

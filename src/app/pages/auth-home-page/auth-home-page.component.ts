@@ -18,7 +18,27 @@ export class AuthHomePageComponent implements OnInit {
     { id: 3, name: 'Haters' }
   ];
 
+  relationshipToFilter: number = 0;
+  displayedRecipients: object[];
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.displayedRecipients = this.recipients;
+  }
+
+  setRelationshipToFilter(value) {
+    this.relationshipToFilter = Number(value);
+    this.filterDisplayedRecipients(Number(value));
+  }
+
+  filterDisplayedRecipients(value) {
+    if (Number(value) === 0) {
+      this.displayedRecipients = this.recipients;
+    } else {
+      this.displayedRecipients = this.recipients.filter(
+        recipient => Number(recipient['relationshipId']) === Number(value)
+      );
+    }
+  }
 }
