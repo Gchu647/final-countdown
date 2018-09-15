@@ -1,6 +1,7 @@
 const User = require('../db/models/User');
 const Recipient = require('../db/models/Recipient');
 const Package = require('../db/models/Package');
+const EncryptedFile = require('../db/models/EncryptedFile');
 const moment = require('moment');
 
 /*** Active Trigger Queue: This is the linked-list that will represent the trigger queue ***/
@@ -12,7 +13,7 @@ class ActiveTriggerQueue {
 
   /** Active Trigger getExecutableTriggers: This function searchs the
    * linkedlist and returns an array of the triggers to execute **/
-  getExecutableTriggers() {
+  async getExecutableTriggers() {
     let executableTriggers = [];
     if (!this.head) {
       return null;
@@ -28,15 +29,34 @@ class ActiveTriggerQueue {
       this.delete(this.head.value.userId);
       console.log('executableTrigger', this.head);
       let userInfo;
-      this.getUserData(this.head.value.userId)
+      return await this.getUserData(this.head.value.userId)
         .then(response => {
-          console.log(response);
+          userInfo = response.toJSON();
+          if (userInfo) {
+            console.log('UserInfo', userInfo);
+            console.log(`user full name: ${userInfo.f_name} ${userInfo.l_name}`);
+            executableTriggers = userInfo.recipients.map(recipient => {
+              if(!recipient){
+                console.log('recipient', recipient);
+                return null;
+              }
+              return {
+                recipientName: `${recipient.f_name} ${recipient.l_name}`,
+                recipientEmail: recipient.email,
+                userFullName: `${userInfo.f_name} ${userInfo.l_name}`,
+                relationshipId: recipient.id,
+                subject: recipient.package.file.name,
+                body: recipient.package.file.aws_url
+              };
+            });
+            console.log(`recipient ${userInfo.recipients.id}`);
+          }
+          console.log('executableTriggerArr', executableTriggers);
+          return executableTriggers;
         })
         .catch(err => {
           console.log('err: ', err);
         });
-      console.log('UserInfo', userInfo);
-      return temp.value;
     } else {
       return null;
     }
@@ -45,11 +65,7 @@ class ActiveTriggerQueue {
   getUserData(userId) {
     console.log('userId', userId);
     return User.where({ id: userId })
-      .fetch({ withRelated: ['recipients'] })
-      .then(response => {
-        console.log('response', response);
-        return response;
-      })
+      .fetch({ withRelated: ['recipients.package.file'] })
       .catch(err => {
         console.log('error', err);
       });

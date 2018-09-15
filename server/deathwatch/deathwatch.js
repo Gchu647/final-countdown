@@ -10,29 +10,31 @@ const mg = mailgun.client({
 
 let count = 0;
 let recipientArr;
-const deathWatch = schedule.scheduleJob('* * * * * *', function() {
+const deathWatch = schedule.scheduleJob('* * * * * *', async function() {
   // console.log(triggerQueue);
-  recipientArr = triggerQueue.getExecutableTriggers();
+  recipientArr = await triggerQueue.getExecutableTriggers();
   console.log('count: ', count, 'triggers', recipientArr);
   console.log('executeableTrigger', recipientArr);
   if (recipientArr !== null) {
     console.log('if recip', recipientArr);
-    console.log('send triggered');
-
-    // sendMessages(recipientArr);
+    recipientArr.map(recipient => {
+      sendMessages(recipient);
+    });
   }
   count += 1;
 });
 
 const sendMessages = function(recipientArray) {
-  console.log('send triggered');
+  console.log('send triggered', recipientArray);
   return mg.messages
     .create(process.env.MAILGUN_DOMAIN, {
       from: process.env.MAILGUN_NOREPLY,
       to: 'jeg6@hawaii.edu',
-      subject: `Hello ${recipientArray.userId}`,
-      text: 'I am probably dead!',
-      html: `<h1>Probably a test: ${recipientArray.timeToExecute}! </h1>`
+      subject: `${recipientArray.subject}`,
+      text: `${recipientArray.body}`,
+      html: `<h1>From: ${recipientArray.userFullName} To: ${
+        recipientArray.recipientName
+      } Body:${recipientArray.body} Sent:${recipientArray.timeToExecute} </h1>`
     })
     .then(msg => console.log(msg))
     .catch(err => console.log(err));
