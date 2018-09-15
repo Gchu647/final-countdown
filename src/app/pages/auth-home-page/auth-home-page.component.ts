@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BackendService } from '../../services/backend.service';
 
 @Component({
   selector: 'app-auth-home-page',
@@ -21,10 +22,17 @@ export class AuthHomePageComponent implements OnInit {
   relationshipToFilter: number = 0;
   displayedRecipients: object[];
 
-  constructor() {}
+  constructor(
+    private backend: BackendService
+  ) {}
 
   ngOnInit() {
     this.displayedRecipients = this.recipients;
+    // Getting relationships from backend
+    this.backend.fetchRelationships()
+    .then(response => {
+      console.log('getting relationships', response);
+    })
   }
 
   setRelationshipToFilter(value) {

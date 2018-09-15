@@ -28,11 +28,6 @@ export class AuthService {
       return response;
     })
   }
-
-  // register(data) {
-  //   console.log('register auth smoke test!', data);
-  //   return Promise.resolve({});
-  // }
 }
 
 // get userId info from this route and add it to the obj passed in

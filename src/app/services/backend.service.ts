@@ -33,6 +33,12 @@ export class BackendService {
       email: data.email,
       password: data.password
     }
+    // smoke test!
+    return Promise.resolve({});
+  }
+
+  fetchRelationships() {
+    console.log('backend service relationships');
     return Promise.resolve({});
   }
 }
