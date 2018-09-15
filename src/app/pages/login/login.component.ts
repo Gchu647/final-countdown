@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { BackendService } from '../../services/backend.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,13 +18,13 @@ export class LoginComponent {
 
   constructor(
     private router: Router,
-    private backend: BackendService
+    private auth: AuthService,
   ){};
 
   login() {
-    return this.backend.login(this.loginFormData)
+    return this.auth.login(this.loginFormData)
     .then((response) => {
-      console.log('Response from server login: ', response);
+      console.log('Response @login_component: ', response);
     })
     .then(() => {
       this.router.navigate(['/messages']);
