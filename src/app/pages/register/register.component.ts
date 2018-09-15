@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { BackendService } from '../../services/backend.service';
 
 @Component({
   selector: 'app-register',
@@ -11,14 +11,16 @@ export class RegisterComponent {
   RegisterFormData: {
     email: string,
     password: string,
+    confirm: string
   } = {
     email: '',
-    password: ''
+    password: '',
+    confirm: ''
   };
 
   constructor(
     private router: Router,
-    private auth: AuthService,
+    private backend: BackendService,
   ) {};
 
   ngOnInit() {
@@ -26,7 +28,11 @@ export class RegisterComponent {
   }
 
   register() {
-    return this.auth.register(this.RegisterFormData)
+    if(this.RegisterFormData.password !== this.RegisterFormData.confirm) {
+      throw new Error('password and confirm password does not match');
+    }
+
+    return this.backend.register(this.RegisterFormData)
     .then((response) => {
       console.log('Response @register_component: ', response);
     })

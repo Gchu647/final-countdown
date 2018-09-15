@@ -30,7 +30,8 @@ export class BackendService {
   register(data) {
     const registerUrl = this.url + 'register';
     const input = {
-      // in progress
+      email: data.email,
+      password: data.password
     }
     return Promise.resolve({});
   }
