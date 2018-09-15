@@ -3,12 +3,12 @@
     FINAL&nbsp;&nbsp;COUNTDOWN
   </div>
 
-  <div class="header-options" *ngIf="!_router.url.includes('profile') && !_router.url.includes('messages')">
+  <div class="header-options" *ngIf="!router.url.includes('profile') && !router.url.includes('messages')">
     <div class="header-options-login" routerLink="/login">LOG IN</div>
     <div class="header-options-signup" routerLink="/register">SIGN UP</div>
   </div>
 
-  <div class="header-auth-options" *ngIf="_router.url.includes('profile') || _router.url.includes('messages')">
+  <div class="header-auth-options" *ngIf="router.url.includes('profile') || router.url.includes('messages')">
     <div class="header-auth-options-messages" routerLink="/messages">MESSAGES</div>
     <span>•</span>
     <div class="header-auth-options-profile" routerLink="/profile">PROFILE</div>

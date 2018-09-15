@@ -8,21 +8,19 @@ import { BackendService } from '../../services/backend.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  // Source (Stack Overflow): https://goo.gl/ozCQCt
-  // Used in displaying specific header links for authenticated users:
-  router: string;
 
   constructor(
-    private _router: Router,
+    private router: Router,
     private backend: BackendService
-  ) {
-    this.router = _router.url;
-  }
+  ) {}
 
   logout() {
     return this.backend.logout()
     .then((response) => {
       console.log('Response from server logout:  ', response);
+    })
+    .then(() => {
+      this.router.navigate(['/']);
     })
     .catch(response => {
       console.log(response.error.message);
