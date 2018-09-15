@@ -19,12 +19,13 @@ export class BackendService {
       password: data.password
     }
 
-    console.log('backend service login', data);
     return this.http.post(loginUrl, input).toPromise();
   }
 
-  // logout() {
-  //   const logoutUrl = this.url + 'logout';
-  //   return this.http.get(logoutUrl).toPromise();
-  // }
+  logout() {
+    // const logoutUrl = this.url + 'logout';
+    // return this.http.get(logoutUrl).toPromise();
+    console.log('backend logout');
+    return Promise.resolve({});
+  }
 }
