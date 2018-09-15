@@ -38,7 +38,7 @@ export class BackendService {
   }
 
   fetchRelationships() {
-    console.log('backend service relationships');
-    return Promise.resolve({});
+    const relationshipsUrl = this.url + 'relationships';
+    return this.http.get(relationshipsUrl).toPromise();
   }
 }
