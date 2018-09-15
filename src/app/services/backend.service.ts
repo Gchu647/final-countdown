@@ -25,7 +25,13 @@ export class BackendService {
   logout() {
     const logoutUrl = this.url + 'logout';
     return this.http.get(logoutUrl).toPromise();
-    // console.log('backend logout');
-    // return Promise.resolve({});
+  }
+
+  register(data) {
+    const registerUrl = this.url + 'register';
+    const input = {
+      // in progress
+    }
+    return Promise.resolve({});
   }
 }
