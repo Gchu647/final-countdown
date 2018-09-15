@@ -18,9 +18,10 @@ let dayAfterAfter = new Date();
 dayAfterAfter.setSeconds(dayAfterAfter.getSeconds() + 30);
 queue.insertToQueue({ userId: 4, timeToExecute: dayAfterAfter });
 console.log('Insert4', queue);
-let yesterday = new Date();
-yesterday.setSeconds(yesterday.getSeconds() - 1);
-console.log('yesterday', yesterday);
-queue.insertToQueue({ userId: 0, timeToExecute: yesterday });
+// let yesterday = new Date();
+// yesterday.setSeconds(yesterday.getSeconds() - 1);
+// console.log('yesterday', yesterday);
+// queue.insertToQueue({ userId: 0, timeToExecute: yesterday });
+
 
 module.exports = queue;

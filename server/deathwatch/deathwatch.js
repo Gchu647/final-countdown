@@ -16,14 +16,16 @@ const deathWatch = schedule.scheduleJob('* * * * * *', function() {
   console.log('count: ', count, 'triggers', recipientArr);
   console.log('executeableTrigger', recipientArr);
   if (recipientArr !== null) {
-    console.log('if recip');
-    sendMessages(recipientArr);
+    console.log('if recip', recipientArr);
+    console.log('send triggered');
+
+    // sendMessages(recipientArr);
   }
   count += 1;
 });
 
 const sendMessages = function(recipientArray) {
-  console.log('send triggered')
+  console.log('send triggered');
   return mg.messages
     .create(process.env.MAILGUN_DOMAIN, {
       from: process.env.MAILGUN_NOREPLY,

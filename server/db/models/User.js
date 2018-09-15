@@ -16,7 +16,11 @@ class User extends bookshelf.Model {
   }
 
   recipients() {
+<<<<<<< Updated upstream
     return this.hasMany('Recipient', 'sender_id');
+=======
+    return this.hasMany('Recipient', 'sender_id','id');
+>>>>>>> Stashed changes
   }
 
   packages() {
