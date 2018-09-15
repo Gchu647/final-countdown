@@ -72,6 +72,7 @@ router.post('/login', (req, res, next) => {
 
 // Logout user
 router.get('/logout', (req, res) => {
+  console.log('logging out in server!');
   req.logout();
   res.json({ success: true });
 });
