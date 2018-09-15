@@ -21,6 +21,9 @@ import { RecipientsComponent } from './pages/recipients/recipients.component';
 import { RecipientNewComponent } from './pages/recipient-new/recipient-new.component';
 import { RecipientViewComponent } from './pages/recipient-view/recipient-view.component';
 
+// Services:
+import { BackendService } from './services/backend.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +54,9 @@ import { RecipientViewComponent } from './pages/recipient-view/recipient-view.co
       { path: 'messages', component: AuthHomePageComponent }
     ])
   ],
-  providers: [],
+  providers: [
+    BackendService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
