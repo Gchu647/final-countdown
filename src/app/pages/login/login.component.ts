@@ -31,6 +31,6 @@ export class LoginComponent {
     })
     .catch(response => {
       console.log(response.error.message);
-    })
+    });
   }
 }

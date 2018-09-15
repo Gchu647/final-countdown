@@ -8,12 +8,12 @@
     <form class="register-form-inner">
       <div class="register-form-inner-input">
         <label for="email">Email: </label>
-        <input type="email" name="email" class="register-form-inner-input-email" required>
+        <input type="email" name="email" class="register-form-inner-input-email" [(ngModel)]='RegisterFormData.email' required>
       </div>
 
       <div class="register-form-inner-input">
         <label for="password">Password: </label>
-        <input type="password" name="password" class="register-form-inner-input-password" required>
+        <input type="password" name="password" class="register-form-inner-input-password" [(ngModel)]='RegisterFormData.password' required>
       </div>
 
       <div class="register-form-inner-input">
@@ -21,7 +21,7 @@
         <input type="password" name="confirm" class="register-form-inner-input-confirm" required>
       </div>
 
-      <button type="button" class="register-form-inner-submit">REGISTER</button>
+      <button type="button" class="register-form-inner-submit" (click)='register()'>REGISTER</button>
     </form>
   </div>
 
