@@ -9,17 +9,18 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterComponent {
   RegisterFormData: {
-    email: string,
-    password: string,
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
   } = {
     email: '',
+    firstName: '',
+    lastName: '',
     password: ''
   };
 
-  constructor(
-    private router: Router,
-    private auth: AuthService,
-  ) {};
+  constructor(private router: Router, private auth: AuthService) {}
 
   ngOnInit() {
     console.log('Register Component initiated');
@@ -27,14 +28,14 @@ export class RegisterComponent {
 
   register() {
     return this.auth.register(this.RegisterFormData)
-    .then((response) => {
-      console.log('Response @register_component: ', response);
-    })
-    .then(() => {
-      this.router.navigate(['/login']);
-    })
-    .catch(response => {
-      console.log(response.error.message);
-    });
+      .then(response => {
+        console.log('Response @register_component: ', response);
+      })
+      .then(() => {
+        this.router.navigate(['/login']);
+      })
+      .catch(response => {
+        console.log(response.error.message);
+      });
   }
 }

@@ -17,7 +17,6 @@
   z-index: 1;
   display: flex;
   flex-flow: column;
-  height: 100vh;
   width: 100%;
   background-color: transparent;
 
@@ -57,7 +56,7 @@
         flex-direction: column;
         letter-spacing: 1px;
         width: 90%;
-        padding-bottom: 30px;
+        padding-bottom: 45px;
 
         label {
           padding-bottom: 7.5px;
@@ -70,6 +69,11 @@
           padding: 15px;
           border-radius: 2px;
           border: 1px solid #206060;
+        }
+
+        &:nth-of-type(2),
+        &:nth-of-type(4) {
+          padding-bottom: 15px;
         }
       }
 
