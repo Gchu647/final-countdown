@@ -19,8 +19,12 @@ class Package extends bookshelf.Model {
     return this.belongsTo('Recipient', 'recipient_id ');
   }
 
+  group() {
+    return this.belongsTo('Group', 'package_id');
+  }
+
   file() {
-    return this.hasOne('EncryptedFile', 'packages_id');
+    return this.hasMany('EncryptedFile', 'id');
   }
 }
 
