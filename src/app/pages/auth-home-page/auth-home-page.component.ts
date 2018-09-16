@@ -13,28 +13,28 @@ export class AuthHomePageComponent implements OnInit {
     { id: 2, first_name: 'Ben', last_name: 'Beta', relationshipId: 2 },
     { id: 3, first_name: 'Greg', last_name: 'Gamma', relationshipId: 3 }
   ];
-  // relationships: object[] = [
-  //   { id: 1, name: 'Family' },
-  //   { id: 2, name: 'Friends' },
-  //   { id: 3, name: 'Haters' }
-  // ];
-  relationships: any;
 
+  relationships: object[];
   relationshipToFilter: number = 0;
   displayedRecipients: object[];
 
-  constructor(
-    private backend: BackendService
-  ) {}
+  constructor(private backend: BackendService) {}
 
   ngOnInit() {
     this.displayedRecipients = this.recipients;
-    // Getting relationships from backend
-     this.backend.fetchRelationships()
-    .then(response => {
-      this.relationships = response;
-      console.log('getting relationships', response);
-    })
+
+    // Get relationships from backend and capitalize first letter of each:
+    this.backend.fetchRelationships().then((response: object[]) => {
+      const capitalizedRelationships = response.map(relationship => {
+        const capitalizedRelationship = Object.assign(relationship);
+        capitalizedRelationship['name'] =
+          capitalizedRelationship.name.charAt(0).toUpperCase() +
+          capitalizedRelationship.name.substr(1);
+        return capitalizedRelationship;
+      });
+
+      this.relationships = capitalizedRelationships;
+    });
   }
 
   setRelationshipToFilter(value) {

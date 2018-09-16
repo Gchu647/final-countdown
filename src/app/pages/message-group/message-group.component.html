@@ -18,10 +18,13 @@
       <form class="group-message-text-form">
         <span>WRITE A GROUP MESSAGE</span>
 
-        <label for="message">Message: </label>
+        <label for="message">Message:</label>
         <textarea rows="16" name="message">{{message}}</textarea>
 
-        <button type="button" class="group-message-text-form-button">SAVE MESSAGE</button>
+        <div class="group-message-text-form-buttons">
+          <button type="button" class="group-message-text-form-buttons-save">SAVE&nbsp;&nbsp;MESSAGE</button>
+          <button type="button" class="group-message-text-form-buttons-cancel" routerLink="/messages">CANCEL</button>
+        </div>
       </form>
     </div>
   </div>
