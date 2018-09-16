@@ -143,18 +143,19 @@
               padding: 15px 30px;
               border: 0;
               border-radius: 2px;
-              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
             }
 
             .message-new-text-form-buttons-submit {
               color: #fbfbfb;
               background-color: #478585;
+              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
             }
 
             .message-new-text-form-buttons-cancel {
               color: #478585;
               background-color: #fbfbfb;
               border: 1px solid #478585;
+              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
             }
           }
         }
