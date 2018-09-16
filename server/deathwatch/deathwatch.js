@@ -18,7 +18,8 @@ const deathWatch = schedule.scheduleJob('* * * * * *', async function() {
   if (recipientArr !== null) {
     console.log('if recip', recipientArr);
     recipientArr.map(recipient => {
-      sendMessages(recipient);
+      console.log('recipioent',recipient);
+      // sendMessages(recipient);
     });
   }
   count += 1;

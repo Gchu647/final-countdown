@@ -2,6 +2,7 @@ const User = require('../db/models/User');
 const Recipient = require('../db/models/Recipient');
 const Package = require('../db/models/Package');
 const EncryptedFile = require('../db/models/EncryptedFile');
+const Group = require('../db/models/Group');
 const moment = require('moment');
 
 /*** Active Trigger Queue: This is the linked-list that will represent the trigger queue ***/
@@ -33,10 +34,10 @@ class ActiveTriggerQueue {
         .then(response => {
           userInfo = response.toJSON();
           if (userInfo) {
-            console.log('UserInfo', userInfo);
+            console.log('UserInfo.groups', userInfo.groups);
             console.log(`user full name: ${userInfo.f_name} ${userInfo.l_name}`);
             executableTriggers = userInfo.recipients.map(recipient => {
-              if(!recipient){
+              if (!recipient) {
                 console.log('recipient', recipient);
                 return null;
               }
@@ -44,9 +45,9 @@ class ActiveTriggerQueue {
                 recipientName: `${recipient.f_name} ${recipient.l_name}`,
                 recipientEmail: recipient.email,
                 userFullName: `${userInfo.f_name} ${userInfo.l_name}`,
-                relationshipId: recipient.id,
-                subject: recipient.package.file.name,
-                body: recipient.package.file.aws_url
+                relationshipId: recipient.id
+                // subject: recipient.package.file.name,
+                // body: recipient.package.file.aws_url
               };
             });
             console.log(`recipient ${userInfo.recipients.id}`);
@@ -65,7 +66,11 @@ class ActiveTriggerQueue {
   getUserData(userId) {
     console.log('userId', userId);
     return User.where({ id: userId })
-      .fetch({ withRelated: ['recipients.package.file'] })
+      .fetch({ withRelated: ['recipients.package.file', 'groups.members.package.file'] })
+      .then(response => {
+        console.log('response', response);
+        return response;
+      })
       .catch(err => {
         console.log('error', err);
       });
