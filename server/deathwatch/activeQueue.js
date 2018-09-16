@@ -34,7 +34,7 @@ class ActiveTriggerQueue {
         .then(response => {
           userInfo = response.toJSON();
           if (userInfo) {
-            console.log('UserInfo.groups', userInfo.groups);
+            console.log('UserInfo.groups.members', userInfo.groups[0].members);
             console.log(`user full name: ${userInfo.f_name} ${userInfo.l_name}`);
             executableTriggers = userInfo.recipients.map(recipient => {
               if (!recipient) {
