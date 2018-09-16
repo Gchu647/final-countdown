@@ -10,10 +10,14 @@ import { BackendService } from '../../services/backend.service';
 export class RegisterComponent {
   RegisterFormData: {
     email: string,
+    firstName: string,
+    lastName: string,
     password: string,
     confirm: string
   } = {
     email: '',
+    firstName: '',
+    lastName: '',
     password: '',
     confirm: ''
   };
