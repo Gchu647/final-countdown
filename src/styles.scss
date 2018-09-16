@@ -18,3 +18,18 @@ body {
   color: #2b2b2b;
   background-color: #fbfbfb;
 }
+
+.active-link {
+  font-weight: bold;
+  color: #478585;
+}
+
+.shrink {
+  font-size: 1.125rem !important;
+  letter-spacing: 1.5px !important;
+  padding: 22.5px 0 !important;
+}
+
+.grow {
+  max-height: calc(100vh - 116px) !important;
+}
