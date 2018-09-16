@@ -130,18 +130,32 @@
             border: 1px solid #206060;
           }
 
-          button {
-            z-index: 1;
-            font-size: 1.25rem;
-            line-height: 1.25rem;
-            letter-spacing: 2px;
-            padding: 15px 30px;
-            margin-top: 45px;
-            border: 0;
-            border-radius: 2px;
-            color: #fbfbfb;
-            background-color: #478585;
-            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+          .message-new-text-form-buttons {
+            display: flex;
+            flex-direction: column;
+
+            * {
+              z-index: 1;
+              font-size: 1.25rem;
+              line-height: 1.25rem;
+              letter-spacing: 2px;
+              margin-top: 30px;
+              padding: 15px 30px;
+              border: 0;
+              border-radius: 2px;
+              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+            }
+
+            .message-new-text-form-buttons-submit {
+              color: #fbfbfb;
+              background-color: #478585;
+            }
+
+            .message-new-text-form-buttons-cancel {
+              color: #478585;
+              background-color: #fbfbfb;
+              border: 1px solid #478585;
+            }
           }
         }
       }

@@ -12,14 +12,16 @@
 
         <div class="auth-home-contents-personal-filter">
           <label for="relationship">Filter: </label>
-          <select name="relationship" class="auth-home-contents-personal-filter-relationship" [(ngModel)]="relationshipToFilter" (ngModelChange)="setRelationshipToFilter($event)">
+          <select name="relationship" class="auth-home-contents-personal-filter-relationship" [(ngModel)]="relationshipToFilter"
+            (ngModelChange)="setRelationshipToFilter($event)">
             <option [value]="0" class="auth-home-contents-personal-filter-relationship-all">Show All</option>
             <option *ngFor="let relationship of relationships" [value]="relationship.id">{{relationship.name}}</option>
           </select>
         </div>
 
         <div class="auth-home-contents-personal-list">
-          <div *ngFor="let recipient of displayedRecipients" class="auth-home-contents-personal-list-recipient" routerLink="/messages/personal/{{recipient.id}}">
+          <div *ngFor="let recipient of displayedRecipients" class="auth-home-contents-personal-list-recipient"
+            routerLink="/messages/personal/{{recipient.id}}">
             <div class="auth-home-contents-personal-list-recipient-envelope">
               <!-- Source: Jam Icons (ENVELOPE) -->
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -5 24 24" width="24" height="24" preserveAspectRatio="xMinYMin"
@@ -45,10 +47,11 @@
 
         <div class="auth-home-contents-group-list">
           <div *ngFor="let relationship of relationships" class="auth-home-contents-group-list-item" routerLink="/messages/group/{{relationship.id}}">
-            <div class="auth-home-contents-group-list-item-number">
-              <div class="auth-home-contents-group-list-item-number-inner">
-                88
-              </div>
+            <div class="auth-home-contents-group-list-item-icon">
+              <!-- Source: Jam Icons (PENCIL) -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24" height="24"
+                preserveAspectRatio="xMinYMin" class="jam jam-pencil-f">
+                <path d='M16.318 6.11l-3.536-3.535 1.415-1.414c.63-.63 2.073-.755 2.828 0l.707.707c.755.755.631 2.198 0 2.829L16.318 6.11zm-1.414 1.415l-9.9 9.9-4.596 1.06 1.06-4.596 9.9-9.9 3.536 3.536z' /></svg>
             </div>
 
             <div class="auth-home-contents-group-list-item-name">
