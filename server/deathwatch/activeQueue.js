@@ -1,3 +1,8 @@
+const User = require('../db/models/User');
+const Recipient = require('../db/models/Recipient');
+const Package = require('../db/models/Package');
+const EncryptedFile = require('../db/models/EncryptedFile');
+const Group = require('../db/models/Group');
 const moment = require('moment');
 
 /*** Active Trigger Queue: This is the linked-list that will represent the trigger queue ***/
@@ -5,6 +10,70 @@ class ActiveTriggerQueue {
   constructor() {
     this.head = null;
     this.tail = null;
+  }
+
+  /** Active Trigger getExecutableTriggers: This function searchs the
+   * linkedlist and returns an array of the triggers to execute **/
+  async getExecutableTriggers() {
+    let executableTriggers = [];
+    if (!this.head) {
+      return null;
+    }
+    console.log(
+      'head v now',
+      this.head.value.timeToExecute,
+      moment.utc(Date.now()).format()
+    );
+
+    if (this.head.value.timeToExecute < moment.utc(Date.now()).format()) {
+      let temp = this.head;
+      this.delete(this.head.value.userId);
+      console.log('executableTrigger', this.head);
+      let userInfo;
+      return await this.getUserData(this.head.value.userId)
+        .then(response => {
+          userInfo = response.toJSON();
+          if (userInfo) {
+            console.log('UserInfo.groups.members', userInfo.groups[0].members);
+            console.log(`user full name: ${userInfo.f_name} ${userInfo.l_name}`);
+            executableTriggers = userInfo.recipients.map(recipient => {
+              if (!recipient) {
+                console.log('recipient', recipient);
+                return null;
+              }
+              return {
+                recipientName: `${recipient.f_name} ${recipient.l_name}`,
+                recipientEmail: recipient.email,
+                userFullName: `${userInfo.f_name} ${userInfo.l_name}`,
+                relationshipId: recipient.id
+                // subject: recipient.package.file.name,
+                // body: recipient.package.file.aws_url
+              };
+            });
+            console.log(`recipient ${userInfo.recipients.id}`);
+          }
+          console.log('executableTriggerArr', executableTriggers);
+          return executableTriggers;
+        })
+        .catch(err => {
+          console.log('err: ', err);
+        });
+    } else {
+      return null;
+    }
+  }
+
+  getUserData(userId) {
+    console.log('userId', userId);
+    return User.where({ id: userId })
+      .fetch({ withRelated: ['recipients.package.file', 'groups.members.package.file'] })
+      .then(response => {
+        console.log('response', response);
+        return response;
+      })
+      .catch(err => {
+        console.log('error', err);
+      });
   }
 
   /*** Active Trigger Search: This function searches the structure
@@ -44,7 +113,7 @@ class ActiveTriggerQueue {
    * the timeToExecute. It returns true if edit was successful else false***/
   edit(userId, newTimeToExecute) {
     this.delete(userId);
-    return this.insertToQueue({userId, timeToExecute: newTimeToExecute});
+    return this.insertToQueue({ userId, timeToExecute: newTimeToExecute });
   }
   /*** Active Trigger Delete: This function deletes an active trigger.
    * It returns true if delete was successful else false***/
@@ -60,11 +129,11 @@ class ActiveTriggerQueue {
     if (this.tail === precedingTrigger.next) {
       this.tail = precedingTrigger;
       this.tail.next = null;
-      return success = true;
+      return (success = true);
     }
 
     precedingTrigger = precedingTrigger.next.next;
-    success = precedingTrigger ? true: false;
+    success = precedingTrigger ? true : false;
 
     return success;
   }
@@ -132,4 +201,6 @@ function ActiveTrigger(value, next) {
   this.next = next;
 }
 
-module.exports = { ActiveTriggerQueue };
+let queue = new ActiveTriggerQueue();
+
+module.exports = queue;

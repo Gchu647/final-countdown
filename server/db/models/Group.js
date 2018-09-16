@@ -24,7 +24,7 @@ class Group extends bookshelf.Model {
   }
 
   members() {
-    return this.hasMany('Recipient', 'group_id');
+    return this.hasMany('Recipient', 'group_id', 'id');
   }
 }
 

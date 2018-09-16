@@ -31,7 +31,7 @@ exports.seed = function(knex, Promise) {
       f_name: 'Daniel',
       l_name: 'Kirk',
       sender_id: 2,
-      group_id: 1
+      group_id: 4
     },
     {
       id: 5,
@@ -39,7 +39,7 @@ exports.seed = function(knex, Promise) {
       f_name: 'Silas',
       l_name: 'Fry',
       sender_id: 2,
-      group_id: 2
+      group_id: 5
     },
     {
       id: 6,
@@ -47,7 +47,7 @@ exports.seed = function(knex, Promise) {
       f_name: 'Jordyn',
       l_name: 'Greg',
       sender_id: 2,
-      group_id: 3
+      group_id: 6
     },
     {
       id: 7,
