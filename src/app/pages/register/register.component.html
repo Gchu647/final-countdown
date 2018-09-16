@@ -32,7 +32,7 @@
 
       <div class="register-form-inner-input">
         <label for="confirm">Confirm Password: </label>
-        <input type="password" name="confirm" class="register-form-inner-input-confirm" required>
+        <input type="password" name="confirm" class="register-form-inner-input-confirm" [(ngModel)]='RegisterFormData.confirm' required>
       </div>
 
       <button type="button" class="register-form-inner-submit" (click)='register()'>REGISTER</button>

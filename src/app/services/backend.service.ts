@@ -30,8 +30,15 @@ export class BackendService {
   register(data) {
     const registerUrl = this.url + 'register';
     const input = {
-      // in progress
+      email: data.email,
+      password: data.password
     }
+    // smoke test!
     return Promise.resolve({});
+  }
+
+  fetchRelationships() {
+    const relationshipsUrl = this.url + 'relationships';
+    return this.http.get(relationshipsUrl).toPromise();
   }
 }

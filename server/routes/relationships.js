@@ -3,10 +3,12 @@ const router = express.Router();
 const Relationships = require('../db/models/Relationships');
 
 router.get('/', (req, res) => {
+  console.log('server getting relationships');
+  
   return Relationships
     .fetchAll()
-    .then(response => {
-      res.json(response.data);
+    .then(relationships => {
+      res.json(relationships);
     })
     .catch(err => {
       res.status(400).json({ message: err.message });

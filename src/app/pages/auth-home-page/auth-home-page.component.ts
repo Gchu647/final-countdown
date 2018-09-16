@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BackendService } from '../../services/backend.service';
 
 @Component({
   selector: 'app-auth-home-page',
@@ -12,19 +13,28 @@ export class AuthHomePageComponent implements OnInit {
     { id: 2, first_name: 'Ben', last_name: 'Beta', relationshipId: 2 },
     { id: 3, first_name: 'Greg', last_name: 'Gamma', relationshipId: 3 }
   ];
-  relationships: object[] = [
-    { id: 1, name: 'Family' },
-    { id: 2, name: 'Friends' },
-    { id: 3, name: 'Haters' }
-  ];
+  // relationships: object[] = [
+  //   { id: 1, name: 'Family' },
+  //   { id: 2, name: 'Friends' },
+  //   { id: 3, name: 'Haters' }
+  // ];
+  relationships: any;
 
   relationshipToFilter: number = 0;
   displayedRecipients: object[];
 
-  constructor() {}
+  constructor(
+    private backend: BackendService
+  ) {}
 
   ngOnInit() {
     this.displayedRecipients = this.recipients;
+    // Getting relationships from backend
+     this.backend.fetchRelationships()
+    .then(response => {
+      this.relationships = response;
+      console.log('getting relationships', response);
+    })
   }
 
   setRelationshipToFilter(value) {
