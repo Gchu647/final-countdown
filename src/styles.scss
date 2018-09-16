@@ -55,8 +55,8 @@ body {
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
 
     &:disabled {
-      color: hsla(180, 5%, 40%, 1);
-      background-color: hsla(180, 20%, 20%, 1);
+      color: #616b6b;
+      background-color: #293d3d;
       box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
     }
   }
