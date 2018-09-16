@@ -25,6 +25,22 @@ exports.seed = function(knex, Promise) {
       f_name: 'Mahatama',
       l_name: 'Gandhi',
       default_timer: 604800
+    },
+    {
+      id: 4,
+      email: 'user4@example.com',
+      password: '$2b$12$s8zkkBlEABIT2iouaINqbevNM4nzNd81GD1Wqf7tg4zFwbfXcC3fC',
+      f_name: 'Nikola',
+      l_name: 'Tesla',
+      default_timer: 604800
+    },
+    {
+      id: 5,
+      email: 'user5@example.com',
+      password: '$2b$12$s8zkkBlEABIT2iouaINqbevNM4nzNd81GD1Wqf7tg4zFwbfXcC3fC',
+      f_name: 'Tommy',
+      l_name: 'Tables',
+      default_timer: 604800
     }
   ]);
 };
