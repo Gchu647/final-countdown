@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import { BackendService } from '../../services/backend.service';
 
 @Component({
@@ -11,13 +12,13 @@ export class HeaderComponent {
 
   constructor(
     private router: Router,
-    private backend: BackendService
+    private auth: AuthService,
   ) {}
 
   logout() {
-    return this.backend.logout()
+    return this.auth.logout()
     .then((response) => {
-      console.log('Response from server logout:  ', response);
+      console.log('Response @header_component: ', response);
     })
     .then(() => {
       this.router.navigate(['/']);

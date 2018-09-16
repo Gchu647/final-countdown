@@ -15,12 +15,12 @@ class Recipient extends bookshelf.Model {
     return this.belongsTo('User', 'sender_id');
   }
 
-  relationship() {
-    return this.belongsTo('Relationships', 'relationship_id');
+  package() {
+    return this.hasOne('Package', 'id');
   }
 
-  package() {
-    return this.hasOne('Package', 'recipient_id');
+  group() {
+    return this.hasOne('Group', 'id', 'group_id');
   }
 }
 

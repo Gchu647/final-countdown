@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
     table.increments();
     table.string('name').notNullable();
     table.string('aws_url').notNullable();
-    table.integer('packages_id').references('packages.id').notNullable();
+    table.integer('package_id').references('packages.id').notNullable();
     table.timestamps(true, true);
   });
 };

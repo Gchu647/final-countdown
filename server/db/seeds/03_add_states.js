@@ -1,4 +1,3 @@
-
 exports.seed = function(knex, Promise) {
   return knex('states').insert([
     { id: 1, name: 'Alabama' },
@@ -50,6 +49,6 @@ exports.seed = function(knex, Promise) {
     { id: 47, name: 'Washington' },
     { id: 48, name: 'West Virginia' },
     { id: 49, name: 'Wisconsin' },
-    { id: 50, name: 'Wyoming' },
+    { id: 50, name: 'Wyoming' }
   ]);
 };

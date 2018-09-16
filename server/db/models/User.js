@@ -22,6 +22,10 @@ class User extends bookshelf.Model {
   packages() {
     return this.hasMany('Package', 'package_maker_id');
   }
+
+  groups() {
+    return this.hasMany('Group', 'owner_id');
+  }
 }
 
 module.exports = bookshelf.model('User', User);
