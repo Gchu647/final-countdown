@@ -270,14 +270,17 @@ export class ProfileComponent implements OnInit, DoCheck {
   //   phoneNumber: '808-999-9999'
   // };
 
+  formData: object;
+
   showStates: boolean = false;
 
   constructor(private auth: AuthService) {}
 
   ngOnInit() {
     this.auth.fetchProfile()
-    .then((response) => {
+    .then((response: Object) => {
       console.log('profile got: ', response);
+      this.formData = response;
     });
   }
 
