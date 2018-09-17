@@ -284,9 +284,11 @@ export class ProfileComponent implements DoCheck {
     const countryInput = document.getElementsByClassName(
       'profile-form-inner-input-country'
     )[0];
+    const unitedStatesId = this.countries[
+      this.countries.findIndex(country => country['name'] === 'United States')
+    ]['id'];
 
-    // "187" is the value assigned to the United States:
-    Number(countryInput['value']) === 187
+    Number(countryInput['value']) === unitedStatesId
       ? (this.showStates = true)
       : (this.showStates = false);
   }
@@ -367,9 +369,7 @@ export class ProfileComponent implements DoCheck {
 
   toggleSubmitButton() {
     // Enable submit button only if there are no validation errors:
-    const submitButton = document.getElementsByClassName(
-      'buttons-primary'
-    )[0];
+    const submitButton = document.getElementsByClassName('buttons-primary')[0];
     const errorMessages = [
       this.firstNameError,
       this.lastNameError,
