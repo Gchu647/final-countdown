@@ -9,9 +9,10 @@
   </div>
 
   <div class="header-auth-options" *ngIf="router.url.includes('profile') || router.url.includes('messages')">
-    <div class="header-auth-options-messages" routerLink="/messages">MESSAGES</div>
+    <div class="header-auth-options-messages" routerLink="/messages" [ngClass]="setActiveLink()">MESSAGES</div>
     <span>•</span>
-    <div class="header-auth-options-profile" routerLink="/profile">PROFILE</div>
+    <div class="header-auth-options-profile" routerLink="/profile" routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }">PROFILE</div>
     <span>•</span>
     <div class="header-auth-options-logout" (click)='logout()'>LOGOUT</div>
   </div>

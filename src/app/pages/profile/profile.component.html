@@ -7,22 +7,23 @@
 
       <div class="profile-form">
         <form class="profile-form-inner">
-          <div class="profile-form-inner-input">
-            <label for="email">Email:</label>
-            <input type="email" name="email" class="profile-form-inner-input-email" [(ngModel)]="formData.email"
-              disabled>
-          </div>
+
+          <div class="profile-form-inner-header">PERSONAL</div>
 
           <div class="profile-form-inner-input">
             <label for="first-name">First Name:</label>
+            <span *ngIf="firstNameError" class="profile-form-inner-input-error">{{firstNameError}}</span>
+
             <input type="text" name="first-name" class="profile-form-inner-input-first-name" [(ngModel)]="formData.firstName"
-              required>
+              (ngModelChange)="validateName('profile-form-inner-input-first-name')" required>
           </div>
 
           <div class="profile-form-inner-input">
             <label for="last-name">Last Name:</label>
+            <span *ngIf="lastNameError" class="profile-form-inner-input-error">{{lastNameError}}</span>
+
             <input type="text" name="last-name" class="profile-form-inner-input-last-name" [(ngModel)]="formData.lastName"
-              required>
+              (ngModelChange)="validateName('profile-form-inner-input-last-name')" required>
           </div>
 
           <div class="profile-form-inner-input">
@@ -31,9 +32,12 @@
               required>
           </div>
 
+          <div class="profile-form-inner-header">LOCATION</div>
+
           <div class="profile-form-inner-input">
             <label for="country">Country:</label>
             <select name="country" class="profile-form-inner-input-country" [(ngModel)]="formData.countryId" (change)="toggleStates()">
+              <option value="-1" class="profile-form-inner-input-country-blank">---</option>
               <option *ngFor="let country of countries" value="{{country.id}}">{{country.name}}</option>
             </select>
           </div>
@@ -41,6 +45,7 @@
           <div class="profile-form-inner-input" *ngIf="showStates">
             <label for="state">State:</label>
             <select name="state" class="profile-form-inner-input-state" [(ngModel)]="formData.stateId">
+              <option value="-1" class="profile-form-inner-input-country-blank">---</option>
               <option *ngFor="let state of states" value="{{state.id}}">{{state.name}}</option>
             </select>
           </div>
@@ -50,14 +55,24 @@
             <input type="text" name="city" class="profile-form-inner-input-city" [(ngModel)]="formData.city">
           </div>
 
+          <div class="profile-form-inner-header">CONTACT</div>
+
           <div class="profile-form-inner-input">
-            <label for="phone">Phone Number:</label>
-            <input type="tel" name="phone" class="profile-form-inner-input-phone" [(ngModel)]="formData.phoneNumber">
+            <label for="email">Email:</label>
+            <input type="email" name="email" class="profile-form-inner-input-email" [(ngModel)]="formData.email"
+              disabled>
           </div>
 
-          <div class="profile-form-inner-buttons">
-            <button type="button" class="profile-form-inner-buttons-save">SAVE&nbsp;&nbsp;CHANGES</button>
-            <button type="button" class="profile-form-inner-buttons-cancel" routerLink="/messages">CANCEL</button>
+          <div class="profile-form-inner-input">
+            <label for="phone">Phone Number:</label>
+            <span *ngIf="phoneError" class="profile-form-inner-input-error">{{phoneError}}</span>
+            <input type="tel" name="phone" class="profile-form-inner-input-phone" [(ngModel)]="formData.phoneNumber"
+              (ngModelChange)="validatePhoneNumber('ngModelChange')" (blur)="validatePhoneNumber('blur')">
+          </div>
+
+          <div class="buttons">
+            <button type="button" class="buttons-primary">SAVE&nbsp;&nbsp;CHANGES</button>
+            <button type="button" class="buttons-secondary" routerLink="/messages">CANCEL</button>
           </div>
         </form>
       </div>
