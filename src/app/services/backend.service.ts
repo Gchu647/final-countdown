@@ -43,9 +43,16 @@ export class BackendService {
     const relationshipsUrl = this.url + 'relationships';
     return this.http.get(relationshipsUrl).toPromise();
   }
+
   fetchProfile(userId) {
     const profileUrl = this.url + `user/${userId}`;
     return this.http.get(profileUrl).toPromise();
+  }
+
+  editProfile(userId) {
+    const profileUrl = this.url + `user/${userId}`;
+    console.log('backend service edit smoke test!');
+    return Promise.resolve({});
   }
 
   fetchRecipients(userId) {
