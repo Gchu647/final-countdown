@@ -43,6 +43,17 @@
           align-items: center;
           width: 100%;
 
+          .profile-form-inner-header {
+            text-align: center;
+            letter-spacing: 1px;
+            font-weight: bold;
+            padding: 15px 0;
+
+            &:first-of-type {
+              padding: 0 0 15px;
+            }
+          }
+
           .profile-form-inner-input {
             display: flex;
             flex-direction: column;
@@ -82,6 +93,11 @@
               text-transform: uppercase;
               color: #666;
             }
+
+            .profile-form-inner-input-error {
+              padding-bottom: 7.5px;
+              color: #bf4040;
+            }
           }
 
           .profile-form-inner-buttons {
@@ -97,18 +113,25 @@
               padding: 15px 30px;
               border: 0;
               border-radius: 2px;
-              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
             }
 
             .profile-form-inner-buttons-save {
               color: #fbfbfb;
               background-color: #478585;
+              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+
+              &:disabled {
+                color: hsla(180, 5%, 40%, 1);
+                background-color: hsla(180, 20%, 20%, 1);
+                box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
+              }
             }
 
             .profile-form-inner-buttons-cancel {
               color: #478585;
               background-color: #fbfbfb;
               border: 1px solid #478585;
+              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
             }
           }
         }

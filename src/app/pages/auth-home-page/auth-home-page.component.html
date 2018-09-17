@@ -65,7 +65,7 @@
     </div>
 
     <div class="auth-home-footer">
-      <button class="auth-home-footer-toggle-countdown">
+      <button class="auth-home-footer-toggle-countdown" (click)="toggleConfirmationModal()">
         <!-- Source: Jam Icons (ALERT) -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" height="24" preserveAspectRatio="xMinYMin">
           <path d='M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-13a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1zm0 10a1 1 0 1 1 0-2 1 1 0 0 1 0 2z' />
@@ -78,6 +78,24 @@
           <path d='M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-13a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1zm0 10a1 1 0 1 1 0-2 1 1 0 0 1 0 2z' />
         </svg>
       </button>
+    </div>
+  </div>
+</div>
+
+<div class="confirmation-modal" *ngIf="confirmationModalEnabled" (click)="toggleConfirmationModal()">
+  <div class="confirmation-modal-inner" (click)="stopPropagation($event)">
+    <div class="confirmation-modal-inner-content">
+      <div class="confirmation-modal-inner-content-top">SEND MESSAGES IN:</div>
+      <div class="confirmation-modal-inner-content-bottom">
+        <select class="confirmation-modal-inner-content-countdown-days" [(ngModel)]="countdownDayValue">
+          <option *ngFor="let countdownDay of countdownDays" value="{{countdownDay}}">{{countdownDay}}</option>
+        </select>
+        <span>DAYS</span>
+      </div>
+    </div>
+    <div class="buttons">
+      <button type="button" class="buttons-danger-primary" (click)="toggleActiveCountdown()">ACTIVATE</button>
+      <button type="button" class="buttons-danger-secondary" (click)="toggleConfirmationModal()">CANCEL</button>
     </div>
   </div>
 </div>
