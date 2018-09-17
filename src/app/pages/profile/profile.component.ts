@@ -287,6 +287,13 @@ export class ProfileComponent implements OnInit, DoCheck {
     this.toggleStates();
   }
 
+  saveProfile() {
+    this.auth.editProfile(this.formData)
+    .then((response) => {
+      console.log('profile got: ', response);
+    });
+  }
+
   toggleStates() {
     const countryInput = document.getElementsByClassName(
       'profile-form-inner-input-country'
