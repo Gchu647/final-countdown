@@ -51,7 +51,12 @@ export class BackendService {
 
   editProfile(userId, formData) {
     const profileUrl = this.url + `user/${userId}`;
+    formData.countryId = Number(formData.countryId);
     formData.stateId = Number(formData.stateId);
+
+    if(formData.countryId < 1) { // prevents countryId from being 0
+      formData.countryId = null;
+    }
 
     if(formData.stateId < 1) { // prevents stateId from being 0
       formData.stateId = null;
@@ -61,10 +66,10 @@ export class BackendService {
       f_name: formData.firstName ? formData.firstName.trim() : null,
       l_name: formData.lastName ? formData.lastName.trim() : null,
       dob: formData.dateOfBirth ? formData.dateOfBirth.trim() : null,
-      country: Number(formData.countryId),
+      country: formData.countryId,
       state: formData.stateId,
       city: formData.city ? formData.city.trim() : null,
-      phone_num: formData.phoneNumber
+      phone_num: formData.phoneNumber ? formData.trim() : null
     };
     
     console.log('backend service edit smoke test!');
