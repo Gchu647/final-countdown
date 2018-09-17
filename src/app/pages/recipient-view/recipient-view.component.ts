@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-recipient-view',
@@ -22,7 +23,17 @@ export class RecipientViewComponent implements OnInit {
   message: string =
     'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum facilis, ipsa ipsam unde, veniam assumenda iste saepe cumque similique tenetur provident perspiciatis rem harum. Incidunt explicabo perspiciatis alias quis ipsa!';
 
-  constructor() {}
+  constructor(private auth: AuthService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Getting the recipientId from URL
+    let index = window.location.pathname.length -1;
+    let recipientId = Number(window.location.pathname.charAt(index));
+    console.log('recipientId: ', recipientId);
+
+    this.auth.fetchRecpientById(recipientId)
+    .then((response) => {
+      console.log('recipient view got: ', response);
+    });
+  }
 }

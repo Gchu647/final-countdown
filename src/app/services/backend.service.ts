@@ -1,5 +1,6 @@
 import { Injectable, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { promise } from 'protractor';
 
 @Injectable ({
   providedIn: 'root'
@@ -72,12 +73,17 @@ export class BackendService {
       phone_num: formData.phoneNumber ? formData.trim() : null
     };
     
-    console.log('backend service edit smoke test!');
     return this.http.put(profileUrl, input).toPromise();
   }
 
   fetchRecipients(userId) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
     return this.http.get(recipientsUrl).toPromise();
+  }
+
+  fetchRecipientById(userId, recipientId) {
+    const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
+    console.log('backend.service', recipientIdUrl);
+    return Promise.resolve({});
   }
 }
