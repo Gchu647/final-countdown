@@ -271,13 +271,19 @@ export class ProfileComponent implements OnInit, DoCheck {
   ngOnInit() {
     this.auth.fetchProfile()
     .then((response: Object) => {
-      console.log('profile got: ', response);
       this.formData = response;
     });
   }
 
   ngDoCheck() {
     this.toggleStates();
+  }
+
+  saveProfile() {
+    this.auth.editProfile(this.formData)
+    .then((response) => {
+      console.log('profile got: ', response);
+    });
   }
 
   toggleStates() {

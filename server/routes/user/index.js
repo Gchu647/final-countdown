@@ -22,7 +22,6 @@ router.route('/user/:id')
       .where({ id: userId })
       .fetch()
       .then(user => {
-        console.log('user route: ', user.attributes);
         const userResponse = {
           id: user.attributes.id,
           email: user.attributes.email,
@@ -41,13 +40,12 @@ router.route('/user/:id')
       });
   })
   .put(isAuthenticated, (req, res) => {
+    console.log('user route edit', req.body);
+
     // edits user information by id
     const userId = req.params.id;
     // Initailize edited info
-    const userInput = {
-      f_name: req.body.fName ? req.body.fName.trim() : null,
-      l_name: req.body.lName ? req.body.lName.trim() : null
-    };
+    const userInput = req.body;
 
     // Edit using bookshelf
     return new User()

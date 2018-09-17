@@ -76,7 +76,6 @@ export class AuthHomePageComponent implements OnInit {
 
   }
 
-  // GChu didn't get to use this method yet
   setRelationshipToFilter(value) {
     this.relationshipToFilter = Number(value);
     this.filterDisplayedRecipients(Number(value));
@@ -87,6 +86,7 @@ export class AuthHomePageComponent implements OnInit {
       this.displayedRecipients = this.recipients;
     } else {
       this.displayedRecipients = this.recipients.filter(
+        // might have to have add in a withRelated later
         recipient => Number(recipient['group_id']) === Number(value)
       );
     }
