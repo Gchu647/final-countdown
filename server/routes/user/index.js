@@ -31,7 +31,7 @@ router.route('/user/:id')
           dateOfBirth: user.attributes.dob, //dob
           countryId: user.attributes.country, //country
           stateId: user.attributes.state, //state
-          city: '',
+          city: user.attributes.city,
           phoneNumber: user.attributes.phone_num //phone_num
         }
         return res.json(userResponse);
