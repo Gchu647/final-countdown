@@ -43,7 +43,7 @@ import { AnonymousGuardService } from './services/anonymous-guard.service';
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      { path: '', component: UnauthHomePageComponent },
+      { path: '', component: UnauthHomePageComponent, canActivate: [AnonymousGuardService] },
       { path: 'register', component: RegisterComponent, canActivate: [AnonymousGuardService] },
       { path: 'login', component: LoginComponent, canActivate: [AnonymousGuardService] },
       { path: 'profile', component: ProfileComponent },

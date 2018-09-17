@@ -1,4 +1,4 @@
-// Prevents logged-in users from accessing login/registration pages:
+// Prevent logged-in users from accessing login/registration/unauth-home pages:
 import { SessionsService } from './sessions.service';
 import { Injectable } from '@angular/core';
 
