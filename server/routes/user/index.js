@@ -22,7 +22,19 @@ router.route('/user/:id')
       .where({ id: userId })
       .fetch()
       .then(user => {
-        return res.json(user);
+        console.log('user route: ', user.attributes);
+        const userResponse = {
+          id: user.attributes.id,
+          email: user.attributes.email,
+          firstName: user.attributes.f_name, //f_name
+          lastName: user.attributes.l_name, //l_name
+          dateOfBirth: user.attributes.dob, //dob
+          countryId: user.attributes.country, //country
+          stateId: user.attributes.state, //state
+          city: user.attributes.city,
+          phoneNumber: user.attributes.phone_num //phone_num
+        }
+        return res.json(userResponse);
       })
       .catch(err => {
         return res.status(400).json({ message: err.message });

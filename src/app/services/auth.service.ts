@@ -6,15 +6,24 @@ import { SessionsService } from './sessions.service';
   providedIn: 'root'
 })
 export class AuthService {
+
+  user: {
+    loggedIn: boolean,
+    email: string,
+    userId: number,
+  };
+
   constructor(
     private backend: BackendService,
     private session: SessionsService
-  ){};
+  ){
+    this.user = this.session.getSession();
+  };
 
   login(data) {
     return this.backend.login(data)
     .then(response => {
-      this.session.setSession(response['username'], response['id']);
+      this.session.setSession(response['email'], response['id']);
 
       return response;
     })
@@ -26,7 +35,27 @@ export class AuthService {
       this.session.clearSession();
 
       return response;
-    })
+    });
+  }
+
+  fetchProfile() {
+    console.log('auth.service: ', this.user);
+    const userId = this.user.userId;
+
+    return this.backend.fetchProfile(userId)
+    .then(response => {
+      return response;
+    });
+  }
+
+  fetchRecipients() {
+    console.log('auth.service: ', this.user);
+    const userId = this.user.userId;
+
+    return this.backend.fetchRecipients(userId)
+    .then(response => {
+      return response;
+    });
   }
 }
 

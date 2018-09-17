@@ -1,11 +1,12 @@
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements DoCheck {
+export class ProfileComponent implements OnInit, DoCheck {
   // Temporary variables (until database integrated):
   countries: object[] = [
     { id: 1, name: 'Afghanistan' },
@@ -257,24 +258,23 @@ export class ProfileComponent implements DoCheck {
     { id: 49, name: 'Wisconsin' },
     { id: 50, name: 'Wyoming' }
   ];
-  formData: object = {
-    id: 1,
-    email: 'oscar@example.com',
-    firstName: 'Oscar',
-    lastName: 'Omega',
-    dateOfBirth: '1977-11-11',
-    countryId: 187,
-    stateId: 11,
-    city: 'Honolulu',
-    phoneNumber: '808-999-9999'
-  };
+
+  formData: object;
 
   showStates: boolean = false;
   firstNameError: string = '';
   lastNameError: string = '';
   phoneError: string = '';
 
-  constructor() {}
+  constructor(private auth: AuthService) {}
+
+  ngOnInit() {
+    this.auth.fetchProfile()
+    .then((response: Object) => {
+      console.log('profile got: ', response);
+      this.formData = response;
+    });
+  }
 
   ngDoCheck() {
     this.toggleStates();
