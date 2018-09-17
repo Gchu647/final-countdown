@@ -8,12 +8,6 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./auth-home-page.component.scss']
 })
 export class AuthHomePageComponent implements OnInit {
-  // Temporary variables (until database integrated):
-  // recipients: object[] = [
-  //   { id: 1, first_name: 'Adam', last_name: 'Alpha', relationshipId: 1 },
-  //   { id: 2, first_name: 'Ben', last_name: 'Beta', relationshipId: 2 },
-  //   { id: 3, first_name: 'Greg', last_name: 'Gamma', relationshipId: 3 }
-  // ];
   recipients: object[];
   relationships: object[];
   relationshipToFilter: number = 0;
@@ -38,13 +32,12 @@ export class AuthHomePageComponent implements OnInit {
       this.relationships = capitalizedRelationships;
     });
 
-    // WORKING on get recipients from server and capitalize first letter of each:
+    // Gets recipients from server:
     this.auth.fetchRecipients()
       .then((response: object[]) => {
         this.recipients = response;
         this.displayedRecipients = this.recipients;
-        console.log('auth-homepage got: ', response);
-      })
+      });
 
   }
 

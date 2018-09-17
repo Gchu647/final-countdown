@@ -43,10 +43,13 @@ export class BackendService {
     const relationshipsUrl = this.url + 'relationships';
     return this.http.get(relationshipsUrl).toPromise();
   }
+  fetchProfile(userId) {
+    console.log('backend.service: ', userId);
+    return Promise.resolve({});
+  }
 
   fetchRecipients(userId) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
-    console.log('backend.service: ', recipientsUrl);
     return this.http.get(recipientsUrl).toPromise();
   }
 }

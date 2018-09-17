@@ -38,9 +38,20 @@ export class AuthService {
     });
   }
 
+  fetchProfile() {
+    console.log('auth.service: ', this.user);
+    const userId = this.user.userId;
+
+    return this.backend.fetchProfile(userId)
+    .then(response => {
+      return response;
+    });
+  }
+
   fetchRecipients() {
     console.log('auth.service: ', this.user);
     const userId = this.user.userId;
+
     return this.backend.fetchRecipients(userId)
     .then(response => {
       return response;
