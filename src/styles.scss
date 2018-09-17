@@ -67,4 +67,17 @@ body {
     border: 1px solid #478585;
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
   }
+
+  .buttons-danger-primary {
+    color: #fbfbfb;
+    background-color: #bf4040;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  .buttons-danger-secondary {
+    color: #bf4040;
+    background-color: #fbfbfb;
+    border: 1px solid #bf4040;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
+  }
 }
