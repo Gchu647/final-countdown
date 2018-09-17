@@ -26,7 +26,14 @@ export class AuthService {
       this.session.clearSession();
 
       return response;
-    })
+    });
+  }
+
+  fetchRecipients() {
+    return this.backend.fetchRecipients()
+    .then(response => {
+      return response;
+    });
   }
 }
 

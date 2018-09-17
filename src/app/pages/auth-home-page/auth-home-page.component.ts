@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../../services/backend.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-auth-home-page',
@@ -18,12 +19,15 @@ export class AuthHomePageComponent implements OnInit {
   relationshipToFilter: number = 0;
   displayedRecipients: object[];
 
-  constructor(private backend: BackendService) {}
+  constructor(
+    private backend: BackendService,
+    private auth: AuthService
+  ) {}
 
   ngOnInit() {
     this.displayedRecipients = this.recipients;
 
-    // Get relationships from backend and capitalize first letter of each:
+    // Get relationships from server and capitalize first letter of each:
     this.backend.fetchRelationships().then((response: object[]) => {
       const capitalizedRelationships = response.map(relationship => {
         const capitalizedRelationship = Object.assign(relationship);
@@ -35,6 +39,13 @@ export class AuthHomePageComponent implements OnInit {
 
       this.relationships = capitalizedRelationships;
     });
+
+    // WORKING on get recipients from server and capitalize first letter of each:
+    this.auth.fetchRecipients()
+      .then((response) => {
+        console.log('auth-homepage got: ', response);
+      })
+
   }
 
   setRelationshipToFilter(value) {
