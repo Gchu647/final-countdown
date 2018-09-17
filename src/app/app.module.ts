@@ -23,6 +23,7 @@ import { RecipientViewComponent } from './pages/recipient-view/recipient-view.co
 import { BackendService } from './services/backend.service';
 import { SessionsService } from './services/sessions.service';
 import { AuthService } from './services/auth.service';
+import { AnonymousGuardService } from './services/anonymous-guard.service';
 
 @NgModule({
   declarations: [
@@ -43,8 +44,8 @@ import { AuthService } from './services/auth.service';
     HttpClientModule,
     RouterModule.forRoot([
       { path: '', component: UnauthHomePageComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent, canActivate: [AnonymousGuardService] },
+      { path: 'login', component: LoginComponent, canActivate: [AnonymousGuardService] },
       { path: 'profile', component: ProfileComponent },
       { path: 'messages/group/:id', component: MessageGroupComponent },
       { path: 'messages/personal/new', component: MessagePersonalNewComponent },
