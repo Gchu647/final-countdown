@@ -9,12 +9,12 @@ import { AuthService } from '../../services/auth.service';
 })
 export class AuthHomePageComponent implements OnInit {
   // Temporary variables (until database integrated):
-  recipients: object[] = [
-    { id: 1, first_name: 'Adam', last_name: 'Alpha', relationshipId: 1 },
-    { id: 2, first_name: 'Ben', last_name: 'Beta', relationshipId: 2 },
-    { id: 3, first_name: 'Greg', last_name: 'Gamma', relationshipId: 3 }
-  ];
-
+  // recipients: object[] = [
+  //   { id: 1, first_name: 'Adam', last_name: 'Alpha', relationshipId: 1 },
+  //   { id: 2, first_name: 'Ben', last_name: 'Beta', relationshipId: 2 },
+  //   { id: 3, first_name: 'Greg', last_name: 'Gamma', relationshipId: 3 }
+  // ];
+  recipients: object[];
   relationships: object[];
   relationshipToFilter: number = 0;
   displayedRecipients: object[];
@@ -25,8 +25,6 @@ export class AuthHomePageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.displayedRecipients = this.recipients;
-
     // Get relationships from server and capitalize first letter of each:
     this.backend.fetchRelationships().then((response: object[]) => {
       const capitalizedRelationships = response.map(relationship => {
@@ -42,12 +40,15 @@ export class AuthHomePageComponent implements OnInit {
 
     // WORKING on get recipients from server and capitalize first letter of each:
     this.auth.fetchRecipients()
-      .then((response) => {
+      .then((response: object[]) => {
+        this.recipients = response;
+        this.displayedRecipients = this.recipients;
         console.log('auth-homepage got: ', response);
       })
 
   }
 
+  // GChu didn't get to use this method yet
   setRelationshipToFilter(value) {
     this.relationshipToFilter = Number(value);
     this.filterDisplayedRecipients(Number(value));
@@ -58,7 +59,7 @@ export class AuthHomePageComponent implements OnInit {
       this.displayedRecipients = this.recipients;
     } else {
       this.displayedRecipients = this.recipients.filter(
-        recipient => Number(recipient['relationshipId']) === Number(value)
+        recipient => Number(recipient['group_id']) === Number(value)
       );
     }
   }
