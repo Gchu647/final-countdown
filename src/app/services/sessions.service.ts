@@ -6,11 +6,11 @@ import { Injectable } from '@angular/core';
 export class SessionsService {
   user: {
     loggedIn: boolean,
-    username: string,
+    email: string,
     userId: number,
   } = {
     loggedIn: false,
-    username: '',
+    email: '',
     userId: null,
   }
 
@@ -30,8 +30,8 @@ export class SessionsService {
     return this.user;
   }
 
-  setSession(username, userId) {
-    this.user.username = username;
+  setSession(email, userId) {
+    this.user.email = email;
     this.user.loggedIn = true;
     this.user.userId = parseInt(userId);
 
@@ -41,7 +41,8 @@ export class SessionsService {
 
   clearSession() {
     this.user.loggedIn = false;
-    this.user.username = '';
+    this.user.email = '';
+    this.user.userId = null;
     window.localStorage.removeItem('user');
   }
 

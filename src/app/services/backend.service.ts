@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable ({
@@ -31,14 +31,25 @@ export class BackendService {
     const registerUrl = this.url + 'register';
     const input = {
       email: data.email,
-      password: data.password
+      password: data.password,
+      fName: data.firstName,
+      lName: data.lastName
     }
-    // smoke test!
-    return Promise.resolve({});
+    
+    return this.http.post(registerUrl, input).toPromise();
   }
 
   fetchRelationships() {
     const relationshipsUrl = this.url + 'relationships';
     return this.http.get(relationshipsUrl).toPromise();
+  }
+  fetchProfile(userId) {
+    const profileUrl = this.url + `user/${userId}`;
+    return this.http.get(profileUrl).toPromise();
+  }
+
+  fetchRecipients(userId) {
+    const recipientsUrl = this.url + `user/${userId}/recipients`;
+    return this.http.get(recipientsUrl).toPromise();
   }
 }
