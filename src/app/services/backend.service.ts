@@ -49,10 +49,26 @@ export class BackendService {
     return this.http.get(profileUrl).toPromise();
   }
 
-  editProfile(userId) {
+  editProfile(userId, formData) {
     const profileUrl = this.url + `user/${userId}`;
+    formData.stateId = Number(formData.stateId);
+
+    if(formData.stateId < 1) { // prevents stateId from being 0
+      formData.stateId = null;
+    }
+
+    const input = {
+      f_name: formData.firstName ? formData.firstName.trim() : null,
+      l_name: formData.lastName ? formData.lastName.trim() : null,
+      dob: formData.dateOfBirth ? formData.dateOfBirth.trim() : null,
+      country: Number(formData.countryId),
+      state: formData.stateId,
+      city: formData.city ? formData.city.trim() : null,
+      phone_num: formData.phoneNumber
+    };
+    
     console.log('backend service edit smoke test!');
-    return Promise.resolve({});
+    return this.http.put(profileUrl, input).toPromise();
   }
 
   fetchRecipients(userId) {

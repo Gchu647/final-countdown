@@ -47,11 +47,11 @@ export class AuthService {
     });
   }
 
-  editProfile(data) {
-    console.log('auth.service: ', data);
+  editProfile(formData) {
+    console.log('auth.service: ', formData);
     const userId = this.user.userId;
 
-    return this.backend.editProfile(userId)
+    return this.backend.editProfile(userId, formData)
     .then(response => {
       return response;
     });
