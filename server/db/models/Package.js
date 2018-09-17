@@ -15,10 +15,6 @@ class Package extends bookshelf.Model {
     return this.belongsTo('User', 'package_maker_id');
   }
 
-  recipient() {
-    return this.belongsTo('Recipient', 'recipient_id ');
-  }
-
   group() {
     return this.belongsTo('Group', 'package_id');
   }
