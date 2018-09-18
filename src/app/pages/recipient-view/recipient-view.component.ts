@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { BackendService } from '../../services/backend.service';
 
@@ -15,6 +16,7 @@ export class RecipientViewComponent implements OnInit {
     'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum facilis, ipsa ipsam unde, veniam assumenda iste saepe cumque similique tenetur provident perspiciatis rem harum. Incidunt explicabo perspiciatis alias quis ipsa!';
 
   constructor(
+    private router: Router,
     private backend: BackendService,
     private auth: AuthService
   ) {}
@@ -51,6 +53,9 @@ export class RecipientViewComponent implements OnInit {
       .then((response: object) => {
         this.formData = response;
         console.log('recipient edit: ', response);
+      })
+      .then(() => {
+        this.router.navigate(['/messages']);
       });
   }
 }
