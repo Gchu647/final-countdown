@@ -10,6 +10,7 @@ import { BackendService } from '../../services/backend.service';
 export class RecipientViewComponent implements OnInit {
   formData: object;
   relationships: object[];
+  recipientId: number;
   message: string =
     'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum facilis, ipsa ipsam unde, veniam assumenda iste saepe cumque similique tenetur provident perspiciatis rem harum. Incidunt explicabo perspiciatis alias quis ipsa!';
 
@@ -35,13 +36,21 @@ export class RecipientViewComponent implements OnInit {
     
     // Getting the recipientId from URL
     let index = window.location.pathname.length -1;
-    let recipientId = Number(window.location.pathname.charAt(index));
+    this.recipientId = Number(window.location.pathname.charAt(index));
     
     // Getting the recipient info using recipientId
-    this.auth.fetchRecpientById(recipientId)
-    .then((response: object) => {
-      this.formData = response;
-      console.log('recipient view got: ', response);
-    });
+    this.auth.fetchRecpientById(this.recipientId)
+      .then((response: object) => {
+        this.formData = response;
+        console.log('recipient fetch: ', response);
+      });
+  }
+
+  saveChanges() {
+    this.auth.editRecipientById(this.recipientId)
+      .then((response: object) => {
+        this.formData = response;
+        console.log('recipient edit: ', response);
+      });
   }
 }

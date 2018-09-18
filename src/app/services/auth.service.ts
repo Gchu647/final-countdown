@@ -66,10 +66,19 @@ export class AuthService {
   }
 
   fetchRecpientById(recipientId) {
-    console.log('auth.service: ');
     const userId = this.user.userId;
   
     return this.backend.fetchRecipientById(userId, recipientId)
+    .then(response => {
+      return response;
+    });
+  }
+
+  editRecipientById(recipientId) {
+    console.log('auth.service!');
+    const userId = this.user.userId;
+  
+    return this.backend.editRecipientById(userId, recipientId)
     .then(response => {
       return response;
     });
