@@ -3,7 +3,14 @@ const Recipient = require('../db/models/Recipient');
 const Package = require('../db/models/Package');
 const EncryptedFile = require('../db/models/EncryptedFile');
 const Group = require('../db/models/Group');
+const Trigger = require('../db/models/Trigger');
 const moment = require('moment');
+const crypto = require('crypto'),
+  algorithm = 'aes-256-ctr',
+  password = 'password';
+
+const encrypt = crypto.createDecipher(algorithm, password);
+const decrypt = crypto.createDecipher(algorithm, password);
 
 /*** Active Trigger Queue: This is the linked-list that will represent the trigger queue ***/
 class ActiveTriggerQueue {
@@ -12,6 +19,32 @@ class ActiveTriggerQueue {
     this.tail = null;
   }
 
+  async getTriggers() {
+    return await Trigger.fetchAll()
+      .then(response => {
+        console.log('getTriggers response', response);
+        return response.toJSON();
+      })
+      .catch(err => {
+        console.log('error: ', err);
+      });
+  }
+
+  async initialize() {
+    return await this.getTriggers()
+      .then(trigArr => {
+        console.log('initialize', trigArr);
+        trigArr.map(trigger => {
+          this.insertToQueue({
+            userId: trigger.user_id,
+            timeToExecute: trigger.countdown
+          });
+        });
+      })
+      .catch(err => {
+        console.log('Initialization Error:', err);
+      });
+  }
   /** Active Trigger getExecutableTriggers: This function searchs the
    * linkedlist and returns an array of the triggers to execute **/
   async getExecutableTriggers() {
@@ -28,26 +61,33 @@ class ActiveTriggerQueue {
     if (this.head.value.timeToExecute < moment.utc(Date.now()).format()) {
       let temp = this.head;
       this.delete(this.head.value.userId);
-      console.log('executableTrigger', this.head);
+      console.log('executableTrigger', temp);
       let userInfo;
-      return await this.getUserData(this.head.value.userId)
+      return await this.getUserData(temp.value.userId)
         .then(response => {
           userInfo = response.toJSON();
           if (userInfo) {
-            console.log('UserInfo.groups.members', userInfo.groups[0].members);
+            console.log('UserInfo', userInfo);
+            // console.log('UserInfo.groups.members', userInfo.groups[0].members);
             console.log(`user full name: ${userInfo.f_name} ${userInfo.l_name}`);
             executableTriggers = userInfo.recipients.map(recipient => {
               if (!recipient) {
-                console.log('recipient', recipient);
                 return null;
               }
+              console.log('recipient', recipient);
+              console.log('recipient.package', recipient.package.file[0]);
+              let subjectStr = recipient.package.file[0].name;
+              let enc = encrypt.update(subjectStr, 'utf8', 'binary');
+              let dec = decrypt.update(enc, 'binary', 'utf8');
+              console.log('subj enc', enc);
+              console.log('subj dec', dec);
               return {
                 recipientName: `${recipient.f_name} ${recipient.l_name}`,
                 recipientEmail: recipient.email,
                 userFullName: `${userInfo.f_name} ${userInfo.l_name}`,
-                relationshipId: recipient.id
-                // subject: recipient.package.file.name,
-                // body: recipient.package.file.aws_url
+                relationshipId: recipient.id,
+                subject: subjectStr,
+                body: recipient.package.file[0].aws_url
               };
             });
             console.log(`recipient ${userInfo.recipients.id}`);
@@ -68,7 +108,7 @@ class ActiveTriggerQueue {
     return User.where({ id: userId })
       .fetch({ withRelated: ['recipients.package.file', 'groups.members.package.file'] })
       .then(response => {
-        console.log('response', response);
+        console.log('getUserData response', response);
         return response;
       })
       .catch(err => {
