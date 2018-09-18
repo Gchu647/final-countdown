@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-message-personal-new',
@@ -13,5 +14,12 @@ export class MessagePersonalNewComponent {
     { id: 3, name: 'Haters' }
   ];
 
-  constructor() {}
+  constructor(private auth: AuthService) {}
+
+  save() {
+    this.auth.addRecipient()
+      .then((response) => {
+        console.log('recipient save: ', response);
+      });
+  }
 }

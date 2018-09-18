@@ -52,7 +52,6 @@ export class RecipientViewComponent implements OnInit {
     this.auth.editRecipientById(this.recipientId, this.formData)
       .then((response: object) => {
         this.formData = response;
-        console.log('recipient edit: ', response);
       })
       .then(() => {
         this.router.navigate(['/messages']);

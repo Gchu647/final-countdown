@@ -72,6 +72,12 @@ export class BackendService {
     return this.http.get(recipientsUrl).toPromise();
   }
 
+  addRecipient(userId) {
+    const recipientsUrl = this.url + `user/${userId}/recipients`;
+
+    return Promise.resolve({});
+  }
+
   fetchRecipientById(userId, recipientId) {
     const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
 

@@ -65,6 +65,15 @@ export class AuthService {
     });
   }
 
+  addRecipient() {
+    const userId = this.user.userId;
+
+    return this.backend.addRecipient(userId)
+    .then(response => {
+      return response;
+    });
+  }
+
   fetchRecpientById(recipientId) {
     const userId = this.user.userId;
   
