@@ -30,7 +30,7 @@ router.route('/:id/recipients')
       l_name: req.body.lName ? req.body.lName.trim() : null,
       phone_num: req.body.phoneNum ? req.body.phoneNum.trim() : null,
       sender_id: Number(userId),
-      relationship_id: Number(req.body.relationshipId)
+      group_id: Number(req.body.groupId)
     };
 
     // Save using bookshelf
@@ -66,7 +66,8 @@ router.route('/:id/recipients/:recipientId')
           email: recipient.attributes.email,
           firstName: recipient.attributes.f_name,
           lastName: recipient.attributes.l_name,
-          phoneNumber: recipient.attributes.phone_num
+          phoneNumber: recipient.attributes.phone_num,
+          groupId: recipient.attributes.group_id
         };
 
         return res.json(recipientResponse);
@@ -76,18 +77,18 @@ router.route('/:id/recipients/:recipientId')
       });
   })
   .put(isAuthenticated, (req, res) => {
-    console.log('edit recipient info');
+    console.log('edit recipient info', req.body);
     // edit recipient's info
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
     // Initailize edited info
     const recipientInput = {
       email: req.body.email ? req.body.email.trim() : null,
-      f_name: req.body.fName ? req.body.fName.trim() : null,
-      l_name: req.body.lName ? req.body.lName.trim() : null,
-      phone_num: req.body.phoneNum ? req.body.phoneNum.trim() : null,
+      f_name: req.body.firstName ? req.body.firstName.trim() : null,
+      l_name: req.body.lastName ? req.body.lastName.trim() : null,
+      phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null,
       sender_id: Number(userId),
-      relationship_id: Number(req.body.relationshipId)
+      group_id: Number(req.body.groupId)
     };
 
     // Edit using bookshelf
