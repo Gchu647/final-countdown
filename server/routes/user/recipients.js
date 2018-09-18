@@ -43,7 +43,6 @@ router.route('/:id/recipients')
         return res.json(recipient);
       })
       .catch(err => {
-        console.log(err.message);
         return res.status(400).json({ error: err.message });
       });
   });
@@ -77,6 +76,7 @@ router.route('/:id/recipients/:recipientId')
       });
   })
   .put(isAuthenticated, (req, res) => {
+    console.log('edit recipient info');
     // edit recipient's info
     const userId = req.params.id;
     const recipientId = req.params.recipientId;
@@ -105,6 +105,7 @@ router.route('/:id/recipients/:recipientId')
         return res.json(recipient);
       })
       .catch(err => {
+        console.log(err.message);
         return res.status(400).json({ error: err.message });
       });
   })

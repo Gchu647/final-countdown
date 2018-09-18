@@ -74,11 +74,11 @@ export class AuthService {
     });
   }
 
-  editRecipientById(recipientId) {
+  editRecipientById(recipientId, formData) {
     console.log('auth.service!');
     const userId = this.user.userId;
   
-    return this.backend.editRecipientById(userId, recipientId)
+    return this.backend.editRecipientById(userId, recipientId, formData)
     .then(response => {
       return response;
     });

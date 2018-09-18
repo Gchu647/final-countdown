@@ -88,9 +88,15 @@ export class BackendService {
     return this.http.get(recipientIdUrl).toPromise();
   }
 
-  editRecipientById(userId, recipientId) {
+  editRecipientById(userId, recipientId, formData) {
     const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
-    console.log('backend.service', recipientIdUrl);
-    return Promise.resolve({});
+    const input = {
+      email: formData.email ? formData.email.trim() : null,
+      f_name: formData.firstName ? formData.firstName.trim() : null,
+      l_name: formData.lastName ? formData.lastName.trim() : null,
+      phone_num: formData.phoneNumber ? formData.phoneNumber.trim() : null
+    }
+    console.log('backend.service', input);
+    return this.http.put(recipientIdUrl, input).toPromise();;
   }
 }

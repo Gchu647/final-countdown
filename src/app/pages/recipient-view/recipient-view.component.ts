@@ -42,12 +42,12 @@ export class RecipientViewComponent implements OnInit {
     this.auth.fetchRecpientById(this.recipientId)
       .then((response: object) => {
         this.formData = response;
-        console.log('recipient fetch: ', response);
+        // console.log('recipient fetch: ', response);
       });
   }
 
   saveChanges() {
-    this.auth.editRecipientById(this.recipientId)
+    this.auth.editRecipientById(this.recipientId, this.formData)
       .then((response: object) => {
         this.formData = response;
         console.log('recipient edit: ', response);
