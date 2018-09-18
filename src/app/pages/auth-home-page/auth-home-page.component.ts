@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BackendService } from '../../services/backend.service';
 import { AuthService } from '../../services/auth.service';
+import { BackendService } from '../../services/backend.service';
+import { SessionsService } from './../../services/sessions.service';
+
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-auth-home-page',
@@ -8,52 +11,41 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./auth-home-page.component.scss']
 })
 export class AuthHomePageComponent implements OnInit {
-  countdownDays = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    26,
-    27,
-    28,
-    29,
-    30
-  ];
+  user: {
+    loggedIn: boolean;
+    email: string;
+    userId: number;
+  };
   recipients: object[];
   relationships: object[];
   relationshipToFilter: number = 0;
   displayedRecipients: object[];
-  confirmationModalEnabled: boolean = false;
+  triggerData: object;
+
+  // Modals:
+  activationModalEnabled: boolean = false;
+  deactivationModalEnabled: boolean = false;
+
+  // Countdown:
   countdownActive: boolean = false;
   countdownDayValue: number = 7;
+  countdownDays: number[] = [];
+  countdownDisplay: object;
 
   constructor(
+    private auth: AuthService,
     private backend: BackendService,
-    private auth: AuthService
-  ) {}
+    private session: SessionsService
+  ) {
+    this.user = this.session.getSession();
+  }
 
   ngOnInit() {
+    // Fill countdownDays with preset values (1-30) to be selected by user:
+    for (let i = 1; i < 31; i++) {
+      this.countdownDays.push(i);
+    }
+
     // Get relationships from server and capitalize first letter of each:
     this.backend.fetchRelationships().then((response: object[]) => {
       const capitalizedRelationships = response.map(relationship => {
@@ -68,12 +60,67 @@ export class AuthHomePageComponent implements OnInit {
     });
 
     // Gets recipients from server:
-    this.auth.fetchRecipients()
-      .then((response: object[]) => {
-        this.recipients = response;
-        this.displayedRecipients = this.recipients;
-      });
+    this.auth.fetchRecipients().then((response: object[]) => {
+      this.recipients = response;
+      this.displayedRecipients = this.recipients;
+    });
 
+    // Retrieve countdown expiration timer:
+    this.backend
+      .fetchTrigger(this.user['userId'])
+      .then(response => {
+        if (response) {
+          return (this.triggerData = response);
+        }
+      })
+      .then(response => {
+        if (response && response['countdown']) {
+          this.setActiveCountdown();
+        }
+      })
+      .catch(err => {
+        console.log('Trigger Retrieval Error:', err);
+      });
+  }
+
+  setActiveCountdown() {
+    this.countdownActive = true;
+    // Set initial countdown display:
+    this.getTimeUntil(this.triggerData['countdown']);
+    // Update countdown display every second:
+    setInterval(
+      () => this.getTimeUntil(this.triggerData['countdown']),
+      1000
+    );
+  }
+
+  getTimeUntil(deadline) {
+    const timeRemaining =
+      Date.parse(deadline) - Date.parse(new Date().toUTCString());
+
+    this.countdownDisplay = {
+      days: Math.floor(timeRemaining / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((timeRemaining / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((timeRemaining / 1000 / 60) % 60),
+      seconds: Math.floor((timeRemaining / 1000) % 60)
+    };
+  }
+
+  getFormattedTime(timeStr) {
+    // Example: Mon, Sep 17, 2018 4:32 PM
+    return moment(timeStr).format('llll');
+  }
+
+  getFormattedTimeZone(timeStr) {
+    // Returns time zone without surrounding parentheses:
+    return new Date(timeStr)
+      .toTimeString()
+      .split('(')[1]
+      .slice(0, -1);
+  }
+
+  addLeadingZero(num) {
+    return num < 10 ? '0' + num : num;
   }
 
   setRelationshipToFilter(value) {
@@ -92,13 +139,35 @@ export class AuthHomePageComponent implements OnInit {
     }
   }
 
-  toggleConfirmationModal() {
-    this.confirmationModalEnabled = !this.confirmationModalEnabled;
+  toggleActivationModal() {
+    this.activationModalEnabled = !this.activationModalEnabled;
+  }
+
+  toggleDeactivationModal() {
+    this.deactivationModalEnabled = !this.deactivationModalEnabled;
   }
 
   toggleActiveCountdown() {
     this.countdownActive = !this.countdownActive;
-    this.toggleConfirmationModal();
+
+    if (this.activationModalEnabled) {
+      return this.backend.activateTrigger(this.user['userId'], this.countdownDayValue)
+        .then(response => {
+          this.triggerData = response;
+          this.setActiveCountdown();
+          this.toggleActivationModal();
+        })
+    }
+
+    if (this.deactivationModalEnabled) {
+      return this.backend
+        .deactivateTrigger(this.user['userId'])
+        .then(response => {
+          this.triggerData = response;
+          this.countdownActive = false;
+          this.toggleDeactivationModal();
+        });
+    }
   }
 
   stopPropagation(event) {

@@ -242,7 +242,8 @@
   }
 }
 
-.confirmation-modal {
+.activation-modal,
+.deactivation-modal {
   position: absolute;
   z-index: 3;
   top: 0;
@@ -253,7 +254,8 @@
   height: 100vh;
   background: rgba(0, 0, 0, 0.25);
 
-  .confirmation-modal-inner {
+  .activation-modal-inner,
+  .deactivation-modal-inner {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -266,16 +268,18 @@
     background-color: #fbfbfb;
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
 
-    .confirmation-modal-inner-content {
+    .activation-modal-inner-content,
+    .deactivation-modal-inner-content {
       display: flex;
       flex-direction: column;
       align-items: center;
 
-      .confirmation-modal-inner-content-top {
+      .activation-modal-inner-content-top,
+      .deactivation-modal-inner-content-top {
         padding-bottom: 30px;
       }
 
-      .confirmation-modal-inner-content-bottom {
+      .activation-modal-inner-content-bottom {
         display: flex;
         align-items: center;
         padding-bottom: 15px;
@@ -291,6 +295,23 @@
           border-radius: 2px;
           border: 1px solid #bf4040;
           box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
+        }
+      }
+
+      .deactivation-modal-inner-content-bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .deactivation-modal-inner-content-bottom-time {
+          font-weight: bold;
+          padding-bottom: 15px;
+        }
+
+        .deactivation-modal-inner-content-bottom-timezone {
+          text-align: center;
+          width: 67%;
+          color: #666;
         }
       }
     }
