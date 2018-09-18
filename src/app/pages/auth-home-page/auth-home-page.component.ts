@@ -174,6 +174,11 @@ export class AuthHomePageComponent implements OnInit {
   }
 
   toggleMessagesSentModal() {
+    // Close deactivation modal if open, as trigger can no longer be canceled:
+    if (this.deactivationModalEnabled) {
+      this.toggleDeactivationModal();
+    }
+
     this.messagesSentModalEnabled = !this.messagesSentModalEnabled;
   }
 

@@ -162,7 +162,7 @@
 </div>
 
 <div class="messages-sent-modal" *ngIf="messagesSentModalEnabled" (click)="toggleMessagesSentModal()">
-  <div class="messages-sent-modal-inner">
+  <div class="messages-sent-modal-inner" (click)="stopPropagation($event)">
     <div class="messages-sent-modal-inner-content">
       <div class="messages-sent-modal-inner-content-top">
         <strong>MESSAGES EN ROUTE</strong>
@@ -170,7 +170,6 @@
       <div class="messages-sent-modal-inner-content-bottom">
         <p>Your messages will be delivered shortly</p>
         <p>Thank you for using the Final Countdown</p>
-        <p>Good bye</p>
       </div>
       <div class="buttons">
         <button type="button" class="buttons-danger-primary" (click)="toggleMessagesSentModal()">OK</button>
