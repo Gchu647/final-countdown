@@ -32,7 +32,8 @@ router.route('/user/:id')
           stateId: user.attributes.state, //state
           city: user.attributes.city,
           phoneNumber: user.attributes.phone_num //phone_num
-        }
+        };
+        
         return res.json(userResponse);
       })
       .catch(err => {

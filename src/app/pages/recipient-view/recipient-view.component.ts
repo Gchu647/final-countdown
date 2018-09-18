@@ -7,14 +7,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./recipient-view.component.scss']
 })
 export class RecipientViewComponent implements OnInit {
-  // Temporary variables (until database integrated):
-  formData: object = {
-    first_name: 'Adam',
-    last_name: 'Alpha',
-    relationship: 1,
-    email: 'adam@example.com',
-    phone_number: '808-422-2222'
-  };
+  formData: object;
   relationships: object[] = [
     { id: 1, name: 'Family' },
     { id: 2, name: 'Friend' },
@@ -32,7 +25,8 @@ export class RecipientViewComponent implements OnInit {
     console.log('recipientId: ', recipientId);
 
     this.auth.fetchRecpientById(recipientId)
-    .then((response) => {
+    .then((response: object) => {
+      this.formData = response;
       console.log('recipient view got: ', response);
     });
   }

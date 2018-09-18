@@ -62,7 +62,15 @@ router.route('/:id/recipients/:recipientId')
       })
       .fetch()
       .then(recipient => {
-        return res.json(recipient);
+        const recipientResponse = {
+          id: recipient.attributes.id,
+          email: recipient.attributes.email,
+          firstName: recipient.attributes.f_name,
+          lastName: recipient.attributes.l_name,
+          phoneNumber: recipient.attributes.phone_num
+        };
+
+        return res.json(recipientResponse);
       })
       .catch(err => {
         return res.status(400).json({ message: err.message });
@@ -97,7 +105,6 @@ router.route('/:id/recipients/:recipientId')
         return res.json(recipient);
       })
       .catch(err => {
-        console.log(err.message);
         return res.status(400).json({ error: err.message });
       });
   })
@@ -118,7 +125,6 @@ router.route('/:id/recipients/:recipientId')
         return res.json({ message: 'recipient deleted' });
       })
       .catch(err => {
-        console.log(err.message);
         return res.status(400).json({ error: err.message });
       });
   });

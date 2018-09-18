@@ -84,6 +84,6 @@ export class BackendService {
   fetchRecipientById(userId, recipientId) {
     const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
     console.log('backend.service', recipientIdUrl);
-    return Promise.resolve({});
+    return this.http.get(recipientIdUrl).toPromise();
   }
 }
