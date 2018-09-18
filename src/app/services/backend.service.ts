@@ -62,18 +62,8 @@ export class BackendService {
     if(formData.stateId < 1) { // prevents stateId from being 0
       formData.stateId = null;
     }
-
-    const input = {
-      f_name: formData.firstName ? formData.firstName.trim() : null,
-      l_name: formData.lastName ? formData.lastName.trim() : null,
-      dob: formData.dateOfBirth ? formData.dateOfBirth.trim() : null,
-      country: formData.countryId,
-      state: formData.stateId,
-      city: formData.city ? formData.city.trim() : null,
-      phone_num: formData.phoneNumber ? formData.trim() : null
-    };
     
-    return this.http.put(profileUrl, input).toPromise();
+    return this.http.put(profileUrl, formData).toPromise();
   }
 
   fetchRecipients(userId) {
@@ -90,13 +80,7 @@ export class BackendService {
 
   editRecipientById(userId, recipientId, formData) {
     const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
-    // const input = {
-    //   email: formData.email
-    //   f_name: formData.firstName ? formData.firstName.trim() : null,
-    //   l_name: formData.lastName ? formData.lastName.trim() : null,
-    //   phone_num: formData.phoneNumber ? formData.phoneNumber.trim() : null
-    // }
-    console.log('backend.service', formData);
+ 
     return this.http.put(recipientIdUrl, formData).toPromise();;
   }
 }
