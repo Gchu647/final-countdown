@@ -243,7 +243,8 @@
 }
 
 .activation-modal,
-.deactivation-modal {
+.deactivation-modal,
+.messages-sent-modal {
   position: absolute;
   z-index: 3;
   top: 0;
@@ -255,7 +256,8 @@
   background: rgba(0, 0, 0, 0.25);
 
   .activation-modal-inner,
-  .deactivation-modal-inner {
+  .deactivation-modal-inner,
+  .messages-sent-modal-inner {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -269,14 +271,17 @@
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
 
     .activation-modal-inner-content,
-    .deactivation-modal-inner-content {
+    .deactivation-modal-inner-content,
+    .messages-sent-modal-inner-content {
       display: flex;
       flex-direction: column;
       align-items: center;
 
       .activation-modal-inner-content-top,
-      .deactivation-modal-inner-content-top {
+      .deactivation-modal-inner-content-top,
+      .messages-sent-modal-inner-content-top {
         padding-bottom: 30px;
+        letter-spacing: 1px;
       }
 
       .activation-modal-inner-content-bottom {
@@ -298,10 +303,24 @@
         }
       }
 
-      .deactivation-modal-inner-content-bottom {
+      .deactivation-modal-inner-content-bottom,
+      .messages-sent-modal-inner-content-bottom {
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        p {
+          text-align: center;
+          letter-spacing: 1.25px;
+          padding-bottom: 15px;
+          margin: 0;
+          width: 75%;
+          color: #666;
+
+          &:first-of-type {
+            padding-top: 15px;
+          }
+        }
 
         .deactivation-modal-inner-content-bottom-time {
           font-weight: bold;

@@ -23,14 +23,17 @@ export class AuthHomePageComponent implements OnInit {
   triggerData: object;
 
   // Modals:
-  activationModalEnabled: boolean = false;
-  deactivationModalEnabled: boolean = false;
+  activationModalEnabled: boolean;
+  deactivationModalEnabled: boolean;
+  messagesSentModalEnabled: boolean;
 
   // Countdown:
-  countdownActive: boolean = false;
+  countdownActive: boolean;
   countdownDayValue: number = 7;
   countdownDays: number[] = [];
   countdownDisplay: object;
+  countdownIntervalId: number;
+  countdownExpired: boolean;
 
   constructor(
     private auth: AuthService,
@@ -41,8 +44,14 @@ export class AuthHomePageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.activationModalEnabled = false;
+    this.deactivationModalEnabled = false;
+    this.messagesSentModalEnabled = false;
+    this.countdownActive = false;
+    this.countdownExpired = false;
+
     // Fill countdownDays with preset values (1-30) to be selected by user:
-    for (let i = 1; i < 31; i++) {
+    for (let i = 1; i <= 30; i++) {
       this.countdownDays.push(i);
     }
 
@@ -78,9 +87,7 @@ export class AuthHomePageComponent implements OnInit {
           this.setActiveCountdown();
         }
       })
-      .catch(err => {
-        console.log('Trigger Retrieval Error:', err);
-      });
+      .catch(err => console.log(err));
   }
 
   setActiveCountdown() {
@@ -88,19 +95,41 @@ export class AuthHomePageComponent implements OnInit {
     // Set initial countdown display:
     this.getTimeUntil(this.triggerData['countdown']);
     // Update countdown display every second:
-    setInterval(() => this.getTimeUntil(this.triggerData['countdown']), 1000);
+    this.countdownIntervalId = window.setInterval(
+      () => this.getTimeUntil(this.triggerData['countdown']),
+      1000
+    );
   }
 
   getTimeUntil(deadline) {
     const timeRemaining =
       Date.parse(deadline) - Date.parse(new Date().toUTCString());
 
-    this.countdownDisplay = {
-      days: Math.floor(timeRemaining / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((timeRemaining / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((timeRemaining / 1000 / 60) % 60),
-      seconds: Math.floor((timeRemaining / 1000) % 60)
-    };
+    if (timeRemaining >= 0) {
+      this.countdownDisplay = {
+        days: Math.floor(timeRemaining / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((timeRemaining / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((timeRemaining / 1000 / 60) % 60),
+        seconds: Math.floor((timeRemaining / 1000) % 60)
+      };
+    } else if (this.countdownActive) { // Prevent attempt to delete null trigger
+      this.backend
+        .deactivateTrigger(this.user['userId'])
+        .then(response => {
+          window.clearInterval(this.countdownIntervalId);
+          this.toggleMessagesSentModal();
+          this.triggerData = response;
+          this.countdownActive = false;
+          this.countdownExpired = true;
+          this.countdownDisplay = {
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0
+          };
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   getFormattedTime(timeStr) {
@@ -144,6 +173,10 @@ export class AuthHomePageComponent implements OnInit {
     this.deactivationModalEnabled = !this.deactivationModalEnabled;
   }
 
+  toggleMessagesSentModal() {
+    this.messagesSentModalEnabled = !this.messagesSentModalEnabled;
+  }
+
   toggleActiveCountdown() {
     this.countdownActive = !this.countdownActive;
 
@@ -154,7 +187,8 @@ export class AuthHomePageComponent implements OnInit {
           this.triggerData = response;
           this.setActiveCountdown();
           this.toggleActivationModal();
-        });
+        })
+        .catch(err => console.log(err));
     }
 
     if (this.deactivationModalEnabled) {
@@ -164,7 +198,8 @@ export class AuthHomePageComponent implements OnInit {
           this.triggerData = response;
           this.countdownActive = false;
           this.toggleDeactivationModal();
-        });
+        })
+        .catch(err => console.log(err));
     }
   }
 
