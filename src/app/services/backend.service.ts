@@ -1,23 +1,21 @@
 import { Injectable, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
-@Injectable ({
+@Injectable({
   providedIn: 'root'
 })
 export class BackendService {
-  url:
-  string='http://localhost:4200/api/';
+  url: string = 'http://localhost:4200/api/';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) {}
 
-  }
-
-  login(data) { // data has to be username and password
+  login(data) {
+    // Data object properties must be named "username" and "password":
     const loginUrl = this.url + 'login';
     const input = {
       username: data.email,
       password: data.password
-    }
+    };
 
     return this.http.post(loginUrl, input).toPromise();
   }
@@ -34,8 +32,8 @@ export class BackendService {
       password: data.password,
       fName: data.firstName,
       lName: data.lastName
-    }
-    
+    };
+
     return this.http.post(registerUrl, input).toPromise();
   }
 
@@ -43,13 +41,62 @@ export class BackendService {
     const relationshipsUrl = this.url + 'relationships';
     return this.http.get(relationshipsUrl).toPromise();
   }
+
   fetchProfile(userId) {
     const profileUrl = this.url + `user/${userId}`;
     return this.http.get(profileUrl).toPromise();
   }
 
+  editProfile(userId, formData) {
+    const profileUrl = this.url + `user/${userId}`;
+    formData.countryId = Number(formData.countryId);
+    formData.stateId = Number(formData.stateId);
+
+    if (formData.countryId < 1) {
+      // Prevents countryId from being 0:
+      formData.countryId = null;
+    }
+
+    if (formData.stateId < 1) {
+      // Prevents stateId from being 0:
+      formData.stateId = null;
+    }
+
+    const input = {
+      f_name: formData.firstName ? formData.firstName.trim() : null,
+      l_name: formData.lastName ? formData.lastName.trim() : null,
+      dob: formData.dateOfBirth ? formData.dateOfBirth.trim() : null,
+      country: formData.countryId,
+      state: formData.stateId,
+      city: formData.city ? formData.city.trim() : null,
+      phone_num: formData.phoneNumber ? formData.trim() : null
+    };
+
+    console.log('backend service edit smoke test!');
+    return this.http.put(profileUrl, input).toPromise();
+  }
+
   fetchRecipients(userId) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
     return this.http.get(recipientsUrl).toPromise();
+  }
+
+  fetchTrigger(userId) {
+    const triggerUrl = this.url + `user/${userId}/trigger`;
+    return this.http.get(triggerUrl).toPromise();
+  }
+
+  activateTrigger(userId, countdownDays) {
+    const triggerUrl = this.url + `user/${userId}/trigger`;
+    const params = new HttpParams()
+      .set('id', userId)
+      .set('countdownDays', countdownDays);
+
+    return this.http.post(triggerUrl, null, { params }).toPromise();
+  }
+
+  deactivateTrigger(userId) {
+    const triggerUrl = this.url + `user/${userId}/trigger`;
+    return this.http.delete(triggerUrl).toPromise();
   }
 }

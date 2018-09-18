@@ -39,10 +39,19 @@ export class AuthService {
   }
 
   fetchProfile() {
-    console.log('auth.service: ', this.user);
     const userId = this.user.userId;
 
     return this.backend.fetchProfile(userId)
+    .then(response => {
+      return response;
+    });
+  }
+
+  editProfile(formData) {
+    console.log('auth.service: ', formData);
+    const userId = this.user.userId;
+
+    return this.backend.editProfile(userId, formData)
     .then(response => {
       return response;
     });
