@@ -88,10 +88,7 @@ export class AuthHomePageComponent implements OnInit {
     // Set initial countdown display:
     this.getTimeUntil(this.triggerData['countdown']);
     // Update countdown display every second:
-    setInterval(
-      () => this.getTimeUntil(this.triggerData['countdown']),
-      1000
-    );
+    setInterval(() => this.getTimeUntil(this.triggerData['countdown']), 1000);
   }
 
   getTimeUntil(deadline) {
@@ -151,12 +148,13 @@ export class AuthHomePageComponent implements OnInit {
     this.countdownActive = !this.countdownActive;
 
     if (this.activationModalEnabled) {
-      return this.backend.activateTrigger(this.user['userId'], this.countdownDayValue)
+      return this.backend
+        .activateTrigger(this.user['userId'], this.countdownDayValue)
         .then(response => {
           this.triggerData = response;
           this.setActiveCountdown();
           this.toggleActivationModal();
-        })
+        });
     }
 
     if (this.deactivationModalEnabled) {
