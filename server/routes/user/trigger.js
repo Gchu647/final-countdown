@@ -27,7 +27,7 @@ router.route('/:id/trigger')
     const time = new Date();
 
     // 86,400 seconds in a day (LOWER THIS VALUE WHEN TESTING):
-    time.setSeconds(time.getSeconds() + (countdownDays * 86400));
+    time.setSeconds(time.getSeconds() + (countdownDays * .86400));
 
     const triggerInput = {
       user_id: userId ? userId.trim() : null,
