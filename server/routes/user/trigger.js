@@ -54,7 +54,7 @@ router.route('/:id/trigger')
       .fetch()
       .then(trigger => {
         if (
-          trigger.attributes.countdown &&
+          trigger &&
           trigger.attributes.pending_notification
         ) {
           throw new Error('You already set up a trigger!');
