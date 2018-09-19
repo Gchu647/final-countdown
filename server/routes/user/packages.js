@@ -28,6 +28,7 @@ router
     // req.body includes a message:
     const userId = req.params.id;
     // const recipientId = req.body.recipientId;
+    console.log('posting package: ', req.body);
 
     const packageInput = {
       package_maker_id: userId,
