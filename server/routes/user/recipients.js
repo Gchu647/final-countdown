@@ -90,7 +90,7 @@ router.route('/:id/recipients/:recipientId')
       l_name: req.body.lastName ? req.body.lastName.trim() : null,
       phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null,
       sender_id: Number(userId),
-      group_id: Number(req.body.groupId)
+      group_id: req.body.groupId
     };
 
     // Edit using bookshelf

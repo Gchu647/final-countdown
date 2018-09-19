@@ -92,6 +92,12 @@ export class BackendService {
 
   editRecipientById(userId, recipientId, formData) {
     const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
+    formData.groupId = Number(formData.groupId);
+
+    if (formData.groupId < 1) {
+      // Prevents groupId from being 0:
+      formData.groupId = null;
+    }
  
     return this.http.put(recipientIdUrl, formData).toPromise();;
   }
