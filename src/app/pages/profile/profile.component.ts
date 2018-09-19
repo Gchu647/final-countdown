@@ -9,10 +9,6 @@ import { BackendService } from '../../services/backend.service';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, DoCheck {
-  // Temporary variables (until database integrated):
-  countries: object[];
-  states: object[];
-
   formData: object = {
     id: 0,
     firstName: '',
@@ -24,7 +20,11 @@ export class ProfileComponent implements OnInit, DoCheck {
     email: '',
     phoneNumber: ''
   };
+
+  countries: object[];
+  states: object[];
   showStates: boolean = false;
+  
   firstNameError: string = '';
   lastNameError: string = '';
   phoneError: string = '';
