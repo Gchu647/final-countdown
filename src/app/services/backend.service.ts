@@ -114,7 +114,9 @@ export class BackendService {
 
   fetchTrigger(userId) {
     const triggerUrl = this.url + `user/${userId}/trigger`;
-    return this.http.get(triggerUrl).toPromise();
+    const params = new HttpParams().set('origin', 'frontEnd');
+
+    return this.http.get(triggerUrl, { params }).toPromise();
   }
 
   activateTrigger(userId, countdownDays) {
@@ -126,8 +128,20 @@ export class BackendService {
     return this.http.post(triggerUrl, null, { params }).toPromise();
   }
 
-  deactivateTrigger(userId) {
+  deactivateTrigger(userId, manualDeactivation) {
     const triggerUrl = this.url + `user/${userId}/trigger`;
-    return this.http.delete(triggerUrl).toPromise();
+    // manualDeactivation accepts a string rather than a boolean because the
+    // boolean value will be converted to a string when set in HttpParams():
+    const params = new HttpParams()
+      .set('origin', 'frontEnd')
+      .set('manualDeactivation', manualDeactivation);
+
+    return this.http.delete(triggerUrl, { params }).toPromise();
+  }
+
+  acknowledgeNotification(userId) {
+    const triggerUrl = this.url + `user/${userId}/trigger/acknowledge`;
+
+    return this.http.put(triggerUrl, null).toPromise();
   }
 }
