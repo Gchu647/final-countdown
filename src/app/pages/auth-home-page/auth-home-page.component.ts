@@ -150,10 +150,8 @@ export class AuthHomePageComponent implements OnInit {
         minutes: Math.floor((timeRemaining / 1000 / 60) % 60),
         seconds: Math.floor((timeRemaining / 1000) % 60)
       };
-    } else if (this.countdownActive) {
-      // Prevent attempt to delete null trigger
-      this.backend
-        .deactivateTrigger(this.user['userId'], 'false')
+    } else if (this.countdownActive) { // Prevent attempt to delete null trigger
+      this.backend.deactivateTrigger(this.user['userId'], 'false')
         .then(response => {
           window.clearInterval(this.countdownIntervalId);
 
@@ -209,8 +207,7 @@ export class AuthHomePageComponent implements OnInit {
     }
 
     if (typeStr === 'click') {
-      this.backend
-        .acknowledgeNotification(this.user['userId'])
+      this.backend.acknowledgeNotification(this.user['userId'])
         .then(response => {
           this.messagesSentModalEnabled = !this.messagesSentModalEnabled;
         })
