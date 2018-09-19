@@ -35,6 +35,8 @@ export class AuthHomePageComponent implements OnInit {
   countdownExpired: boolean;
   enRouteNotificationPending: boolean;
 
+  // ------------------------------------------------------------------------ //
+
   constructor(
     private auth: AuthService,
     private backend: BackendService,
@@ -42,8 +44,6 @@ export class AuthHomePageComponent implements OnInit {
   ) {
     this.user = this.session.getSession();
   }
-
-  // ------------------------------------------------------------------------ //
 
   ngOnInit() {
     this.activationModalEnabled = false;
@@ -107,6 +107,27 @@ export class AuthHomePageComponent implements OnInit {
 
   // ------------------------------------------------------------------------ //
 
+  setRelationshipToFilter(value) {
+    this.groupToFilter = Number(value);
+    this.filterDisplayedRecipients(Number(value));
+  }
+
+  filterDisplayedRecipients(value) {
+    if (Number(value) === 0) {
+      this.displayedRecipients = this.recipients;
+    } else {
+      this.displayedRecipients = this.recipients.filter(
+        recipient => Number(recipient['group_id']) === Number(value)
+      );
+    }
+  }
+
+  stopPropagation(event) {
+    event.stopPropagation();
+  }
+
+  // ------------------------------------------------------------------------ //
+
   setActiveCountdown() {
     this.countdownActive = true;
     // Set initial countdown display:
@@ -129,8 +150,10 @@ export class AuthHomePageComponent implements OnInit {
         minutes: Math.floor((timeRemaining / 1000 / 60) % 60),
         seconds: Math.floor((timeRemaining / 1000) % 60)
       };
-    } else if (this.countdownActive) { // Prevent attempt to delete null trigger
-      this.backend.deactivateTrigger(this.user['userId'], 'false')
+    } else if (this.countdownActive) {
+      // Prevent attempt to delete null trigger
+      this.backend
+        .deactivateTrigger(this.user['userId'], 'false')
         .then(response => {
           window.clearInterval(this.countdownIntervalId);
 
@@ -186,7 +209,8 @@ export class AuthHomePageComponent implements OnInit {
     }
 
     if (typeStr === 'click') {
-      this.backend.acknowledgeNotification(this.user['userId'])
+      this.backend
+        .acknowledgeNotification(this.user['userId'])
         .then(response => {
           this.messagesSentModalEnabled = !this.messagesSentModalEnabled;
         })
@@ -222,26 +246,5 @@ export class AuthHomePageComponent implements OnInit {
         })
         .catch(err => console.log(err));
     }
-  }
-
-  // ------------------------------------------------------------------------ //
-
-  setRelationshipToFilter(value) {
-    this.groupToFilter = Number(value);
-    this.filterDisplayedRecipients(Number(value));
-  }
-
-  filterDisplayedRecipients(value) {
-    if (Number(value) === 0) {
-      this.displayedRecipients = this.recipients;
-    } else {
-      this.displayedRecipients = this.recipients.filter(
-        recipient => Number(recipient['group_id']) === Number(value)
-      );
-    }
-  }
-
-  stopPropagation(event) {
-    event.stopPropagation();
   }
 }
