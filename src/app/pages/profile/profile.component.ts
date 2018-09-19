@@ -377,7 +377,9 @@ export class ProfileComponent implements OnInit, DoCheck {
         // Immediately removes existing error message once valid input entered:
         if (
           this.phoneError &&
-          validRegexNumbers.some(regex => regex.test(phoneNumber))
+          // An empty input is also deemed valid (as input is not required):
+          (validRegexNumbers.some(regex => regex.test(phoneNumber)) ||
+            phoneNumber === '')
         ) {
           this.phoneError = '';
         }
