@@ -28,7 +28,6 @@ export class MessagePersonalNewComponent {
   ) {}
 
   save() {
-    // console.log('formData: ', this.formData);
     this.auth.addRecipient(this.formData)
       .then((response) => {
         console.log('recipient save: ', response);

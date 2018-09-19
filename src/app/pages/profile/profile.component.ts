@@ -1,4 +1,5 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -275,7 +276,10 @@ export class ProfileComponent implements OnInit, DoCheck {
   lastNameError: string = '';
   phoneError: string = '';
 
-  constructor(private auth: AuthService) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.auth.fetchProfile().then((response: object) => {
@@ -291,6 +295,9 @@ export class ProfileComponent implements OnInit, DoCheck {
     this.auth.editProfile(this.formData)
     .then((response) => {
       console.log('profile got: ', response);
+    })
+    .then(() => {
+      this.router.navigate(['/messages']);
     });
   }
 
