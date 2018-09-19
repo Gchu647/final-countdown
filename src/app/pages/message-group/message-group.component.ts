@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SessionsService } from '../../services/sessions.service';
+import { BackendService } from '../../services/backend.service';
 
 @Component({
   selector: 'app-message-group',
@@ -8,27 +10,59 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MessageGroupComponent implements OnInit {
   // Temporary variable(s) (until database integrated):
-  relationships: object[] = [
-    { id: 1, name: 'Family' },
-    { id: 2, name: 'Friends' },
-    { id: 3, name: 'Haters' }
-  ];
   message: string =
     'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum facilis, ipsa ipsam unde, veniam assumenda iste saepe cumque similique tenetur provident perspiciatis rem harum. Incidunt explicabo perspiciatis alias quis ipsa!';
 
-  messageGroupId: number = 0;
+  user: {
+    loggedIn: boolean;
+    email: string;
+    userId: number;
+  };
 
-  constructor(private route: ActivatedRoute) {}
+  groups: object[];
+  groupId: number;
+  groupName: object;
+  groupMembers: object;
+
+  constructor(
+    private route: ActivatedRoute,
+    private session: SessionsService,
+    private backend: BackendService
+  ) {
+    this.user = this.session.getSession();
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.messageGroupId = Number(params['id']);
+      this.groupId = Number(params['id']);
+    });
+
+    this.getGroups();
+    this.getGroupName();
+    this.getGroupMembers();
+  }
+
+  getGroups() {
+    this.backend.fetchGroups(this.user['userId']).then(response => {
+      console.log('GROUPS', response);
     });
   }
 
-  getGroupNameById(id) {
-    return this.relationships
-      .find(group => group['id'] === id)
-      ['name'].toUpperCase();
+  getGroupName() {
+    this.backend
+      .fetchGroup(this.user['userId'], this.groupId)
+      .then(response => {
+        console.log('groupName', response['relationship']['name']);
+        this.groupName = response['relationship']['name'];
+      });
+  }
+
+  getGroupMembers() {
+    this.backend
+      .fetchGroupMembers(this.user['userId'], this.groupId)
+      .then(response => {
+        console.log('groupMembers', response['members']);
+        this.groupMembers = response['members'];
+      });
   }
 }

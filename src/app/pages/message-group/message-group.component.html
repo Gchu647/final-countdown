@@ -2,7 +2,7 @@
   <div class="container-inner">
     <div class="group-message">
       <div class="group-message-title">
-        MESSAGE TO {{getGroupNameById(messageGroupId)}}
+        MESSAGE TO {{groupName ? groupName.toUpperCase() : null}}
       </div>
 
       <div class="group-message-view-members">
@@ -10,8 +10,8 @@
 
         <select name="individual" class="group-message-view-members-select">
           <option value="-1">---</option>
-          <option *ngFor="let recipientIndividual of recipientIndividuals" value="{{recipientIndividual.id}}">{{recipientIndividual.first_name}}
-            {{recipientIndividual.last_name}}</option>
+          <option *ngFor="let groupMember of groupMembers" value="{{groupMember.id}}">{{groupMember.f_name}}
+            {{groupMember.l_name}}</option>
         </select>
       </div>
 
