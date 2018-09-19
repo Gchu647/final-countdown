@@ -259,8 +259,17 @@ export class ProfileComponent implements OnInit, DoCheck {
     { id: 50, name: 'Wyoming' }
   ];
 
-  formData: object;
-
+  formData: object = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    dateOfBirth: '',
+    countryId: 0,
+    stateId: 0,
+    city: '',
+    email: '',
+    phoneNumber: ''
+  };
   showStates: boolean = false;
   firstNameError: string = '';
   lastNameError: string = '';
@@ -269,8 +278,7 @@ export class ProfileComponent implements OnInit, DoCheck {
   constructor(private auth: AuthService) {}
 
   ngOnInit() {
-    this.auth.fetchProfile()
-    .then((response: Object) => {
+    this.auth.fetchProfile().then((response: object) => {
       this.formData = response;
     });
   }
