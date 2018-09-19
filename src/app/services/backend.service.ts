@@ -1,4 +1,5 @@
 import { Injectable, Input } from '@angular/core';
+// import { promise } from 'protractor';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
@@ -61,24 +62,32 @@ export class BackendService {
       // Prevents stateId from being 0:
       formData.stateId = null;
     }
-
-    const input = {
-      f_name: formData.firstName ? formData.firstName.trim() : null,
-      l_name: formData.lastName ? formData.lastName.trim() : null,
-      dob: formData.dateOfBirth ? formData.dateOfBirth.trim() : null,
-      country: formData.countryId,
-      state: formData.stateId,
-      city: formData.city ? formData.city.trim() : null,
-      phone_num: formData.phoneNumber ? formData.trim() : null
-    };
-
-    console.log('backend service edit smoke test!');
-    return this.http.put(profileUrl, input).toPromise();
+    
+    return this.http.put(profileUrl, formData).toPromise();
   }
 
   fetchRecipients(userId) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
+
     return this.http.get(recipientsUrl).toPromise();
+  }
+
+  addRecipient(userId) {
+    const recipientsUrl = this.url + `user/${userId}/recipients`;
+
+    return Promise.resolve({});
+  }
+
+  fetchRecipientById(userId, recipientId) {
+    const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
+
+    return this.http.get(recipientIdUrl).toPromise();
+  }
+
+  editRecipientById(userId, recipientId, formData) {
+    const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
+ 
+    return this.http.put(recipientIdUrl, formData).toPromise();;
   }
 
   fetchTrigger(userId) {
