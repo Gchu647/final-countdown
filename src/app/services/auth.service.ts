@@ -65,10 +65,10 @@ export class AuthService {
     });
   }
 
-  addRecipient() {
+  addRecipient(formData) {
     const userId = this.user.userId;
 
-    return this.backend.addRecipient(userId)
+    return this.backend.addRecipient(userId, formData)
     .then(response => {
       return response;
     });

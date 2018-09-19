@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -13,13 +14,26 @@ export class MessagePersonalNewComponent {
     { id: 2, name: 'Friends' },
     { id: 3, name: 'Haters' }
   ];
+  formData: object = {
+    email: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    groupId: '',
+  };
 
-  constructor(private auth: AuthService) {}
+  constructor(
+    private router: Router,
+    private auth: AuthService
+  ) {}
 
   save() {
-    this.auth.addRecipient()
+    this.auth.addRecipient(this.formData)
       .then((response) => {
         console.log('recipient save: ', response);
+      })
+      .then(() => {
+        this.router.navigate(['/messages']);
       });
   }
 }

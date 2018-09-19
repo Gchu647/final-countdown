@@ -35,16 +35,19 @@ export class RecipientViewComponent implements OnInit {
       this.relationships = capitalizedRelationships;
     });
     
+    // let pathStr = 'localhost:4200/46';
+    // let index = pathStr.lastIndexOf('/');
+    // let recipientId = Number(pathStr.slice(index+1));
     
     // Getting the recipientId from URL
-    let index = window.location.pathname.length -1;
-    this.recipientId = Number(window.location.pathname.charAt(index));
+    let index = window.location.pathname.lastIndexOf('/');
+    this.recipientId = Number(window.location.pathname.slice(index +1));
     
     // Getting the recipient info using recipientId
     this.auth.fetchRecpientById(this.recipientId)
       .then((response: object) => {
         this.formData = response;
-        // console.log('recipient fetch: ', response);
+        console.log('recipient fetch: ', response);
       });
   }
 

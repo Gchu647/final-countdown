@@ -72,10 +72,16 @@ export class BackendService {
     return this.http.get(recipientsUrl).toPromise();
   }
 
-  addRecipient(userId) {
+  addRecipient(userId, formData) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
+    formData.groupId = Number(formData.groupId);
 
-    return Promise.resolve({});
+    if (formData.groupId < 1) {
+      // Prevents groupId from being 0:
+      formData.groupId = null;
+    }
+
+    return this.http.post(recipientsUrl, formData).toPromise();
   }
 
   fetchRecipientById(userId, recipientId) {
@@ -86,6 +92,12 @@ export class BackendService {
 
   editRecipientById(userId, recipientId, formData) {
     const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
+    formData.groupId = Number(formData.groupId);
+
+    if (formData.groupId < 1) {
+      // Prevents groupId from being 0:
+      formData.groupId = null;
+    }
  
     return this.http.put(recipientIdUrl, formData).toPromise();;
   }
