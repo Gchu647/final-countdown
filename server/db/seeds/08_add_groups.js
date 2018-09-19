@@ -6,6 +6,9 @@ exports.seed = function(knex, Promise) {
     { id: 3, relationship_id: 3, package_id: 3, owner_id: 1 },
     { id: 4, relationship_id: 1, package_id: 4, owner_id: 2 },
     { id: 5, relationship_id: 2, package_id: 5, owner_id: 2 },
-    { id: 6, relationship_id: 3, package_id: 6, owner_id: 2 }
+    { id: 6, relationship_id: 3, package_id: 6, owner_id: 2 },
+    { id: 7, relationship_id: 1, package_id: 7, owner_id: 3 },
+    { id: 8, relationship_id: 2, package_id: 8, owner_id: 3 },
+    { id: 9, relationship_id: 3, package_id: 9, owner_id: 3 }
   ]);
 };
