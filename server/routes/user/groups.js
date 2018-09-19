@@ -41,7 +41,7 @@ router.route('/:id/groups/:groupId').get(isAuthenticated, (req, res) => {
 
 router.route('/:id/groups/:groupId/members')
   .get(isAuthenticated, (req, res) => {
-    // Fetches a single user group:
+    // Fetches a single user group and its members:
     const userId = req.params.id;
     const groupId = req.params.groupId;
 
@@ -69,6 +69,7 @@ router.route('/:id/groups/:groupId/members')
 
 router.route('/:id/groups/:groupId/package')
   .get(isAuthenticated, (req, res) => {
+     // Fetches a single user group, its members, and its package file:
     const userId = req.params.id;
     const groupId = req.params.groupId;
 
