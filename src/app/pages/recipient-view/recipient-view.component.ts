@@ -24,8 +24,9 @@ export class RecipientViewComponent implements OnInit {
   };
   groups: object[];
   recipientId: number;
-  message: string =
-    'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum facilis, ipsa ipsam unde, veniam assumenda iste saepe cumque similique tenetur provident perspiciatis rem harum. Incidunt explicabo perspiciatis alias quis ipsa!';
+
+  // Temporary variable (until integrated with database):
+  message: string = 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.';
 
   // Errors:
   firstNameError: string = '';
@@ -44,45 +45,52 @@ export class RecipientViewComponent implements OnInit {
 
   ngOnInit() {
     // Get user's groups from server and capitalize first letter of each:
-    this.backend.fetchGroups(this.user['userId']).then((response: object[]) => {
-      const groups = response.map(group => {
-        return {
-          id: group['id'],
-          name: group['relationship']['name']
-        };
-      });
+    this.backend.fetchGroups(this.user['userId'])
+      .then((response: object[]) => {
+        const groups = response.map(group => {
+          return {
+            id: group['id'],
+            name: group['relationship']['name']
+          };
+        });
 
-      const capitalizedGroups = groups.map(group => {
-        const capitalizedGroup = Object.assign(group);
-        capitalizedGroup['name'] =
-          capitalizedGroup.name.charAt(0).toUpperCase() +
-          capitalizedGroup.name.substr(1);
-        return capitalizedGroup;
-      });
+        const capitalizedGroups = groups.map(group => {
+          const capitalizedGroup = Object.assign(group);
+          capitalizedGroup['name'] =
+            capitalizedGroup.name.charAt(0).toUpperCase() +
+            capitalizedGroup.name.substr(1);
+          return capitalizedGroup;
+        });
 
-      this.groups = capitalizedGroups;
-    });
+        return (this.groups = capitalizedGroups);
+      })
+      .then(() => {
+        // This step must occur after groups have been fetched to ensure that
+        // the "Relationship" dropdown menu is populated appropriately:
+        this.getRecipientById(this.recipientId);
+      })
+      .catch(err => console.log(err));
 
     // Get recipientId from window URL:
     let index = window.location.pathname.lastIndexOf('/');
     this.recipientId = Number(window.location.pathname.slice(index + 1));
+  }
 
-    // Get recipient information by using recipientId:
-    this.auth.fetchRecpientById(this.recipientId).then((response: object) => {
+  getRecipientById(recipientId) {
+    this.auth.fetchRecpientById(recipientId).then((response: object) => {
       this.formData = response;
-      console.log('recipient fetch: ', response);
     });
   }
 
   saveChanges() {
-    this.auth
-      .editRecipientById(this.recipientId, this.formData)
+    this.auth.editRecipientById(this.recipientId, this.formData)
       .then((response: object) => {
         this.formData = response;
       })
       .then(() => {
         this.router.navigate(['/messages']);
-      });
+      })
+      .catch(err => console.log(err));
   }
 
   // ------------------------------------------------------------------------ //
