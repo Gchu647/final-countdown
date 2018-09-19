@@ -72,8 +72,9 @@ export class BackendService {
     return this.http.get(recipientsUrl).toPromise();
   }
 
-  addRecipient(userId) {
+  addRecipient(userId, formData) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
+    console.log('backend.service: ', formData);
 
     return Promise.resolve({});
   }

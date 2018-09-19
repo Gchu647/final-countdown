@@ -13,11 +13,20 @@ export class MessagePersonalNewComponent {
     { id: 2, name: 'Friends' },
     { id: 3, name: 'Haters' }
   ];
+  formData: object = {
+    email: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    // add in sender_id in auth
+    groupId: '',
+  };
 
   constructor(private auth: AuthService) {}
 
   save() {
-    this.auth.addRecipient()
+    // console.log('formData: ', this.formData);
+    this.auth.addRecipient(this.formData)
       .then((response) => {
         console.log('recipient save: ', response);
       });

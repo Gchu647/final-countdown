@@ -11,16 +11,17 @@
 
           <div class="message-new-add-recipient-form-input">
             <label for="first-name">First Name:</label>
-            <input type="text" name="first-name" class="message-new-add-recipient-form-input-first-name" required>
+            <input type="text" name="first-name" class="message-new-add-recipient-form-input-first-name" [(ngModel)]="formData.firstName" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
             <label for="last-name">Last Name:</label>
-            <input type="text" name="last-name" class="message-new-add-recipient-form-input-last-name" required>
+            <input type="text" name="last-name" class="message-new-add-recipient-form-input-last-name" [(ngModel)]="formData.lastName" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
             <label for="relationship">Relationship:</label>
+            <!-- Relationships? We only got groupId -->
             <select name="relationship" class="message-new-add-recipient-form-input-relationship">
               <option value="-1" class="message-new-add-recipient-form-input-relationship-blank">---</option>
               <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
@@ -29,12 +30,12 @@
 
           <div class="message-new-add-recipient-form-input">
             <label for="email">Email:</label>
-            <input type="email" name="email" class="message-new-add-recipient-form-input-email" required>
+            <input type="email" name="email" class="message-new-add-recipient-form-input-email" [(ngModel)]="formData.email" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
             <label for="phone">Phone Number:</label>
-            <input type="tel" name="phone" class="message-new-add-recipient-form-input-phone">
+            <input type="tel" name="phone" class="message-new-add-recipient-form-input-phone" [(ngModel)]="formData.phoneNumber">
           </div>
         </form>
       </div>
