@@ -102,6 +102,12 @@ export class BackendService {
     return this.http.put(recipientIdUrl, formData).toPromise();;
   }
 
+  addPackage(userId, message) {
+    const packageUrl = this.url + `user/${userId}/packages`;
+    console.log('backend.service: ', message);
+    return Promise.resolve({response: packageUrl});
+  }
+
   fetchTrigger(userId) {
     const triggerUrl = this.url + `user/${userId}/trigger`;
     return this.http.get(triggerUrl).toPromise();
