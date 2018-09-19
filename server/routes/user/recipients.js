@@ -92,8 +92,8 @@ router.route('/:id/recipients/:recipientId')
       l_name: req.body.lastName ? req.body.lastName.trim() : null,
       phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null,
       sender_id: Number(userId),
-      package_id: req.body.packageId,
-      group_id: req.body.groupId
+      package_id: req.body.packageId ? req.body.packageId : null,
+      group_id: req.body.groupId ? req.body.groupId : null
     };
 
     // Edit using bookshelf
