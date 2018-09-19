@@ -68,6 +68,7 @@ export class RecipientViewComponent implements OnInit {
       });
   }
 
+   // ------------------------------------------------------------------------ //
   validateName(classNameStr) {
     const nameErrorMessage = 'Required';
     const name = document
