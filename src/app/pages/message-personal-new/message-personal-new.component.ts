@@ -41,23 +41,24 @@ export class MessagePersonalNewComponent implements OnInit {
   }
 
   save() {
-    this.auth.addPackage(this.messageData)
-    .then((response) => {
-      console.log('recipient save: ', response);
-    })
-    .then(() => {
-      this.router.navigate(['/messages']);
-    });
-    // this.auth.addRecipient(this.recipientData)
-    //   .then((response) => {
-    //     console.log('recipient save: ', response);
-    //   })
-    //   .then(() => {
-    //     this.router.navigate(['/messages']);
-    //   });
+    // Saves a package first with a message for aws_url
+    return this.auth.addPackage(this.messageData)
+      .then((response: object) => {
+        // Save the recipient with the new packageId
+        console.log('added package', response);
+        this.recipientData['packageId'] = response['packageId'];
+
+        this.auth.addRecipient(this.recipientData)
+        .then((response) => {
+          console.log('recipient save: ', response);
+        })
+      })
+      .then(() => {
+        this.router.navigate(['/messages']);
+      });
   }
 
-  //-- VALIDATIONS --//
+  // ------------------------------------------------------------------------ //
   validateName(classNameStr) {
     const nameErrorMessage = 'Required';
     const name = document
