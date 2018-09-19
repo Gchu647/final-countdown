@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 import { BackendService } from '../../services/backend.service';
+import { SessionsService } from '../../services/sessions.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-recipient-view',
@@ -9,6 +10,11 @@ import { BackendService } from '../../services/backend.service';
   styleUrls: ['./recipient-view.component.scss']
 })
 export class RecipientViewComponent implements OnInit {
+  user: {
+    loggedIn: boolean;
+    email: string;
+    userId: number;
+  };
   formData: object = {
     email: '',
     firstName: '',
@@ -16,11 +22,12 @@ export class RecipientViewComponent implements OnInit {
     phoneNumber: '',
     groupId: ''
   };
-  relationships: object[];
+  groups: object[];
   recipientId: number;
   message: string =
     'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum facilis, ipsa ipsam unde, veniam assumenda iste saepe cumque similique tenetur provident perspiciatis rem harum. Incidunt explicabo perspiciatis alias quis ipsa!';
 
+  // Errors:
   firstNameError: string = '';
   lastNameError: string = '';
   emailError: string = '';
@@ -29,21 +36,31 @@ export class RecipientViewComponent implements OnInit {
   constructor(
     private router: Router,
     private backend: BackendService,
+    private session: SessionsService,
     private auth: AuthService
-  ) {}
+  ) {
+    this.user = this.session.getSession();
+  }
 
   ngOnInit() {
-    // Get relationships from server and capitalize first letter of each:
-    this.backend.fetchRelationships().then((response: object[]) => {
-      const capitalizedRelationships = response.map(relationship => {
-        const capitalizedRelationship = Object.assign(relationship);
-        capitalizedRelationship['name'] =
-          capitalizedRelationship.name.charAt(0).toUpperCase() +
-          capitalizedRelationship.name.substr(1);
-        return capitalizedRelationship;
+    // Get user's groups from server and capitalize first letter of each:
+    this.backend.fetchGroups(this.user['userId']).then((response: object[]) => {
+      const groups = response.map(group => {
+        return {
+          id: group['id'],
+          name: group['relationship']['name']
+        };
       });
 
-      this.relationships = capitalizedRelationships;
+      const capitalizedGroups = groups.map(group => {
+        const capitalizedGroup = Object.assign(group);
+        capitalizedGroup['name'] =
+          capitalizedGroup.name.charAt(0).toUpperCase() +
+          capitalizedGroup.name.substr(1);
+        return capitalizedGroup;
+      });
+
+      this.groups = capitalizedGroups;
     });
 
     // Get recipientId from window URL:
@@ -68,7 +85,8 @@ export class RecipientViewComponent implements OnInit {
       });
   }
 
-   // ------------------------------------------------------------------------ //
+  // ------------------------------------------------------------------------ //
+
   validateName(classNameStr) {
     const nameErrorMessage = 'Required';
     const name = document
