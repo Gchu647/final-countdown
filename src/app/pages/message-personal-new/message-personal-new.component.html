@@ -11,12 +11,16 @@
 
           <div class="message-new-add-recipient-form-input">
             <label for="first-name">First Name:</label>
-            <input type="text" name="first-name" class="message-new-add-recipient-form-input-first-name" [(ngModel)]="formData.firstName" required>
+            <span *ngIf="firstNameError" class="message-new-add-recipient-form-input-error">{{firstNameError}}</span>
+
+            <input type="text" name="first-name" class="message-new-add-recipient-form-input-first-name" [(ngModel)]="formData.firstName" (ngModelChange)="validateName('message-new-add-recipient-form-input-first-name')" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
             <label for="last-name">Last Name:</label>
-            <input type="text" name="last-name" class="message-new-add-recipient-form-input-last-name" [(ngModel)]="formData.lastName" required>
+            <span *ngIf="lastNameError" class="message-new-add-recipient-form-input-error">{{lastNameError}}</span>
+
+            <input type="text" name="last-name" class="message-new-add-recipient-form-input-last-name" [(ngModel)]="formData.lastName" (ngModelChange)="validateName('message-new-add-recipient-form-input-last-name')" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
@@ -30,12 +34,15 @@
 
           <div class="message-new-add-recipient-form-input">
             <label for="email">Email:</label>
-            <input type="email" name="email" class="message-new-add-recipient-form-input-email" [(ngModel)]="formData.email" required>
+            <span *ngIf="emailError" class="message-new-add-recipient-form-input-error">{{emailError}}</span>
+
+            <input type="email" name="email" class="message-new-add-recipient-form-input-email" [(ngModel)]="formData.email" (ngModelChange)="validateEmail('ngModelChange')" (blur)="validateEmail('blur')" autocomplete="off" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
             <label for="phone">Phone Number:</label>
-            <input type="tel" name="phone" class="message-new-add-recipient-form-input-phone" [(ngModel)]="formData.phoneNumber">
+            <span *ngIf="phoneError" class="message-new-add-recipient-form-input-error">{{phoneError}}</span>
+            <input type="tel" name="phone" class="message-new-add-recipient-form-input-phone" [(ngModel)]="formData.phoneNumber" (ngModelChange)="validatePhoneNumber('ngModelChange')" (blur)="validatePhoneNumber('blur')">
           </div>
         </form>
       </div>
@@ -44,12 +51,19 @@
         <form class="message-new-text-form">
           <span>WRITE A MESSAGE</span>
 
-          <label for="message">Message:</label>
-          <textarea rows="16" name="message"></textarea>
+          <div class="message-new-text-form-input">
+            <label for="title">Title:</label>
+            <input type="text" name="title" class="message-new-text-form-input-title">
+          </div>
 
-          <div class="message-new-text-form-buttons">
-            <button type="button" class="message-new-text-form-buttons-submit" (click)='save()' >SUBMIT</button>
-            <button type="button" class="message-new-text-form-buttons-cancel" routerLink="/messages">CANCEL</button>
+          <div class="message-new-text-form-input">
+            <label for="message">Message:</label>
+            <textarea rows="16" name="message"></textarea>
+          </div>
+
+          <div class="buttons">
+            <button type="button" class="buttons-primary" (click)='save()' >SUBMIT</button>
+            <button type="button" class="buttons-secondary" routerLink="/messages">CANCEL</button>
           </div>
         </form>
       </div>
