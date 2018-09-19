@@ -43,6 +43,16 @@ export class BackendService {
     return this.http.get(relationshipsUrl).toPromise();
   }
 
+  fetchCountries() {
+    const countriesUrl = this.url + 'countries';
+    return this.http.get(countriesUrl).toPromise();
+  }
+
+  fetchStates() {
+    const statesUrl = this.url + 'states';
+    return this.http.get(statesUrl).toPromise();
+  }
+
   fetchProfile(userId) {
     const profileUrl = this.url + `user/${userId}`;
     return this.http.get(profileUrl).toPromise();
@@ -62,7 +72,7 @@ export class BackendService {
       // Prevents stateId from being 0:
       formData.stateId = null;
     }
-    
+
     return this.http.put(profileUrl, formData).toPromise();
   }
 
@@ -85,21 +95,23 @@ export class BackendService {
   }
 
   fetchRecipientById(userId, recipientId) {
-    const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
+    const recipientIdUrl =
+      this.url + `user/${userId}/recipients/${recipientId}`;
 
     return this.http.get(recipientIdUrl).toPromise();
   }
 
   editRecipientById(userId, recipientId, formData) {
-    const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
+    const recipientIdUrl =
+      this.url + `user/${userId}/recipients/${recipientId}`;
     formData.groupId = Number(formData.groupId);
 
     if (formData.groupId < 1) {
       // Prevents groupId from being 0:
       formData.groupId = null;
     }
- 
-    return this.http.put(recipientIdUrl, formData).toPromise();;
+
+    return this.http.put(recipientIdUrl, formData).toPromise();
   }
 
   fetchTrigger(userId) {
