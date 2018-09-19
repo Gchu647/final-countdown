@@ -105,7 +105,7 @@ export class MessagePersonalNewComponent implements OnInit {
 
     switch (eventTypeStr) {
       case 'blur':
-        // Display error if input does not satisfy regular expression test:
+        // Display error if input does not satisfy the following tests:
         if (email === '') {
           this.emailError = emailErrorMessages[0];
         } else if (
