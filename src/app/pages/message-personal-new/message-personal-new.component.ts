@@ -19,7 +19,8 @@ export class MessagePersonalNewComponent implements OnInit {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    groupId: '', // No groupId for now
+    packageId: null,
+    groupId: null, // No groupId for now
   };
   messageData: object = {
     title: '',

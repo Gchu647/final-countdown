@@ -30,6 +30,7 @@ router.route('/:id/recipients')
       l_name: req.body.lastName ? req.body.lastName.trim() : null,
       phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null,
       sender_id: Number(userId),
+      package_id: req.body.packageId,
       group_id: req.body.groupId,
     };
 
@@ -70,6 +71,7 @@ router.route('/:id/recipients/:recipientId')
           firstName: recipient.attributes.f_name,
           lastName: recipient.attributes.l_name,
           phoneNumber: recipient.attributes.phone_num,
+          packageId: req.body.package_id,
           groupId: recipient.attributes.group_id
         };
 
@@ -90,6 +92,7 @@ router.route('/:id/recipients/:recipientId')
       l_name: req.body.lastName ? req.body.lastName.trim() : null,
       phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null,
       sender_id: Number(userId),
+      package_id: req.body.packageId,
       group_id: req.body.groupId
     };
 

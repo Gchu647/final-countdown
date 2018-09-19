@@ -53,7 +53,6 @@ router
             return response.refresh();
           })
           .then(file => {
-            console.log('saved package', file.attributes.package_id);
             res.json({ 'packageId': file.attributes.package_id });
           });
       })
