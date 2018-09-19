@@ -54,6 +54,7 @@ export class MessagePersonalNewComponent implements OnInit {
     //   });
   }
 
+  //-- VALIDATIONS --//
   validateName(classNameStr) {
     const nameErrorMessage = 'Required';
     const name = document
