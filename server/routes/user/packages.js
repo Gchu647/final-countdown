@@ -52,8 +52,9 @@ router
           .then(response => {
             return response.refresh();
           })
-          .then(() => {
-            res.json({ message: 'message saved' });
+          .then(file => {
+            console.log('saved package', file.attributes.package_id);
+            res.json({ 'packageId': file.attributes.package_id });
           });
       })
       .catch(err => {
