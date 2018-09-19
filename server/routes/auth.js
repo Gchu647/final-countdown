@@ -41,19 +41,62 @@ router.post('/register', (req, res) => {
 
           // return res.json(result.attributes.email)
         })
-        // Making three empty packages
+        // Making Group(family) with a package
         .then(() => {
-          console.log('newUserId', newUser.id);
           return new Package()
             .save({
-              package_maker_id: newUser.id,
+              'package_maker_id': newUser.id,
             })
             .then(response => {
               return response.refresh();
             })
             .then(package => {
               console.log('package.attributes.id', package.attributes.id);
+              return new Group()
+                .save({
+                  'relationship_id': 1, // family
+                  'package_id': package.attributes.id,
+                  'owner_id': newUser.id,
+                });
             })
+        })
+        // Making Group(friends) with a package
+        .then(() => {
+          return new Package()
+            .save({
+              'package_maker_id': newUser.id,
+            })
+            .then(response => {
+              return response.refresh();
+            })
+            .then(package => {
+              console.log('package.attributes.id', package.attributes.id);
+              return new Group()
+                .save({
+                  'relationship_id': 2, // friends
+                  'package_id': package.attributes.id,
+                  'owner_id': newUser.id,
+                });
+          })          
+        })
+        // Making Group(haters) with a package
+        .then(() => {
+          return new Package()
+            .save({
+              'package_maker_id': newUser.id,
+            })
+            .then(response => {
+              return response.refresh();
+            })
+            .then(package => {
+              console.log('package.attributes.id', package.attributes.id);
+              return new Group()
+                .save({
+                  'relationship_id': 3, // haters
+                  'package_id': package.attributes.id,
+                  'owner_id': newUser.id,
+                });
+          })          
         })
         .then(() => {
           return res.json(newUser);
