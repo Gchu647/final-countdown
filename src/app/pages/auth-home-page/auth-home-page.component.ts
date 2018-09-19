@@ -15,25 +15,25 @@ export class AuthHomePageComponent implements OnInit {
     email: string;
     userId: number;
   };
+  groups: object[];
+  groupToFilter: number = 0;
   recipients: object[];
-  relationships: object[];
-  relationshipToFilter: number = 0;
   displayedRecipients: object[];
-  triggerData: object;
-  enRouteNotificationPending: boolean;
 
   // Modals:
   activationModalEnabled: boolean;
   deactivationModalEnabled: boolean;
   messagesSentModalEnabled: boolean;
 
-  // Countdown:
+  // Trigger/Countdown:
+  triggerData: object;
   countdownActive: boolean;
   countdownDayValue: number = 7;
   countdownDays: number[] = [];
   countdownDisplay: object;
   countdownIntervalId: number;
   countdownExpired: boolean;
+  enRouteNotificationPending: boolean;
 
   constructor(
     private auth: AuthService,
@@ -63,17 +63,24 @@ export class AuthHomePageComponent implements OnInit {
       this.countdownDays.push(i);
     }
 
-    // Get relationships from server and capitalize first letter of each:
-    this.backend.fetchRelationships().then((response: object[]) => {
-      const capitalizedRelationships = response.map(relationship => {
-        const capitalizedRelationship = Object.assign(relationship);
-        capitalizedRelationship['name'] =
-          capitalizedRelationship.name.charAt(0).toUpperCase() +
-          capitalizedRelationship.name.substr(1);
-        return capitalizedRelationship;
+    // Get user's groups from server and capitalize first letter of each:
+    this.backend.fetchGroups(this.user['userId']).then((response: object[]) => {
+      const groups = response.map(group => {
+        return {
+          id: group['id'],
+          name: group['relationship']['name']
+        };
       });
 
-      this.relationships = capitalizedRelationships;
+      const capitalizedGroups = groups.map(group => {
+        const capitalizedGroup = Object.assign(group);
+        capitalizedGroup['name'] =
+          capitalizedGroup.name.charAt(0).toUpperCase() +
+          capitalizedGroup.name.substr(1);
+        return capitalizedGroup;
+      });
+
+      this.groups = capitalizedGroups;
     });
 
     // Gets recipients from server:
@@ -220,7 +227,7 @@ export class AuthHomePageComponent implements OnInit {
   // ------------------------------------------------------------------------ //
 
   setRelationshipToFilter(value) {
-    this.relationshipToFilter = Number(value);
+    this.groupToFilter = Number(value);
     this.filterDisplayedRecipients(Number(value));
   }
 
@@ -229,7 +236,6 @@ export class AuthHomePageComponent implements OnInit {
       this.displayedRecipients = this.recipients;
     } else {
       this.displayedRecipients = this.recipients.filter(
-        // might have to have add in a withRelated later
         recipient => Number(recipient['group_id']) === Number(value)
       );
     }
