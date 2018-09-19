@@ -114,6 +114,16 @@ export class BackendService {
     return this.http.put(recipientIdUrl, formData).toPromise();
   }
 
+  addPackage(userId, message) {
+    const packageUrl = this.url + `user/${userId}/packages`;
+    const input = {
+      message: message
+    };
+
+    // console.log('backend.service: ', message);
+    return this.http.post(packageUrl, input).toPromise();
+  }
+
   fetchTrigger(userId) {
     const triggerUrl = this.url + `user/${userId}/trigger`;
     const params = new HttpParams().set('origin', 'frontEnd');

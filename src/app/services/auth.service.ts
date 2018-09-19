@@ -83,6 +83,15 @@ export class AuthService {
     });
   }
 
+  addPackage(message) {
+    const userId = this.user.userId;
+
+    return this.backend.addPackage(userId, message)
+    .then(response => {
+      return response;
+    });
+  }
+
   editRecipientById(recipientId, formData) {
     console.log('auth.service!');
     const userId = this.user.userId;

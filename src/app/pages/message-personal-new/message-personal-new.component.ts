@@ -14,12 +14,14 @@ export class MessagePersonalNewComponent implements OnInit {
     { id: 2, name: 'Friends' },
     { id: 3, name: 'Haters' }
   ];
+
+  message: string = '';
   formData: object = {
     email: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    groupId: ''
+    groupId: '', // No groupId for now
   };
 
   firstNameError: string = '';
@@ -36,14 +38,20 @@ export class MessagePersonalNewComponent implements OnInit {
   }
 
   save() {
-    this.auth
-      .addRecipient(this.formData)
-      .then(response => {
-        console.log('recipient save: ', response);
-      })
-      .then(() => {
-        this.router.navigate(['/messages']);
-      });
+    this.auth.addPackage(this.message)
+    .then((response) => {
+      console.log('recipient save: ', response);
+    })
+    .then(() => {
+      this.router.navigate(['/messages']);
+    });
+    // this.auth.addRecipient(this.formData)
+    //   .then((response) => {
+    //     console.log('recipient save: ', response);
+    //   })
+    //   .then(() => {
+    //     this.router.navigate(['/messages']);
+    //   });
   }
 
   validateName(classNameStr) {
