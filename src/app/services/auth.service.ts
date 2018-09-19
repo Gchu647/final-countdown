@@ -48,7 +48,6 @@ export class AuthService {
   }
 
   editProfile(formData) {
-    console.log('auth.service: ', formData);
     const userId = this.user.userId;
 
     return this.backend.editProfile(userId, formData)
@@ -58,7 +57,6 @@ export class AuthService {
   }
 
   fetchRecipients() {
-    console.log('auth.service: ', this.user);
     const userId = this.user.userId;
 
     return this.backend.fetchRecipients(userId)
@@ -66,7 +64,32 @@ export class AuthService {
       return response;
     });
   }
-}
 
-// get userId info from this route and add it to the obj passed in
-// also need ngOnInit() to get profile information
+  addRecipient() {
+    const userId = this.user.userId;
+
+    return this.backend.addRecipient(userId)
+    .then(response => {
+      return response;
+    });
+  }
+
+  fetchRecpientById(recipientId) {
+    const userId = this.user.userId;
+  
+    return this.backend.fetchRecipientById(userId, recipientId)
+    .then(response => {
+      return response;
+    });
+  }
+
+  editRecipientById(recipientId, formData) {
+    console.log('auth.service!');
+    const userId = this.user.userId;
+  
+    return this.backend.editRecipientById(userId, recipientId, formData)
+    .then(response => {
+      return response;
+    });
+  }
+}

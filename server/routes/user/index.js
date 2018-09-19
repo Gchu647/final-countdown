@@ -32,7 +32,8 @@ router.route('/user/:id')
           stateId: user.attributes.state, //state
           city: user.attributes.city,
           phoneNumber: user.attributes.phone_num //phone_num
-        }
+        };
+        
         return res.json(userResponse);
       })
       .catch(err => {
@@ -45,7 +46,15 @@ router.route('/user/:id')
     // edits user information by id
     const userId = req.params.id;
     // Initailize edited info
-    const userInput = req.body;
+    const userInput = {
+      f_name: req.body.firstName ? req.body.firstName.trim() : null,
+      l_name: req.body.lastName ? req.body.lastName.trim() : null,
+      dob: req.body.dateOfBirth ? req.body.dateOfBirth.trim() : null,
+      country: req.body.countryId, // adding Number() breaks it
+      state: req.body.stateId, // adding Number() breaks it
+      city: req.body.city ? req.body.city.trim() : null,
+      phone_num: req.body.phoneNumber ? req.body.trim() : null
+    };
 
     // Edit using bookshelf
     return new User()
