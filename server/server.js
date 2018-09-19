@@ -16,7 +16,6 @@ const bcrypt = require('bcrypt');
 const User = require('./db/models/User');
 
 app.use(bodyParser.json());
-console.log('passport', env.DB_USER);
 // ---------------------=[   PASSPORT Config Start   ]=--------------------- //
 app.use(
   session({

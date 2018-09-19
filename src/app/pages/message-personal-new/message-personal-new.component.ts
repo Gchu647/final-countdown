@@ -14,14 +14,16 @@ export class MessagePersonalNewComponent implements OnInit {
     { id: 2, name: 'Friends' },
     { id: 3, name: 'Haters' }
   ];
-
-  message: string = '';
-  formData: object = {
+  recipientData: object = {
     email: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',
     groupId: '', // No groupId for now
+  };
+  messageData: object = {
+    title: '',
+    message: '',
   };
 
   firstNameError: string = '';
@@ -38,14 +40,14 @@ export class MessagePersonalNewComponent implements OnInit {
   }
 
   save() {
-    this.auth.addPackage(this.message)
+    this.auth.addPackage(this.messageData)
     .then((response) => {
       console.log('recipient save: ', response);
     })
     .then(() => {
       this.router.navigate(['/messages']);
     });
-    // this.auth.addRecipient(this.formData)
+    // this.auth.addRecipient(this.recipientData)
     //   .then((response) => {
     //     console.log('recipient save: ', response);
     //   })
@@ -202,9 +204,9 @@ export class MessagePersonalNewComponent implements OnInit {
     if (errorMessages.some(errorMessage => errorMessage.length > 0)) {
       submitButton.setAttribute('disabled', '');
     } else if (
-      !this.formData['firstName'] ||
-      !this.formData['lastName'] ||
-      !this.formData['email']
+      !this.recipientData['firstName'] ||
+      !this.recipientData['lastName'] ||
+      !this.recipientData['email']
     ) {
       submitButton.setAttribute('disabled', '');
     } else {

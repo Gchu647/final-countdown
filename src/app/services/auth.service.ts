@@ -83,10 +83,10 @@ export class AuthService {
     });
   }
 
-  addPackage(message) {
+  addPackage(formData) {
     const userId = this.user.userId;
 
-    return this.backend.addPackage(userId, message)
+    return this.backend.addPackage(userId, formData)
     .then(response => {
       return response;
     });

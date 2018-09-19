@@ -45,8 +45,8 @@ router
         // Second, create an encrypted file using the package ID as foreign key:
         return new EncryptedFile()
           .save({
-            name: 'Message',
-            aws_url: req.body.message,
+            name: req.body.title? req.body.title : 'Message',
+            aws_url: req.body.message ? req.body.message.trim() : null,
             package_id: package.attributes.id
           })
           .then(response => {
