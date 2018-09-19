@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { BackendService } from '../../services/backend.service';
 
 @Component({
   selector: 'app-recipient-view',
@@ -6,23 +9,55 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./recipient-view.component.scss']
 })
 export class RecipientViewComponent implements OnInit {
-  // Temporary variables (until database integrated):
-  formData: object = {
-    first_name: 'Adam',
-    last_name: 'Alpha',
-    relationship: 1,
-    email: 'adam@example.com',
-    phone_number: '808-422-2222'
-  };
-  relationships: object[] = [
-    { id: 1, name: 'Family' },
-    { id: 2, name: 'Friend' },
-    { id: 3, name: 'Hater' }
-  ];
+  formData: object;
+  relationships: object[];
+  recipientId: number;
   message: string =
     'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum facilis, ipsa ipsam unde, veniam assumenda iste saepe cumque similique tenetur provident perspiciatis rem harum. Incidunt explicabo perspiciatis alias quis ipsa!';
 
-  constructor() {}
+  constructor(
+    private router: Router,
+    private backend: BackendService,
+    private auth: AuthService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Get relationships from server and capitalize first letter of each:
+    this.backend.fetchRelationships().then((response: object[]) => {
+      const capitalizedRelationships = response.map(relationship => {
+        const capitalizedRelationship = Object.assign(relationship);
+        capitalizedRelationship['name'] =
+          capitalizedRelationship.name.charAt(0).toUpperCase() +
+          capitalizedRelationship.name.substr(1);
+        return capitalizedRelationship;
+      });
+
+      this.relationships = capitalizedRelationships;
+    });
+    
+    // let pathStr = 'localhost:4200/46';
+    // let index = pathStr.lastIndexOf('/');
+    // let recipientId = Number(pathStr.slice(index+1));
+    
+    // Getting the recipientId from URL
+    let index = window.location.pathname.lastIndexOf('/');
+    this.recipientId = Number(window.location.pathname.slice(index +1));
+    
+    // Getting the recipient info using recipientId
+    this.auth.fetchRecpientById(this.recipientId)
+      .then((response: object) => {
+        this.formData = response;
+        console.log('recipient fetch: ', response);
+      });
+  }
+
+  saveChanges() {
+    this.auth.editRecipientById(this.recipientId, this.formData)
+      .then((response: object) => {
+        this.formData = response;
+      })
+      .then(() => {
+        this.router.navigate(['/messages']);
+      });
+  }
 }

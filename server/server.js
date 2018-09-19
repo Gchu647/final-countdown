@@ -1,9 +1,10 @@
-require('dotenv').config();
-
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const routes = require('./routes');
+const env = process.env;
 const PORT = process.env.PORT || 8080;
 
 // Auth Imports:
@@ -15,7 +16,7 @@ const bcrypt = require('bcrypt');
 const User = require('./db/models/User');
 
 app.use(bodyParser.json());
-
+console.log('passport', env.DB_USER);
 // ---------------------=[   PASSPORT Config Start   ]=--------------------- //
 app.use(
   session({
@@ -100,4 +101,4 @@ app.use(function(err, req, res, next) {
 
 app.listen(PORT, () => {
   console.log(`server is listening on ${PORT}`);
-})
+});

@@ -26,12 +26,14 @@ router.route('/:id/recipients')
     // Initailize recipient info
     const recipientInput = {
       email: req.body.email ? req.body.email.trim() : null,
-      f_name: req.body.fName ? req.body.fName.trim() : null,
-      l_name: req.body.lName ? req.body.lName.trim() : null,
-      phone_num: req.body.phoneNum ? req.body.phoneNum.trim() : null,
+      f_name: req.body.firstName ? req.body.firstName.trim() : null,
+      l_name: req.body.lastName ? req.body.lastName.trim() : null,
+      phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null,
       sender_id: Number(userId),
-      relationship_id: Number(req.body.relationshipId)
+      group_id: req.body.groupId,
     };
+
+    console.log('post new recipient', recipientInput);
 
     // Save using bookshelf
     return new Recipient()
@@ -62,7 +64,16 @@ router.route('/:id/recipients/:recipientId')
       })
       .fetch()
       .then(recipient => {
-        return res.json(recipient);
+        const recipientResponse = {
+          id: recipient.attributes.id,
+          email: recipient.attributes.email,
+          firstName: recipient.attributes.f_name,
+          lastName: recipient.attributes.l_name,
+          phoneNumber: recipient.attributes.phone_num,
+          groupId: recipient.attributes.group_id
+        };
+
+        return res.json(recipientResponse);
       })
       .catch(err => {
         return res.status(400).json({ message: err.message });
@@ -75,11 +86,11 @@ router.route('/:id/recipients/:recipientId')
     // Initailize edited info
     const recipientInput = {
       email: req.body.email ? req.body.email.trim() : null,
-      f_name: req.body.fName ? req.body.fName.trim() : null,
-      l_name: req.body.lName ? req.body.lName.trim() : null,
-      phone_num: req.body.phoneNum ? req.body.phoneNum.trim() : null,
+      f_name: req.body.firstName ? req.body.firstName.trim() : null,
+      l_name: req.body.lastName ? req.body.lastName.trim() : null,
+      phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null,
       sender_id: Number(userId),
-      relationship_id: Number(req.body.relationshipId)
+      group_id: req.body.groupId
     };
 
     // Edit using bookshelf
@@ -118,7 +129,6 @@ router.route('/:id/recipients/:recipientId')
         return res.json({ message: 'recipient deleted' });
       })
       .catch(err => {
-        console.log(err.message);
         return res.status(400).json({ error: err.message });
       });
   });
