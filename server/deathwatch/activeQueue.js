@@ -6,11 +6,12 @@ const Group = require('../db/models/Group');
 const Trigger = require('../db/models/Trigger');
 const moment = require('moment');
 const crypto = require('crypto'),
-  algorithm = 'aes-256-ctr',
-  password = 'password';
+  algorithm = 'aes-256-cbc',
+  password = 'passwordpasswordpasswordpassword',
+  iv = 'passwordpassword';
 
-const encrypt = crypto.createDecipher(algorithm, password);
-const decrypt = crypto.createDecipher(algorithm, password);
+const encrypt = crypto.createCipheriv(algorithm, password, iv);
+const decrypt = crypto.createDecipheriv(algorithm, password, iv);
 
 /*** Active Trigger Queue: This is the linked-list that will represent the trigger queue ***/
 class ActiveTriggerQueue {
@@ -77,17 +78,18 @@ class ActiveTriggerQueue {
               console.log('recipient', recipient);
               console.log('recipient.package', recipient.package.file[0]);
               let subjectStr = recipient.package.file[0].name;
-              let enc = encrypt.update(subjectStr, 'utf8', 'binary');
-              let dec = decrypt.update(enc, 'binary', 'utf8');
-              console.log('subj enc', enc);
-              console.log('subj dec', dec);
+              let bodyStr = recipient.package.file[0].aws_url;
+              // let enc = encrypt.update(bodyStr, 'utf8', 'hex');
+              // let dec = decrypt.update(bodyStr, 'hex', 'utf8');
+              // console.log('subj enc', enc);
+              // console.log('subj dec', dec);
               return {
                 recipientName: `${recipient.f_name} ${recipient.l_name}`,
                 recipientEmail: recipient.email,
                 userFullName: `${userInfo.f_name} ${userInfo.l_name}`,
                 relationshipId: recipient.id,
                 subject: subjectStr,
-                body: recipient.package.file[0].aws_url
+                body: bodyStr
               };
             });
             console.log(`recipient ${userInfo.recipients.id}`);

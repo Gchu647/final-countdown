@@ -1,112 +1,83 @@
 const queue = require('./activeQueue');
 const fs = require('fs');
 const EncryptedFile = require('../db/models/EncryptedFile');
-const crypto = require('crypto'),
-  algorithm = 'aes-256-cbc',
-  password = 'passwordpasswordpasswordpassword',
-  iv = 'passwordpassword';
+const { Buffer } = require('buffer');
+const e = require('./encrypt.js');
+const d = require('./decrypt.js');
+const crypto = require('crypto');
+
 let count = 0;
-const fileReader = fs.createReadStream(__dirname + '/test.txt');
-// const readline = require('readline');
 
-const encrypt = crypto.createCipheriv(algorithm, password, iv);
-const decrypt = crypto.createDecipheriv(algorithm, password, iv);
-
-function e(str) {
-  let all = encrypt.update(str, 'utf8', 'hex');
-  return all += encrypt.final('hex');
-}
-const enc = function() {
+const encodeDecodeTest = function() {
   return EncryptedFile.fetchAll()
     .then(files => {
       files = files.toJSON();
       console.log(files);
       let editedFiles = files.map(file => {
         console.log('file', file);
-        file.aws_url = e(file.aws_url);
+        file.aws_url = e(
+          file.aws_url,
+          '$2b$12$BSeLwzMj1MsNxQHKISC6ued0tILO5WyoMiRvjSmBTygKJaf9fteQC'
+        );
+        file.aws_url = d(
+          file.aws_url,
+          '$2b$12$BSeLwzMj1MsNxQHKISC6ued0tILO5WyoMiRvjSmBTygKJaf9fteQC'
+        );
         console.log('file', file);
         return new EncryptedFile({ id: file.id }).save(
           { aws_url: file.aws_url },
           { patch: true }
         );
       });
-      // return editedFiles;
+      return editedFiles;
     })
-
     .catch(err => {
       console.log('error', err);
     });
 };
-enc();
+encodeDecodeTest();
 
-// const dec = function() {
-//   return EncryptedFile.fetchAll()
-//     .then(files => {
-//       files = files.toJSON();
-//       console.log(files);
-//       let editedFiles = files.map(file => {
-//         console.log('file', file);
-//         file.aws_url = decrypt.update(file.aws_url, 'hex', 'utf8');
-//         console.log('file', file);
-//         // return new EncryptedFile({ id: file.id }).save(
-//         //   { aws_url: file.aws_url },
-//         //   { patch: true }
-//         // );
-//       });
-//       // return editedFiles;
-//     })
-
-//     .catch(err => {
-//       console.log('error', err);
-//     });
-// };
-// dec();
-
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-//   prompt: '\nOHAI> '
-// });
-
-// rl.prompt();
-
-// rl.on('line', line => {
-//   let enc = encrypt.update(line, 'utf8', 'binary');
-//   let dec = decrypt.update(enc, 'binary', 'utf8');
-//   // dec += decrypt.final('utf8');
-//   switch (line.trim()) {
-//   default:
-//     console.log(`encrypted ${enc}`);
-//     console.log(`decrypted ${dec}`);
-//     break;
-//   }
-//   rl.prompt();
-// });
-
-// fileReader.pipe(encrypt).pipe(fileWrite);
-
-// queue.initialize();
-
+/* Basic Functionality tests to be converted to chai and mocha */
+// let queue = new ActiveTriggerQueue();
 // console.log('Initial', queue);
 // queue.insertToQueue({ userId: 1, timeToExecute: Date.now() });
 // console.log('Insert', queue);
 
 // console.log('search', queue.search(1));
 // let tomorrow = new Date();
-// tomorrow.setSeconds(tomorrow.getSeconds() + 10);
+// tomorrow.setDate(tomorrow.getDate() + 1);
 // queue.insertToQueue({ userId: 2, timeToExecute: tomorrow });
 // console.log('Insert2', queue);
 // let dayAfterTomorrow = new Date();
-// dayAfterTomorrow.setSeconds(dayAfterTomorrow.getSeconds() + 20);
+// dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
 // queue.insertToQueue({ userId: 3, timeToExecute: dayAfterTomorrow });
 // console.log('Insert3', queue);
 // let dayAfterAfter = new Date();
-// dayAfterAfter.setSeconds(dayAfterAfter.getSeconds() + 30);
+// dayAfterAfter.setDate(dayAfterAfter.getDate() + 3);
 // queue.insertToQueue({ userId: 4, timeToExecute: dayAfterAfter });
 // console.log('Insert4', queue);
 // let yesterday = new Date();
-// yesterday.setSeconds(yesterday.getSeconds() - 1);
+// yesterday.setDate(yesterday.getDate() - 1);
 // console.log('yesterday', yesterday);
 // queue.insertToQueue({ userId: 0, timeToExecute: yesterday });
+// console.log('Insert5', queue);
+// //DELETE FROM THE FRONT
+// queue.delete(0);
+// console.log('Delete 1', queue);
+// //DELETE FROM THE BACK
+// queue.delete(4);
+// console.log('Delete 2', queue);
+// let dayAfterAfterAfter = new Date();
+// dayAfterAfterAfter.setDate(dayAfterAfterAfter.getDate() + 4);
+// queue.edit(1, dayAfterAfterAfter);
+// console.log('Edit 1', queue);
+// let day4A = new Date();
+// day4A.setDate(day4A.getDate() + 5);
+// queue.edit(2, day4A);
+// console.log('Edit 2', queue);
+// let day5A = new Date();
+// day5A.setDate(day5A.getDate() + 6);
+// queue.edit(3, day5A);
+// console.log('Edit 3', queue);
 
 module.exports = queue;
