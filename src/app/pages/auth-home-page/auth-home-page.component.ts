@@ -35,6 +35,8 @@ export class AuthHomePageComponent implements OnInit {
   countdownExpired: boolean;
   enRouteNotificationPending: boolean;
 
+  // ------------------------------------------------------------------------ //
+
   constructor(
     private auth: AuthService,
     private backend: BackendService,
@@ -42,8 +44,6 @@ export class AuthHomePageComponent implements OnInit {
   ) {
     this.user = this.session.getSession();
   }
-
-  // ------------------------------------------------------------------------ //
 
   ngOnInit() {
     this.activationModalEnabled = false;
@@ -103,6 +103,27 @@ export class AuthHomePageComponent implements OnInit {
         }
       })
       .catch(err => console.log(err));
+  }
+
+  // ------------------------------------------------------------------------ //
+
+  setRelationshipToFilter(value) {
+    this.groupToFilter = Number(value);
+    this.filterDisplayedRecipients(Number(value));
+  }
+
+  filterDisplayedRecipients(value) {
+    if (Number(value) === 0) {
+      this.displayedRecipients = this.recipients;
+    } else {
+      this.displayedRecipients = this.recipients.filter(
+        recipient => Number(recipient['group_id']) === Number(value)
+      );
+    }
+  }
+
+  stopPropagation(event) {
+    event.stopPropagation();
   }
 
   // ------------------------------------------------------------------------ //
@@ -222,26 +243,5 @@ export class AuthHomePageComponent implements OnInit {
         })
         .catch(err => console.log(err));
     }
-  }
-
-  // ------------------------------------------------------------------------ //
-
-  setRelationshipToFilter(value) {
-    this.groupToFilter = Number(value);
-    this.filterDisplayedRecipients(Number(value));
-  }
-
-  filterDisplayedRecipients(value) {
-    if (Number(value) === 0) {
-      this.displayedRecipients = this.recipients;
-    } else {
-      this.displayedRecipients = this.recipients.filter(
-        recipient => Number(recipient['group_id']) === Number(value)
-      );
-    }
-  }
-
-  stopPropagation(event) {
-    event.stopPropagation();
   }
 }
