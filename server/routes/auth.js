@@ -4,6 +4,8 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const User = require('../db/models/User');
+const Package = require('../db/models/Package');
+const Group = require('../db/models/Group');
 const saltedRounds = 12;
 
 // Register new user
@@ -13,6 +15,7 @@ router.post('/register', (req, res) => {
   let { email, password, fName, lName } = req.body;
   // setting a default count down timer
   const defaultCountDown = 14;
+  let newUser = {};
 
   bcrypt.genSalt(saltedRounds, (err, salt) => {
     if (err) {
@@ -33,7 +36,27 @@ router.post('/register', (req, res) => {
       })
         .save()
         .then(result => {
-          res.json(result.attributes.email);
+          newUser = result.attributes;
+          console.log('newUser', newUser);
+
+          // return res.json(result.attributes.email)
+        })
+        // Making three empty packages
+        .then(() => {
+          console.log('newUserId', newUser.id);
+          return new Package()
+            .save({
+              package_maker_id: newUser.id,
+            })
+            .then(response => {
+              return response.refresh();
+            })
+            .then(package => {
+              console.log('package.attributes.id', package.attributes.id);
+            })
+        })
+        .then(() => {
+          return res.json(newUser);
         })
         .catch(err => {
           res.status(400).json({ message: err.message });
