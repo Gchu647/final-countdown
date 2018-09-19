@@ -26,12 +26,14 @@ router.route('/:id/recipients')
     // Initailize recipient info
     const recipientInput = {
       email: req.body.email ? req.body.email.trim() : null,
-      f_name: req.body.fName ? req.body.fName.trim() : null,
-      l_name: req.body.lName ? req.body.lName.trim() : null,
-      phone_num: req.body.phoneNum ? req.body.phoneNum.trim() : null,
+      f_name: req.body.firstName ? req.body.firstName.trim() : null,
+      l_name: req.body.lastName ? req.body.lastName.trim() : null,
+      phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null,
       sender_id: Number(userId),
-      group_id: Number(req.body.groupId)
+      group_id: req.body.groupId,
     };
+
+    console.log('post new recipient', recipientInput);
 
     // Save using bookshelf
     return new Recipient()
@@ -43,6 +45,7 @@ router.route('/:id/recipients')
         return res.json(recipient);
       })
       .catch(err => {
+        console.log(err.message);
         return res.status(400).json({ error: err.message });
       });
   });
@@ -77,7 +80,6 @@ router.route('/:id/recipients/:recipientId')
       });
   })
   .put(isAuthenticated, (req, res) => {
-    console.log('edit recipient info', req.body);
     // edit recipient's info
     const userId = req.params.id;
     const recipientId = req.params.recipientId;

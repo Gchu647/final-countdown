@@ -74,9 +74,14 @@ export class BackendService {
 
   addRecipient(userId, formData) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
-    console.log('backend.service: ', formData);
+    formData.groupId = Number(formData.groupId);
 
-    return Promise.resolve({});
+    if (formData.groupId < 1) {
+      // Prevents groupId from being 0:
+      formData.groupId = null;
+    }
+
+    return this.http.post(recipientsUrl, formData).toPromise();
   }
 
   fetchRecipientById(userId, recipientId) {
