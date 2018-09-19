@@ -19,8 +19,9 @@ export class MessagePersonalNewComponent {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    groupId: '',
+    groupId: '', // No group Id for now
   };
+  message: string = '';
 
   constructor(
     private router: Router,
@@ -28,12 +29,19 @@ export class MessagePersonalNewComponent {
   ) {}
 
   save() {
-    this.auth.addRecipient(this.formData)
-      .then((response) => {
-        console.log('recipient save: ', response);
-      })
-      .then(() => {
-        this.router.navigate(['/messages']);
-      });
+    this.auth.addPackage(this.message)
+    .then((response) => {
+      console.log('recipient save: ', response);
+    })
+    .then(() => {
+      this.router.navigate(['/messages']);
+    });
+    // this.auth.addRecipient(this.formData)
+    //   .then((response) => {
+    //     console.log('recipient save: ', response);
+    //   })
+    //   .then(() => {
+    //     this.router.navigate(['/messages']);
+    //   });
   }
 }

@@ -25,13 +25,14 @@ router
       });
   })
   .post(isAuthenticated, (req, res) => {
-    // req.body includes (1) a recipient ID and (2) a message:
+    // req.body includes a message:
     const userId = req.params.id;
-    const recipientId = req.body.recipientId;
+    // const recipientId = req.body.recipientId;
+    console.log('posting package: ', req.body);
 
     const packageInput = {
       package_maker_id: userId,
-      recipient_id: recipientId
+      // recipient_id: recipientId
     };
 
     // First, create a new package:

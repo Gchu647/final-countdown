@@ -45,7 +45,7 @@
           <span>WRITE A MESSAGE</span>
 
           <label for="message">Message:</label>
-          <textarea rows="16" name="message"></textarea>
+          <textarea rows="16" name="message" [(ngModel)]="message"></textarea>
 
           <div class="message-new-text-form-buttons">
             <button type="button" class="message-new-text-form-buttons-submit" (click)='save()' >SUBMIT</button>
