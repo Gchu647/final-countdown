@@ -10,6 +10,8 @@ export class BackendService {
 
   constructor(private http: HttpClient) {}
 
+  // ------------------------------------------------------------------------ //
+
   login(data) {
     // Data object properties must be named "username" and "password":
     const loginUrl = this.url + 'login';
@@ -38,6 +40,8 @@ export class BackendService {
     return this.http.post(registerUrl, input).toPromise();
   }
 
+  // ------------------------------------------------------------------------ //
+
   fetchRelationships() {
     const relationshipsUrl = this.url + 'relationships';
     return this.http.get(relationshipsUrl).toPromise();
@@ -52,6 +56,8 @@ export class BackendService {
     const statesUrl = this.url + 'states';
     return this.http.get(statesUrl).toPromise();
   }
+
+  // ------------------------------------------------------------------------ //
 
   fetchProfile(userId) {
     const profileUrl = this.url + `user/${userId}`;
@@ -75,6 +81,8 @@ export class BackendService {
 
     return this.http.put(profileUrl, formData).toPromise();
   }
+
+  // ------------------------------------------------------------------------ //
 
   fetchRecipients(userId) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
@@ -114,6 +122,29 @@ export class BackendService {
     return this.http.put(recipientIdUrl, formData).toPromise();
   }
 
+  // ------------------------------------------------------------------------ //
+
+  fetchGroups(userId) {
+    const groupsUrl = this.url + `user/${userId}/groups`;
+
+    return this.http.get(groupsUrl).toPromise();
+  }
+
+  fetchGroup(userId, groupId) {
+    const groupUrl = this.url + `user/${userId}/groups/${groupId}`;
+
+    return this.http.get(groupUrl).toPromise();
+  }
+
+  fetchGroupMembers(userId, groupId) {
+    const groupMembersUrl =
+      this.url + `user/${userId}/groups/${groupId}/members`;
+
+    return this.http.get(groupMembersUrl).toPromise();
+  }
+
+  // ------------------------------------------------------------------------ //
+
   addPackage(userId, formData) {
     const packageUrl = this.url + `user/${userId}/packages`;
 
@@ -125,6 +156,8 @@ export class BackendService {
   fetchPackageById() {
     const packageIdUrl = this.url;
   }
+
+  // ------------------------------------------------------------------------ //
 
   fetchTrigger(userId) {
     const triggerUrl = this.url + `user/${userId}/trigger`;
