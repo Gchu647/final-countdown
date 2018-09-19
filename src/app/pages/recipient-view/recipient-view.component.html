@@ -9,13 +9,17 @@
         <form class="recipient-view-form-inner">
           <div class="recipient-view-form-inner-input">
             <label for="first-name">First Name:</label>
-            <input type="text" name="first-name" [(ngModel)]="formData.firstName" class="recipient-view-form-inner-input-first-name"
+            <span *ngIf="firstNameError" class="recipient-view-form-inner-input-error">{{firstNameError}}</span>
+
+            <input type="text" name="first-name" [(ngModel)]="formData.firstName" (ngModelChange)="validateName('recipient-view-form-inner-input-first-name')" class="recipient-view-form-inner-input-first-name"
               required>
           </div>
 
           <div class="recipient-view-form-inner-input">
             <label for="last-name">Last Name:</label>
-            <input type="text" name="last-name" [(ngModel)]="formData.lastName" class="recipient-view-form-inner-input-last-name"
+            <span *ngIf="lastNameError" class="recipient-view-form-inner-input-error">{{lastNameError}}</span>
+
+            <input type="text" name="last-name" [(ngModel)]="formData.lastName" (ngModelChange)="validateName('recipient-view-form-inner-input-last-name')" class="recipient-view-form-inner-input-last-name"
               required>
           </div>
 
@@ -29,13 +33,16 @@
 
           <div class="recipient-view-form-inner-input">
             <label for="email">Email:</label>
-            <input type="email" name="email" [(ngModel)]="formData.email" class="recipient-view-form-inner-input-email"
-              required>
+            <span *ngIf="emailError" class="recipient-view-form-inner-input-error">{{emailError}}</span>
+
+            <input type="email" name="email" class="recipient-view-form-inner-input-email" [(ngModel)]="formData.email" (ngModelChange)="validateEmail('ngModelChange')" (blur)="validateEmail('blur')" autocomplete="off" required>
           </div>
 
           <div class="recipient-view-form-inner-input">
             <label for="phone">Phone Number:</label>
-            <input type="tel" name="phone" [(ngModel)]="formData.phoneNumber" class="recipient-view-form-inner-input-phone">
+            <span *ngIf="phoneError" class="recipient-view-form-inner-input-error">{{phoneError}}</span>
+
+            <input type="tel" name="phone" class="recipient-view-form-inner-input-phone" [(ngModel)]="formData.phoneNumber" (ngModelChange)="validatePhoneNumber('ngModelChange')" (blur)="validatePhoneNumber('blur')">
           </div>
 
           <div class="recipient-view-form-inner-input">
@@ -43,9 +50,9 @@
             <textarea rows="16" name="message" [(ngModel)]="message" class="recipient-view-form-inner-input-message"></textarea>
           </div>
 
-          <div class="recipient-view-form-inner-buttons">
-            <button type="button" class="recipient-view-form-inner-buttons-save" (click)='saveChanges()'>SAVE&nbsp;&nbsp;CHANGES</button>
-            <button type="button" class="recipient-view-form-inner-buttons-cancel" routerLink="/messages">CANCEL</button>
+          <div class="buttons">
+            <button type="button" class="buttons-primary" (click)='saveChanges()'>SAVE&nbsp;&nbsp;CHANGES</button>
+            <button type="button" class="buttons-secondary" routerLink="/messages">CANCEL</button>
           </div>
         </form>
       </div>
