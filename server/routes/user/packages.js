@@ -89,6 +89,7 @@ router.route('/:id/packages/:packageId')
       .where({ package_id: packageId })
       .save(
         {
+          name: req.body.title,
           aws_url: req.body.message
         },
         { patch: true }
@@ -101,11 +102,11 @@ router.route('/:id/packages/:packageId')
       });
   })
   .delete(isAuthenticated, (req, res) => {
-    // Flag package with deleted_at
+    // Flag package with deleted_at:
     const userId = req.params.id;
     const packageId = req.params.packageId;
 
-    // flags the trigger input
+    // Flags the trigger input:
     return new Package()
       .query(qb => {
         qb.where({ id: packageId }).andWhere({ package_maker_id: userId });
