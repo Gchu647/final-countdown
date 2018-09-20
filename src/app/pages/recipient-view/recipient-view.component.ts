@@ -101,8 +101,7 @@ export class RecipientViewComponent implements OnInit {
 
   // WORKING ON EDITING PACKAGES
   saveChanges() {
-    console.log(this.messageData)
-    this.auth.editPackageById(this.packageId)
+    this.auth.editPackageById(this.packageId, this.messageData)
     .then((response: object) => {
       console.log('recipient-view: ', response);
     });

@@ -110,10 +110,10 @@ export class AuthService {
     });
   }
 
-  editPackageById(packageId) {
+  editPackageById(packageId, formData) {
     const userId = this.user.userId;
 
-    return this.backend.editPackageById(userId, packageId)
+    return this.backend.editPackageById(userId, packageId, formData)
     .then(response => {
       return response;
     });
