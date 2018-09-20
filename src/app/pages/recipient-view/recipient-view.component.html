@@ -24,10 +24,10 @@
           </div>
 
           <div class="recipient-view-form-inner-input">
-            <label for="relationship">Relationship:</label>
-            <select name="relationship" [(ngModel)]="formData.relationship" class="recipient-view-form-inner-input-relationship">
+            <label for="group">Relationship:</label>
+            <select name="group" [(ngModel)]="formData.groupId" class="recipient-view-form-inner-input-group">
               <option value="-1" class="recipient-view-form-inner-input-relationship-blank">---</option>
-              <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
+              <option *ngFor="let group of groups" value="{{group.id}}">{{group.name}}</option>
             </select>
           </div>
 
