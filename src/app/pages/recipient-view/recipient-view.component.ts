@@ -78,6 +78,7 @@ export class RecipientViewComponent implements OnInit {
 
   getRecipientById(recipientId) {
     this.auth.fetchRecpientById(recipientId).then((response: object) => {
+      console.log('getRecipientById: ', response);
       this.formData = response;
     });
   }

@@ -101,6 +101,15 @@ export class AuthService {
     });
   }
 
+  fetchPackageById(packageId) {
+    const userId = this.user.userId;
+
+    return this.backend.fetchPackageById(userId, packageId)
+    .then(response => {
+      return response;
+    });
+  }
+
   editRecipientById(recipientId, formData) {
     console.log('auth.service!');
     const userId = this.user.userId;
