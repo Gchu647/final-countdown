@@ -84,6 +84,24 @@ export class AuthService {
     });
   }
 
+  fetchPackageById(packageId) {
+    const userId = this.user.userId;
+
+    return this.backend.fetchPackageById(userId, packageId)
+    .then(response => {
+      return response;
+    });
+  }
+
+  editPackageById(packageId, formData) {
+    const userId = this.user.userId;
+
+    return this.backend.editPackageById(userId, packageId, formData)
+    .then(response => {
+      return response;
+    });
+  }
+
   editRecipientById(recipientId, formData) {
     const userId = this.user.userId;
 

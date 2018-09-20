@@ -65,13 +65,15 @@ router.route('/:id/recipients/:recipientId')
       })
       .fetch()
       .then(recipient => {
+        console.log('Getting a recipient: ', recipient.attributes);
+
         const recipientResponse = {
           id: recipient.attributes.id,
           email: recipient.attributes.email,
           firstName: recipient.attributes.f_name,
           lastName: recipient.attributes.l_name,
           phoneNumber: recipient.attributes.phone_num,
-          packageId: req.body.package_id,
+          packageId: recipient.attributes.package_id,
           groupId: recipient.attributes.group_id
         };
 
