@@ -11,7 +11,9 @@ router.route('/:id/recipients')
 
     return new Recipient()
       .query(qb => {
-        qb.where({ sender_id: userId }).andWhere({ deleted_at: null });
+        qb.where({ sender_id: userId })
+          .andWhere({ deleted_at: null })
+          .orderBy('f_name', 'ASC');
       })
       .fetchAll({ withRelated: ['package.file'] })
       .then(recipients => {
