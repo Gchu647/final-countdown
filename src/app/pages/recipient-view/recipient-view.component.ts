@@ -103,7 +103,15 @@ export class RecipientViewComponent implements OnInit {
   saveChanges() {
     this.auth.editPackageById(this.packageId, this.messageData)
     .then((response: object) => {
-      console.log('recipient-view: ', response);
+      console.log('edited package: ', response);
+
+      return this.auth.editRecipientById(this.recipientId, this.formData)
+        .then((response: object) => {
+          this.formData = response;
+        })
+    })
+    .then(() => {
+      this.router.navigate(['/messages']);
     });
 
     // this.auth.editRecipientById(this.recipientId, this.formData)
