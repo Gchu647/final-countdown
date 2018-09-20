@@ -89,6 +89,7 @@ router.route('/:id/packages/:packageId')
       .where({ package_id: packageId })
       .save(
         {
+          name: req.body.title,
           aws_url: req.body.message
         },
         { patch: true }

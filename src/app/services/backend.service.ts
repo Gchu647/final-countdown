@@ -159,7 +159,7 @@ export class BackendService {
 
   editPackageById(userId, packageId, formData) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-    console.log('backend.service edit: ');
+    console.log('backend.service edit: ', formData);
     return this.http.put(packageIdUrl, formData).toPromise();
   }
 

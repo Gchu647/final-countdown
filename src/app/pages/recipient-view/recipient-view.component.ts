@@ -96,6 +96,7 @@ export class RecipientViewComponent implements OnInit {
     return this.auth.fetchPackageById(packageId).then((response: object) => {
       console.log('fetchPackageById: ', response['file'][0]['aws_url']);
       this.messageData['message'] = response['file'][0]['aws_url'];
+      this.messageData['title'] = response['file'][0]['name'];
     });
   }
 
