@@ -51,13 +51,20 @@ export class RegisterComponent {
     if (errorMessages.some(errorMessage => errorMessage.length > 0)) {
       return;
     } else {
-      return this.backend
-        .register(this.registerFormData)
+      return this.backend.register(this.registerFormData)
         .then(response => {
           console.log('Response @register_component: ', response);
         })
         .then(() => this.router.navigate(['/login']))
-        .catch(response => console.log(response.error.message));
+        .catch(response => {
+          const errorMessage: string = response.error.message;
+
+          // Display error if submitted email violates foreign key restraint:
+          if (errorMessage && errorMessage.includes('users_email_unique')) {
+            this.emailError = 'Email address already in use';
+            this.toggleSubmitButton();
+          }
+        });
     }
   }
 
