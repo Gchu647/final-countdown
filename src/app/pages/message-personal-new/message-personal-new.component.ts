@@ -37,6 +37,7 @@ export class MessagePersonalNewComponent implements OnInit {
   lastNameError: string = '';
   emailError: string = '';
   phoneError: string = '';
+  messageError: string = '';
 
   constructor(
     private router: Router,
@@ -48,8 +49,9 @@ export class MessagePersonalNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.validateName('message-new-add-recipient-form-input-first-name');
-    this.validateName('message-new-add-recipient-form-input-last-name');
+    this.validateInputLength('message-new-add-recipient-form-input-first-name');
+    this.validateInputLength('message-new-add-recipient-form-input-last-name');
+    this.validateInputLength('message-new-text-form-input-message');
     this.validateEmail('blur');
 
     // Get user's groups from server and capitalize first letter of each:
@@ -94,37 +96,49 @@ export class MessagePersonalNewComponent implements OnInit {
 
   // ------------------------------------------------------------------------ //
 
-  validateName(classNameStr) {
-    const nameErrorMessage = 'Required';
-    const name = document
+  // Validates the input length of "First Name", "Last Name", and "Message":
+  validateInputLength(classNameStr) {
+    const errorMessage = 'Required';
+    const inputValue = document
       .getElementsByClassName(classNameStr)[0]
       ['value'].trim();
 
-    // Display error if first or last name input field is empty:
+    // Display error if input field is empty:
     switch (classNameStr) {
       case 'message-new-add-recipient-form-input-first-name':
-        if (this.checkEmptyNameField(name)) {
-          this.firstNameError = nameErrorMessage;
+        if (this.checkEmptyInputField(inputValue)) {
+          this.firstNameError = errorMessage;
         } else {
           this.firstNameError = '';
         }
         this.toggleSubmitButton();
         break;
+
       case 'message-new-add-recipient-form-input-last-name':
-        if (this.checkEmptyNameField(name)) {
-          this.lastNameError = nameErrorMessage;
+        if (this.checkEmptyInputField(inputValue)) {
+          this.lastNameError = errorMessage;
         } else {
           this.lastNameError = '';
         }
         this.toggleSubmitButton();
         break;
+
+      case 'message-new-text-form-input-message':
+        if (this.checkEmptyInputField(inputValue)) {
+          this.messageError = errorMessage;
+        } else {
+          this.messageError = '';
+        }
+        this.toggleSubmitButton();
+        break;
+
       default:
         break;
     }
   }
 
-  checkEmptyNameField(name) {
-    return name.length < 1 ? true : false;
+  checkEmptyInputField(str) {
+    return str.length < 1 ? true : false;
   }
 
   validateEmail(eventTypeStr) {
@@ -235,7 +249,8 @@ export class MessagePersonalNewComponent implements OnInit {
       this.firstNameError,
       this.lastNameError,
       this.emailError,
-      this.phoneError
+      this.phoneError,
+      this.messageError
     ];
 
     if (errorMessages.some(errorMessage => errorMessage.length > 0)) {
@@ -243,7 +258,8 @@ export class MessagePersonalNewComponent implements OnInit {
     } else if (
       !this.recipientData['firstName'] ||
       !this.recipientData['lastName'] ||
-      !this.recipientData['email']
+      !this.recipientData['email'] ||
+      !this.messageData['message']
     ) {
       submitButton.setAttribute('disabled', '');
     } else {
