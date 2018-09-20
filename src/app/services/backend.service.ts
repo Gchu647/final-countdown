@@ -151,11 +151,16 @@ export class BackendService {
     return this.http.post(packageUrl, formData).toPromise();
   }
 
-  // WORKING ON
   fetchPackageById(userId, packageId) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-    console.log('backend.service: ');
+  
     return this.http.get(packageIdUrl).toPromise();
+  }
+
+  editPackageById(userId, packageId) {
+    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
+    console.log('backend.service edit: ');
+    return Promise.resolve({'message': packageIdUrl});
   }
 
   // ------------------------------------------------------------------------ //

@@ -95,16 +95,21 @@ export class RecipientViewComponent implements OnInit {
     });
   }
 
-
+  // WORKING ON EDITING PACKAGES
   saveChanges() {
-    this.auth.editRecipientById(this.recipientId, this.formData)
-      .then((response: object) => {
-        this.formData = response;
-      })
-      .then(() => {
-        this.router.navigate(['/messages']);
-      })
-      .catch(err => console.log(err));
+    this.auth.editPackageById(this.packageId)
+    .then((response: object) => {
+      console.log('recipient-view: ', response);
+    });
+
+    // this.auth.editRecipientById(this.recipientId, this.formData)
+    //   .then((response: object) => {
+    //     this.formData = response;
+    //   })
+    //   .then(() => {
+    //     this.router.navigate(['/messages']);
+    //   })
+    //   .catch(err => console.log(err));
   }
 
   // ------------------------------------------------------------------------ //
