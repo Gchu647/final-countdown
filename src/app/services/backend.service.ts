@@ -143,6 +143,13 @@ export class BackendService {
     return this.http.get(groupMembersUrl).toPromise();
   }
 
+  fetchGroupPackage(userId, groupId) {
+    const groupPackageUrl =
+      this.url + `user/${userId}/groups/${groupId}/package`;
+
+    return this.http.get(groupPackageUrl).toPromise();
+  }
+
   // ------------------------------------------------------------------------ //
 
   addPackage(userId, formData) {
@@ -152,9 +159,10 @@ export class BackendService {
     return this.http.post(packageUrl, formData).toPromise();
   }
 
-  // WORKING ON
-  fetchPackageById() {
-    const packageIdUrl = this.url;
+  editPackageEncryptedFile(userId, packageId, formData) {
+    const editPackageEncryptedFileUrl = this.url + `user/${userId}/packages/${packageId}`;
+
+    return this.http.put(editPackageEncryptedFileUrl, formData).toPromise();
   }
 
   // ------------------------------------------------------------------------ //
