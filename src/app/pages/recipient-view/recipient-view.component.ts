@@ -25,9 +25,7 @@ export class RecipientViewComponent implements OnInit {
   groups: object[];
   recipientId: number;
   packageId: number;
-
-  // Temporary variable (until integrated with database):
-  message: string = 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.';
+  message: string;
 
   // Errors:
   firstNameError: string = '';
@@ -71,8 +69,8 @@ export class RecipientViewComponent implements OnInit {
         return this.getRecipientById(this.recipientId)
       })
       .then(() => {
-        // Get the package file message
-        if(!this.packageId) {
+        // Get the package file message if packageId is not null
+        if(this.packageId) {
           return this.fetchPackageById(this.packageId)
         }
       })
@@ -92,7 +90,8 @@ export class RecipientViewComponent implements OnInit {
 
   fetchPackageById(packageId) {
     return this.auth.fetchPackageById(packageId).then((response: object) => {
-      console.log('fetchPackageById: ', response);
+      console.log('fetchPackageById: ', response['file'][0]['aws_url']);
+      this.message = response['file'][0]['aws_url'];
     });
   }
 
