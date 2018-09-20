@@ -13,21 +13,21 @@
             <label for="first-name">First Name:</label>
             <span *ngIf="firstNameError" class="message-new-add-recipient-form-input-error">{{firstNameError}}</span>
 
-            <input type="text" name="first-name" class="message-new-add-recipient-form-input-first-name" [(ngModel)]="recipientData.firstName" (ngModelChange)="validateName('message-new-add-recipient-form-input-first-name')" required>
+            <input type="text" name="first-name" class="message-new-add-recipient-form-input-first-name" [(ngModel)]="recipientData.firstName" (ngModelChange)="validateInputLength('message-new-add-recipient-form-input-first-name')" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
             <label for="last-name">Last Name:</label>
             <span *ngIf="lastNameError" class="message-new-add-recipient-form-input-error">{{lastNameError}}</span>
 
-            <input type="text" name="last-name" class="message-new-add-recipient-form-input-last-name" [(ngModel)]="recipientData.lastName" (ngModelChange)="validateName('message-new-add-recipient-form-input-last-name')" required>
+            <input type="text" name="last-name" class="message-new-add-recipient-form-input-last-name" [(ngModel)]="recipientData.lastName" (ngModelChange)="validateInputLength('message-new-add-recipient-form-input-last-name')" required>
           </div>
 
           <div class="message-new-add-recipient-form-input">
-            <label for="relationship">Relationship:</label>
-            <select name="relationship" class="message-new-add-recipient-form-input-relationship" [(ngModel)]="relationshipId" (ngModelChange)="relationshipToGroup()">
+            <label for="group">Relationship:</label>
+            <select name="group" [(ngModel)]="recipientData.groupId" class="message-new-add-recipient-form-input-group">
               <option value="-1" class="message-new-add-recipient-form-input-relationship-blank">---</option>
-              <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
+              <option *ngFor="let group of groups" value="{{group.id}}">{{group.name}}</option>
             </select>
           </div>
 
@@ -57,7 +57,9 @@
 
           <div class="message-new-text-form-input">
             <label for="message">Message:</label>
-            <textarea rows="16" name="message" [(ngModel)]="messageData.message"></textarea>
+            <span *ngIf="messageError" class="message-new-text-form-input-error">{{messageError}}</span>
+
+            <textarea rows="16" name="message" class="message-new-text-form-input-message" [(ngModel)]="messageData.message" (ngModelChange)="validateInputLength('message-new-text-form-input-message')" required></textarea>
           </div>
 
           <div class="buttons">

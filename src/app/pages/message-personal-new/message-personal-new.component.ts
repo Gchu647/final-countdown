@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { BackendService } from '../../services/backend.service';
+import { SessionsService } from '../../services/sessions.service';
 
 @Component({
   selector: 'app-message-personal-new',
@@ -8,57 +10,71 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./message-personal-new.component.scss']
 })
 export class MessagePersonalNewComponent implements OnInit {
-  // Temporary variable(s) (until database integrated):
+  // User:
+  user: {
+    loggedIn: boolean;
+    email: string;
+    userId: number;
+  };
+  groups: object[];
+
+  // Recipient:
   recipientData: object = {
     email: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',
     packageId: null,
-    groupId: null, // No groupId for now
+    groupId: null
   };
   messageData: object = {
     title: '',
-    message: '',
+    message: ''
   };
-  relationships: object[] = [
-    { id: 1, name: 'Family' },
-    { id: 2, name: 'Friends' },
-    { id: 3, name: 'Haters' }
-  ];
-  relationshipId: number;
-  groups: object[];
 
+  // Errors:
   firstNameError: string = '';
   lastNameError: string = '';
   emailError: string = '';
   phoneError: string = '';
+  messageError: string = '';
 
   constructor(
-    private router: Router, 
+    private router: Router,
+    private session: SessionsService,
+    private backend: BackendService,
     private auth: AuthService
-  ) {}
+  ) {
+    this.user = this.session.getSession();
+  }
 
   ngOnInit() {
-    this.validateName('message-new-add-recipient-form-input-first-name');
-    this.validateName('message-new-add-recipient-form-input-last-name');
+    this.validateInputLength('message-new-add-recipient-form-input-first-name');
+    this.validateInputLength('message-new-add-recipient-form-input-last-name');
+    this.validateInputLength('message-new-text-form-input-message');
     this.validateEmail('blur');
 
-    this.auth.fetchGroups()
+    // Get user's groups from server and capitalize first letter of each:
+    this.backend.fetchGroups(this.user['userId'])
       .then((response: object[]) => {
-        // console.log('fetch groups in message personal: ', response);
-        this.groups = response;
+        const groups = response.map(group => {
+          return {
+            id: group['id'],
+            name: group['relationship']['name']
+          };
+        });
+
+        const capitalizedGroups = groups.map(group => {
+          const capitalizedGroup = Object.assign(group);
+          capitalizedGroup['name'] =
+            capitalizedGroup.name.charAt(0).toUpperCase() +
+            capitalizedGroup.name.substr(1);
+          return capitalizedGroup;
+        });
+
+        return (this.groups = capitalizedGroups);
       })
-  }
-  
-  // WORKING ON
-  relationshipToGroup() {
-    console.log('relationshipId: ', this.relationshipId);
-    let theGroup = this.groups.filter(obj => {
-      console.log('group, relationship_id', obj['relationship_id']);
-      return ( Number(obj['relationship_id']) === Number(this.relationshipId) );
-    })
-    console.log('theGroup: ', theGroup[0]['id']);
+      .catch(err => console.log(err));
   }
 
   save() {
@@ -69,10 +85,9 @@ export class MessagePersonalNewComponent implements OnInit {
         console.log('added package', response);
         this.recipientData['packageId'] = response['packageId'];
 
-        return this.auth.addRecipient(this.recipientData)
-          .then((response) => {
-            console.log('recipient save: ', response);
-          })
+        return this.auth.addRecipient(this.recipientData).then(response => {
+          console.log('recipient save: ', response);
+        });
       })
       .then(() => {
         this.router.navigate(['/messages']);
@@ -80,37 +95,50 @@ export class MessagePersonalNewComponent implements OnInit {
   }
 
   // ------------------------------------------------------------------------ //
-  validateName(classNameStr) {
-    const nameErrorMessage = 'Required';
-    const name = document
+
+  // Validates the input length of "First Name", "Last Name", and "Message":
+  validateInputLength(classNameStr) {
+    const errorMessage = 'Required';
+    const inputValue = document
       .getElementsByClassName(classNameStr)[0]
       ['value'].trim();
 
-    // Display error if first or last name input field is empty:
+    // Display error if input field is empty:
     switch (classNameStr) {
       case 'message-new-add-recipient-form-input-first-name':
-        if (this.checkEmptyNameField(name)) {
-          this.firstNameError = nameErrorMessage;
+        if (this.checkEmptyInputField(inputValue)) {
+          this.firstNameError = errorMessage;
         } else {
           this.firstNameError = '';
         }
         this.toggleSubmitButton();
         break;
+
       case 'message-new-add-recipient-form-input-last-name':
-        if (this.checkEmptyNameField(name)) {
-          this.lastNameError = nameErrorMessage;
+        if (this.checkEmptyInputField(inputValue)) {
+          this.lastNameError = errorMessage;
         } else {
           this.lastNameError = '';
         }
         this.toggleSubmitButton();
         break;
+
+      case 'message-new-text-form-input-message':
+        if (this.checkEmptyInputField(inputValue)) {
+          this.messageError = errorMessage;
+        } else {
+          this.messageError = '';
+        }
+        this.toggleSubmitButton();
+        break;
+
       default:
         break;
     }
   }
 
-  checkEmptyNameField(name) {
-    return name.length < 1 ? true : false;
+  checkEmptyInputField(str) {
+    return str.length < 1 ? true : false;
   }
 
   validateEmail(eventTypeStr) {
@@ -221,7 +249,8 @@ export class MessagePersonalNewComponent implements OnInit {
       this.firstNameError,
       this.lastNameError,
       this.emailError,
-      this.phoneError
+      this.phoneError,
+      this.messageError
     ];
 
     if (errorMessages.some(errorMessage => errorMessage.length > 0)) {
@@ -229,7 +258,8 @@ export class MessagePersonalNewComponent implements OnInit {
     } else if (
       !this.recipientData['firstName'] ||
       !this.recipientData['lastName'] ||
-      !this.recipientData['email']
+      !this.recipientData['email'] ||
+      !this.messageData['message']
     ) {
       submitButton.setAttribute('disabled', '');
     } else {
