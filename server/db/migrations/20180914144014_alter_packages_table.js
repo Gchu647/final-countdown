@@ -1,3 +1,4 @@
+// migration breaks in this file
 exports.up = function(knex, Promise) {
   return knex.schema.table('packages', table => {
     table.dropColumn('recipient_id');

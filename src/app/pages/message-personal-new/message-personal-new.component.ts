@@ -85,7 +85,7 @@ export class MessagePersonalNewComponent implements OnInit {
         console.log('added package', response);
         this.recipientData['packageId'] = response['packageId'];
 
-        this.auth.addRecipient(this.recipientData).then(response => {
+        return this.auth.addRecipient(this.recipientData).then(response => {
           console.log('recipient save: ', response);
         });
       })

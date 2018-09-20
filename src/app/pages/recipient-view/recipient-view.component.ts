@@ -22,11 +22,15 @@ export class RecipientViewComponent implements OnInit {
     phoneNumber: '',
     groupId: ''
   };
+  messageData: object = {
+    title: '',
+    message: '',
+  };
   groups: object[];
-  recipientId: number;
 
-  // Temporary variable (until integrated with database):
-  message: string = 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.';
+  // Tacking ids
+  recipientId: number;
+  packageId: number;
 
   // Errors:
   firstNameError: string = '';
@@ -67,7 +71,13 @@ export class RecipientViewComponent implements OnInit {
       .then(() => {
         // This step must occur after groups have been fetched to ensure that
         // the "Relationship" dropdown menu is populated appropriately:
-        this.getRecipientById(this.recipientId);
+        return this.getRecipientById(this.recipientId)
+      })
+      .then(() => {
+        // Get the package file message if packageId is not null
+        if(this.packageId) {
+          return this.fetchPackageById(this.packageId)
+        }
       })
       .catch(err => console.log(err));
 
@@ -77,20 +87,48 @@ export class RecipientViewComponent implements OnInit {
   }
 
   getRecipientById(recipientId) {
-    this.auth.fetchRecpientById(recipientId).then((response: object) => {
+    return this.auth.fetchRecpientById(recipientId).then((response: object) => {
+      this.packageId = response['packageId'];
       this.formData = response;
     });
   }
 
+  fetchPackageById(packageId) {
+    return this.auth.fetchPackageById(packageId).then((response: object) => {
+      console.log('fetchPackageById: ', response['file'][0]['aws_url']);
+      this.messageData['message'] = response['file'][0]['aws_url'];
+      this.messageData['title'] = response['file'][0]['name'];
+    });
+  }
+
   saveChanges() {
-    this.auth.editRecipientById(this.recipientId, this.formData)
-      .then((response: object) => {
-        this.formData = response;
+    // Edits a recipient's package by packageId
+    return this.backend.editPackageEncryptedFile(this.user['userId'], this.packageId, this.messageData)
+      .then(() => {
+        // Then save changes of recipient's info
+        return this.auth.editRecipientById(this.recipientId, this.formData)
+          .then((response: object) => {
+            this.formData = response;
+          })
       })
       .then(() => {
         this.router.navigate(['/messages']);
+      });
+  }
+
+  deleteRecipient() {
+    // deletes(flags) a package by packageId
+    return this.backend.deletePackageById(this.user['userId'], this.packageId)
+      .then((response) => {
+        // deletes(flag) a recipient by recipientId
+          return this.backend.deleteRecipientById(this.user['userId'], this.recipientId)
+          .then(() => {
+            console.log('recipient deleted');
+          })
       })
-      .catch(err => console.log(err));
+      .then(() => {
+        this.router.navigate(['/messages']);
+      });
   }
 
   // ------------------------------------------------------------------------ //

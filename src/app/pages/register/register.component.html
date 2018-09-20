@@ -7,35 +7,48 @@
   <div class="register-form">
     <form class="register-form-inner">
       <div class="register-form-inner-input">
-        <label for="email">Email: </label>
-        <input type="email" name="email" class="register-form-inner-input-email" [(ngModel)]='RegisterFormData.email'
-          required>
+        <label for="email">Email:</label>
+        <span *ngIf="emailError" class="register-form-inner-input-error">{{emailError}}</span>
+
+        <input type="email" name="email" class="register-form-inner-input-email" [(ngModel)]="registerFormData.email"
+          (ngModelChange)="validateEmail('ngModelChange')" (blur)="validateEmail('blur')" autocomplete="off" required>
       </div>
 
       <div class="register-form-inner-input">
-        <label for="first-name">First Name: </label>
-        <input type="first-name" name="first-name" class="register-form-inner-input-first-name" [(ngModel)]='RegisterFormData.firstName'
-          required>
+        <label for="first-name">First Name:</label>
+        <span *ngIf="firstNameError" class="register-form-inner-input-error">{{firstNameError}}</span>
+
+        <input type="first-name" name="first-name" class="register-form-inner-input-first-name" [(ngModel)]="registerFormData.firstName"
+          (ngModelChange)="validateInputLength('register-form-inner-input-first-name')" autocomplete="off" required>
       </div>
 
       <div class="register-form-inner-input">
-        <label for="last-name">Last Name: </label>
-        <input type="last-name" name="last-name" class="register-form-inner-input-last-name" [(ngModel)]='RegisterFormData.lastName'
-          required>
+        <label for="last-name">Last Name:</label>
+        <span *ngIf="lastNameError" class="register-form-inner-input-error">{{lastNameError}}</span>
+
+        <input type="last-name" name="last-name" class="register-form-inner-input-last-name" [(ngModel)]="registerFormData.lastName"
+          (ngModelChange)="validateInputLength('register-form-inner-input-last-name')" autocomplete="off" required>
       </div>
 
       <div class="register-form-inner-input">
-        <label for="password">Password: </label>
-        <input type="password" name="password" class="register-form-inner-input-password" [(ngModel)]='RegisterFormData.password'
-          required>
+        <label for="password">Password:</label>
+        <span *ngIf="passwordError" class="register-form-inner-input-error">{{passwordError}}</span>
+
+        <input type="password" name="password" class="register-form-inner-input-password" [(ngModel)]="registerFormData.password"
+        (ngModelChange)="validatePassword('ngModelChange')" (blur)="validatePassword('blur')" required>
       </div>
 
       <div class="register-form-inner-input">
-        <label for="confirm">Confirm Password: </label>
-        <input type="password" name="confirm" class="register-form-inner-input-confirm" [(ngModel)]='RegisterFormData.confirm' required>
+        <label for="confirm">Confirm Password:</label>
+        <span *ngIf="passwordConfirmError" class="register-form-inner-input-error">{{passwordConfirmError}}</span>
+
+        <input type="password" name="confirm" class="register-form-inner-input-confirm" [(ngModel)]="registerFormData.confirm"
+          (ngModelChange)="validatePasswordConfirm('ngModelChange')" (blur)="validatePasswordConfirm('blur')" required>
       </div>
 
-      <button type="button" class="register-form-inner-submit" (click)='register()'>REGISTER</button>
+      <div class="buttons">
+        <button type="button" class="buttons-primary" (click)="register()">REGISTER</button>
+      </div>
     </form>
   </div>
 
