@@ -155,7 +155,7 @@ export class BackendService {
   fetchPackageById(userId, packageId) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
     console.log('backend.service: ');
-    return Promise.resolve({ 'message': packageIdUrl });
+    return this.http.get(packageIdUrl).toPromise();
   }
 
   // ------------------------------------------------------------------------ //

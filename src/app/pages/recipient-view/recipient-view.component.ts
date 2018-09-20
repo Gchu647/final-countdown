@@ -90,7 +90,7 @@ export class RecipientViewComponent implements OnInit {
 
   fetchPackageById(packageId) {
     return this.auth.fetchPackageById(packageId).then((response: object) => {
-      console.log('fetchPackageById: ', response);
+      console.log('fetchPackageById: ', response['file']);
     });
   }
 
