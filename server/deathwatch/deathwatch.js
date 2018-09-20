@@ -11,9 +11,9 @@ const mg = mailgun.client({
 
 let count = 0;
 let recipientArr;
-triggerQueue.initialize();
 
 const deathWatch = schedule.scheduleJob('* * * * * *', async function() {
+  triggerQueue.updateQueue();
   // console.log(triggerQueue);
   console.log('count: ', count, 'current time: ', new Date(Date.now()).toUTCString());
   recipientArr = await triggerQueue.getExecutableTriggers().catch(err => {

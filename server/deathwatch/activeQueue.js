@@ -18,10 +18,13 @@ class ActiveTriggerQueue {
   constructor() {
     this.head = null;
     this.tail = null;
+    this.lastUpdate = moment.utc(0);
   }
 
   async getTriggers() {
-    return await Trigger.fetchAll()
+    console.log('last update', this.lastUpdate);
+    return await Trigger.query('where', 'created_at', '>', `${this.lastUpdate}`)
+      .fetchAll({ countdown: !null })
       .then(response => {
         console.log('getTriggers response', response);
         return response.toJSON();
@@ -31,11 +34,18 @@ class ActiveTriggerQueue {
       });
   }
 
-  async initialize() {
+  /** ActiveTrigger updateQueue: This function runs periodically and retrieves any new triggers from the trigger
+   * database and inserts them into the ActiveTrigger Queue */
+  async updateQueue() {
     return await this.getTriggers()
       .then(trigArr => {
-        console.log('initialize', trigArr);
+        console.log('update', trigArr);
         trigArr.map(trigger => {
+          console.log('trigger v last', trigger.created_at, this.lastUpdate);
+          if (trigger.created_at > this.lastUpdate) {
+            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+            this.lastUpdate = trigger.created_at;
+          }
           this.insertToQueue({
             userId: trigger.user_id,
             timeToExecute: trigger.countdown
@@ -46,7 +56,8 @@ class ActiveTriggerQueue {
         console.log('Initialization Error:', err);
       });
   }
-  /** Active Trigger getExecutableTriggers: This function searchs the
+
+  /** ActiveTrigger getExecutableTriggers: This function searchs the
    * linkedlist and returns an array of the triggers to execute **/
   async getExecutableTriggers() {
     let executableTriggers = [];
@@ -118,7 +129,7 @@ class ActiveTriggerQueue {
       });
   }
 
-  /*** Active Trigger Search: This function searches the structure
+  /*** ActiveTrigger Search: This function searches the structure
    * for a specific user's trigger. Uses the userId field to find
    * the trigger.***/
   search(userId) {
@@ -134,7 +145,7 @@ class ActiveTriggerQueue {
     return currentTrigger;
   }
 
-  /*** Active Trigger Search Previous: This function searches the structure
+  /*** ActiveTrigger Search Previous: This function searches the structure
    * for a specific user's trigger and returns the previous trigger. Uses the userId field to find
    * the trigger.***/
   searchPrevious(userId) {
@@ -151,13 +162,13 @@ class ActiveTriggerQueue {
     //This will return a trigger or ''
     return previousTrigger;
   }
-  /*** Active Trigger Edit: This function edits an active trigger modifying
+  /*** ActiveTrigger Edit: This function edits an active trigger modifying
    * the timeToExecute. It returns true if edit was successful else false***/
   edit(userId, newTimeToExecute) {
     this.delete(userId);
     return this.insertToQueue({ userId, timeToExecute: newTimeToExecute });
   }
-  /*** Active Trigger Delete: This function deletes an active trigger.
+  /*** ActiveTrigger Delete: This function deletes an active trigger.
    * It returns true if delete was successful else false***/
   delete(userId) {
     let success = false;
@@ -180,7 +191,7 @@ class ActiveTriggerQueue {
     return success;
   }
 
-  /*** Active Trigger Insert: This function inserts a new trigger into
+  /*** ActiveTrigger Insert: This function inserts a new trigger into
    *  the structure. The trigger is inserted based on timeToExecute***/
   insertToQueue(value) {
     let previousTrigger = null;
@@ -235,7 +246,7 @@ class ActiveTriggerQueue {
   }
 }
 
-/*** Active Trigger: This is a node in the linked-list that
+/*** ActiveTrigger: This is a node in the linked-list that
  * represents an active trigger. Value should be an object
  * containing { userId, timeToExecute} ***/
 function ActiveTrigger(value, next) {
