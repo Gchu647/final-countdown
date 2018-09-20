@@ -57,6 +57,8 @@
 
           <div class="buttons">
             <button type="button" class="buttons-primary" (click)='saveChanges()'>SAVE&nbsp;&nbsp;CHANGES</button>
+            <!-- Make delete button red like the trigger button -->
+            <button type="button" class="buttons-secondary" (click)="deleteRecipient()" >DELETE</button>
             <button type="button" class="buttons-secondary" routerLink="/messages">CANCEL</button>
           </div>
         </form>

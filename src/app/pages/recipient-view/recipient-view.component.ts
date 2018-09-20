@@ -118,6 +118,10 @@ export class RecipientViewComponent implements OnInit {
     });
   }
 
+  deleteRecipient() {
+    console.log('deleted a recipient!');
+  }
+
   // ------------------------------------------------------------------------ //
 
   validateName(classNameStr) {
