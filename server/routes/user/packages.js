@@ -43,6 +43,7 @@ router
       })
       .then(package => {
         // Second, create an encrypted file using the package ID as foreign key:
+        // encryption happens here where you get the user's hashed password
         return new EncryptedFile()
           .save({
             name: req.body.title? req.body.title : 'Message',
