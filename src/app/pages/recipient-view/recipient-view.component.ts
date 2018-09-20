@@ -27,9 +27,10 @@ export class RecipientViewComponent implements OnInit {
     message: '',
   };
   groups: object[];
+
+  // Tacking ids
   recipientId: number;
   packageId: number;
-  // message: string;
 
   // Errors:
   firstNameError: string = '';
@@ -100,12 +101,13 @@ export class RecipientViewComponent implements OnInit {
     });
   }
 
-  // WORKING ON EDITING PACKAGES
   saveChanges() {
+    // Edits a recipient's package by its id
     this.auth.editPackageById(this.packageId, this.messageData)
     .then((response: object) => {
       console.log('edited package: ', response);
 
+      // Then save the save changes recipient's info
       return this.auth.editRecipientById(this.recipientId, this.formData)
         .then((response: object) => {
           this.formData = response;
@@ -114,15 +116,6 @@ export class RecipientViewComponent implements OnInit {
     .then(() => {
       this.router.navigate(['/messages']);
     });
-
-    // this.auth.editRecipientById(this.recipientId, this.formData)
-    //   .then((response: object) => {
-    //     this.formData = response;
-    //   })
-    //   .then(() => {
-    //     this.router.navigate(['/messages']);
-    //   })
-    //   .catch(err => console.log(err));
   }
 
   // ------------------------------------------------------------------------ //
