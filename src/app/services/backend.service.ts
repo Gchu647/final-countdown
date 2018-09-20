@@ -148,13 +148,19 @@ export class BackendService {
   addPackage(userId, formData) {
     const packageUrl = this.url + `user/${userId}/packages`;
 
-    console.log('backend.service: ', formData);
     return this.http.post(packageUrl, formData).toPromise();
   }
 
-  // WORKING ON
-  fetchPackageById() {
-    const packageIdUrl = this.url;
+  fetchPackageById(userId, packageId) {
+    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
+  
+    return this.http.get(packageIdUrl).toPromise();
+  }
+
+  editPackageById(userId, packageId, formData) {
+    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
+    console.log('backend.service edit: ', formData);
+    return this.http.put(packageIdUrl, formData).toPromise();
   }
 
   // ------------------------------------------------------------------------ //
