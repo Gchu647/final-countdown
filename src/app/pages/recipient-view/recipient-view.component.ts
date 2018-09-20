@@ -103,17 +103,17 @@ export class RecipientViewComponent implements OnInit {
 
   saveChanges() {
     // Edits a recipient's package by packageId
-    return this.auth.editPackageById(this.packageId, this.messageData)
-    .then(() => {
-      // Then save changes of recipient's info
-      return this.auth.editRecipientById(this.recipientId, this.formData)
-        .then((response: object) => {
-          this.formData = response;
-        })
-    })
-    .then(() => {
-      this.router.navigate(['/messages']);
-    });
+    return this.backend.editPackageEncryptedFile(this.user['userId'], this.packageId, this.messageData)
+      .then(() => {
+        // Then save changes of recipient's info
+        return this.auth.editRecipientById(this.recipientId, this.formData)
+          .then((response: object) => {
+            this.formData = response;
+          })
+      })
+      .then(() => {
+        this.router.navigate(['/messages']);
+      });
   }
 
   deleteRecipient() {
@@ -122,7 +122,7 @@ export class RecipientViewComponent implements OnInit {
       .then((response) => {
         // deletes(flag) a recipient by recipientId
           return this.backend.deleteRecipientById(this.user['userId'], this.recipientId)
-          .then((response) => {
+          .then(() => {
             console.log('recipient deleted');
           })
       })

@@ -171,15 +171,6 @@ export class BackendService {
     return this.http.get(packageIdUrl).toPromise();
   }
 
-  // Creating when developing Personal Messages:
-  editPackageById(userId, packageId, formData) {
-    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-
-    return this.http.put(packageIdUrl, formData).toPromise();
-  }
-
-  // Alternative to the above method (created when developing Group Messages).
-  // One of these methods should replace the other during a future refactor:
   editPackageEncryptedFile(userId, packageId, formData) {
     const editPackageEncryptedFileUrl =
       this.url + `user/${userId}/packages/${packageId}`;
