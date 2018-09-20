@@ -93,15 +93,6 @@ export class AuthService {
     });
   }
 
-  editPackageById(packageId, formData) {
-    const userId = this.user.userId;
-
-    return this.backend.editPackageById(userId, packageId, formData)
-    .then(response => {
-      return response;
-    });
-  }
-
   editRecipientById(recipientId, formData) {
     const userId = this.user.userId;
 

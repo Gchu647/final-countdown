@@ -27,9 +27,10 @@ export class RecipientViewComponent implements OnInit {
     message: '',
   };
   groups: object[];
+
+  // Tacking ids
   recipientId: number;
   packageId: number;
-  // message: string;
 
   // Errors:
   firstNameError: string = '';
@@ -100,29 +101,34 @@ export class RecipientViewComponent implements OnInit {
     });
   }
 
-  // WORKING ON EDITING PACKAGES
   saveChanges() {
-    this.auth.editPackageById(this.packageId, this.messageData)
-    .then((response: object) => {
-      console.log('edited package: ', response);
+    // Edits a recipient's package by packageId
+    return this.backend.editPackageEncryptedFile(this.user['userId'], this.packageId, this.messageData)
+      .then(() => {
+        // Then save changes of recipient's info
+        return this.auth.editRecipientById(this.recipientId, this.formData)
+          .then((response: object) => {
+            this.formData = response;
+          })
+      })
+      .then(() => {
+        this.router.navigate(['/messages']);
+      });
+  }
 
-      return this.auth.editRecipientById(this.recipientId, this.formData)
-        .then((response: object) => {
-          this.formData = response;
-        })
-    })
-    .then(() => {
-      this.router.navigate(['/messages']);
-    });
-
-    // this.auth.editRecipientById(this.recipientId, this.formData)
-    //   .then((response: object) => {
-    //     this.formData = response;
-    //   })
-    //   .then(() => {
-    //     this.router.navigate(['/messages']);
-    //   })
-    //   .catch(err => console.log(err));
+  deleteRecipient() {
+    // deletes(flags) a package by packageId
+    return this.backend.deletePackageById(this.user['userId'], this.packageId)
+      .then((response) => {
+        // deletes(flag) a recipient by recipientId
+          return this.backend.deleteRecipientById(this.user['userId'], this.recipientId)
+          .then(() => {
+            console.log('recipient deleted');
+          })
+      })
+      .then(() => {
+        this.router.navigate(['/messages']);
+      });
   }
 
   // ------------------------------------------------------------------------ //
