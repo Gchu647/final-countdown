@@ -167,7 +167,7 @@ export class BackendService {
   // Creating when developing Personal Messages:
   editPackageById(userId, packageId, formData) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-    console.log('backend.service edit: ', formData);
+
     return this.http.put(packageIdUrl, formData).toPromise();
   }
 
@@ -179,6 +179,13 @@ export class BackendService {
 
     return this.http.put(editPackageEncryptedFileUrl, formData).toPromise();
   }
+
+  deletePackageById(userId, packageId, formData) {
+    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
+    console.log('backend.service delete: ', formData);
+    return Promise.resolve({'message': packageIdUrl});
+  }
+
   // ------------------------------------------------------------------------ //
 
   fetchTrigger(userId) {

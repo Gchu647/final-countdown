@@ -103,7 +103,7 @@ export class RecipientViewComponent implements OnInit {
 
   saveChanges() {
     // Edits a recipient's package by its id
-    this.auth.editPackageById(this.packageId, this.messageData)
+    return this.auth.editPackageById(this.packageId, this.messageData)
     .then((response: object) => {
       console.log('edited package: ', response);
 
@@ -118,8 +118,12 @@ export class RecipientViewComponent implements OnInit {
     });
   }
 
+  // WORKING on
   deleteRecipient() {
-    console.log('deleted a recipient!');
+    return this.backend.deletePackageById(this.user['userId'], this.packageId, this.messageData)
+      .then((response) => {
+        console.log('recipient-view: ', response);
+      })
   }
 
   // ------------------------------------------------------------------------ //
