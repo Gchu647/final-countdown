@@ -120,10 +120,15 @@ export class RecipientViewComponent implements OnInit {
 
   // WORKING on
   deleteRecipient() {
-    return this.backend.deletePackageById(this.user['userId'], this.packageId)
-      .then((response) => {
-        console.log('recipient-view: ', response);
-      })
+    // return this.backend.deletePackageById(this.user['userId'], this.packageId)
+      // .then((response) => {
+      //   console.log('recipient-view: ', response);
+      // })
+
+    this.backend.deleteRecipientById(this.user['userId'], this.recipientId)
+    .then((response) => {
+      console.log('recipient-view: ', response);
+    })
   }
 
   // ------------------------------------------------------------------------ //

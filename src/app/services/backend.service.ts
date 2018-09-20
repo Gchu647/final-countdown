@@ -122,6 +122,13 @@ export class BackendService {
     return this.http.put(recipientIdUrl, formData).toPromise();
   }
 
+  deleteRecipientById(userId, recipientId) {
+    const recipientIdUrl =
+    this.url + `user/${userId}/recipients/${recipientId}`;
+    console.log('backend.service delete recipient.');
+    return Promise.resolve({'message': recipientIdUrl});
+  }
+
   // ------------------------------------------------------------------------ //
 
   fetchGroups(userId) {
@@ -182,7 +189,7 @@ export class BackendService {
 
   deletePackageById(userId, packageId) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-    console.log('backend.service delete.');
+    
     return this.http.delete(packageIdUrl).toPromise();
   }
 
