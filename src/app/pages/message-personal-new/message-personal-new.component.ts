@@ -9,11 +9,6 @@ import { AuthService } from '../../services/auth.service';
 })
 export class MessagePersonalNewComponent implements OnInit {
   // Temporary variable(s) (until database integrated):
-  relationships: object[] = [
-    { id: 1, name: 'Family' },
-    { id: 2, name: 'Friends' },
-    { id: 3, name: 'Haters' }
-  ];
   recipientData: object = {
     email: '',
     firstName: '',
@@ -26,18 +21,44 @@ export class MessagePersonalNewComponent implements OnInit {
     title: '',
     message: '',
   };
+  relationships: object[] = [
+    { id: 1, name: 'Family' },
+    { id: 2, name: 'Friends' },
+    { id: 3, name: 'Haters' }
+  ];
+  relationshipId: number;
+  groups: object[];
 
   firstNameError: string = '';
   lastNameError: string = '';
   emailError: string = '';
   phoneError: string = '';
 
-  constructor(private router: Router, private auth: AuthService) {}
+  constructor(
+    private router: Router, 
+    private auth: AuthService
+  ) {}
 
   ngOnInit() {
     this.validateName('message-new-add-recipient-form-input-first-name');
     this.validateName('message-new-add-recipient-form-input-last-name');
     this.validateEmail('blur');
+
+    this.auth.fetchGroups()
+      .then((response: object[]) => {
+        // console.log('fetch groups in message personal: ', response);
+        this.groups = response;
+      })
+  }
+  
+  // WORKING ON
+  relationshipToGroup() {
+    console.log('relationshipId: ', this.relationshipId);
+    let theGroup = this.groups.filter(obj => {
+      console.log('group, relationship_id', obj['relationship_id']);
+      return ( Number(obj['relationship_id']) === Number(this.relationshipId) );
+    })
+    console.log('theGroup: ', theGroup[0]['id']);
   }
 
   save() {
@@ -49,9 +70,9 @@ export class MessagePersonalNewComponent implements OnInit {
         this.recipientData['packageId'] = response['packageId'];
 
         this.auth.addRecipient(this.recipientData)
-        .then((response) => {
-          console.log('recipient save: ', response);
-        })
+          .then((response) => {
+            console.log('recipient save: ', response);
+          })
       })
       .then(() => {
         this.router.navigate(['/messages']);

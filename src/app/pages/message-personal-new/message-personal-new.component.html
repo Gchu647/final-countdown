@@ -26,7 +26,7 @@
           <div class="message-new-add-recipient-form-input">
             <label for="relationship">Relationship:</label>
             <!-- Relationships? We only got groupId -->
-            <select name="relationship" class="message-new-add-recipient-form-input-relationship">
+            <select name="relationship" class="message-new-add-recipient-form-input-relationship" [(ngModel)]="relationshipId" (ngModelChange)="relationshipToGroup()">
               <option value="-1" class="message-new-add-recipient-form-input-relationship-blank">---</option>
               <option *ngFor="let relationship of relationships" value="{{relationship.id}}">{{relationship.name}}</option>
             </select>

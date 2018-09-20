@@ -83,6 +83,15 @@ export class AuthService {
     });
   }
 
+  fetchGroups() {
+    const userId = this.user.userId;
+    
+    return this.backend.fetchGroups(userId)
+    .then(response => {
+      return response;
+    });
+  }
+
   addPackage(formData) {
     const userId = this.user.userId;
 
