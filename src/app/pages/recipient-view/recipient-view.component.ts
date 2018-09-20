@@ -102,12 +102,10 @@ export class RecipientViewComponent implements OnInit {
   }
 
   saveChanges() {
-    // Edits a recipient's package by its id
+    // Edits a recipient's package by packageId
     return this.auth.editPackageById(this.packageId, this.messageData)
-    .then((response: object) => {
-      console.log('edited package: ', response);
-
-      // Then save the save changes recipient's info
+    .then(() => {
+      // Then save changes of recipient's info
       return this.auth.editRecipientById(this.recipientId, this.formData)
         .then((response: object) => {
           this.formData = response;
@@ -118,17 +116,19 @@ export class RecipientViewComponent implements OnInit {
     });
   }
 
-  // WORKING on
   deleteRecipient() {
-    // return this.backend.deletePackageById(this.user['userId'], this.packageId)
-      // .then((response) => {
-      //   console.log('recipient-view: ', response);
-      // })
-
-    this.backend.deleteRecipientById(this.user['userId'], this.recipientId)
-    .then((response) => {
-      console.log('recipient-view: ', response);
-    })
+    // deletes(flags) a package by packageId
+    return this.backend.deletePackageById(this.user['userId'], this.packageId)
+      .then((response) => {
+        // deletes(flag) a recipient by recipientId
+          return this.backend.deleteRecipientById(this.user['userId'], this.recipientId)
+          .then((response) => {
+            console.log('recipient deleted');
+          })
+      })
+      .then(() => {
+        this.router.navigate(['/messages']);
+      });
   }
 
   // ------------------------------------------------------------------------ //

@@ -126,7 +126,7 @@ export class BackendService {
     const recipientIdUrl =
     this.url + `user/${userId}/recipients/${recipientId}`;
     console.log('backend.service delete recipient.');
-    return Promise.resolve({'message': recipientIdUrl});
+    return this.http.delete(recipientIdUrl).toPromise();
   }
 
   // ------------------------------------------------------------------------ //
