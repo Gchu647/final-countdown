@@ -5,8 +5,8 @@ const State = require('../db/models/State');
 router.get('/', (req, res) => {
   return State
     .fetchAll()
-    .then(state => {
-      res.json(state);
+    .then(states => {
+      res.json(states);
     })
     .catch(err => {
       res.status(400).json({ message: err.message });

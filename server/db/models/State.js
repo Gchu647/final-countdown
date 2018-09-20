@@ -4,7 +4,7 @@ const bookshelf = require('./bookshelf');
 
 class State extends bookshelf.Model {
   get tableName() {
-    return 'countries';
+    return 'states';
   }
 
   get hasTimestamps() {
