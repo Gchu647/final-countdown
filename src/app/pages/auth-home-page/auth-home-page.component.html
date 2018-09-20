@@ -11,11 +11,11 @@
         </div>
 
         <div class="auth-home-contents-personal-filter">
-          <label for="relationship">Filter: </label>
-          <select name="relationship" class="auth-home-contents-personal-filter-relationship" [(ngModel)]="relationshipToFilter"
+          <label for="group">Filter: </label>
+          <select name="group" class="auth-home-contents-personal-filter-group" [(ngModel)]="groupToFilter"
             (ngModelChange)="setRelationshipToFilter($event)">
-            <option [value]="0" class="auth-home-contents-personal-filter-relationship-all">Show All</option>
-            <option *ngFor="let relationship of relationships" [value]="relationship.id">{{relationship.name}}</option>
+            <option [value]="0" class="auth-home-contents-personal-filter-group-all">Show All</option>
+            <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
           </select>
         </div>
 
@@ -46,7 +46,7 @@
         </div>
 
         <div class="auth-home-contents-group-list">
-          <div *ngFor="let relationship of relationships" class="auth-home-contents-group-list-item" routerLink="/messages/group/{{relationship.id}}">
+          <div *ngFor="let group of groups" class="auth-home-contents-group-list-item" routerLink="/messages/group/{{group.id}}">
             <div class="auth-home-contents-group-list-item-icon">
               <!-- Source: Jam Icons (PENCIL) -->
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24" height="24"
@@ -55,7 +55,7 @@
             </div>
 
             <div class="auth-home-contents-group-list-item-name">
-              {{relationship.name.toUpperCase()}}
+              {{group.name.toUpperCase()}}
             </div>
           </div>
         </div>
@@ -161,18 +161,18 @@
   </div>
 </div>
 
-<div class="messages-sent-modal" *ngIf="messagesSentModalEnabled" (click)="toggleMessagesSentModal()">
+<div class="messages-sent-modal" *ngIf="messagesSentModalEnabled" (click)="toggleMessagesSentModal('click')">
   <div class="messages-sent-modal-inner" (click)="stopPropagation($event)">
     <div class="messages-sent-modal-inner-content">
       <div class="messages-sent-modal-inner-content-top">
-        <strong>MESSAGES EN ROUTE</strong>
+        <strong>MESSAGES&nbsp;&nbsp;EN&nbsp;&nbsp;ROUTE</strong>
       </div>
       <div class="messages-sent-modal-inner-content-bottom">
         <p>Your messages will be delivered shortly</p>
         <p>Thank you for using the Final Countdown</p>
       </div>
       <div class="buttons">
-        <button type="button" class="buttons-danger-primary" (click)="toggleMessagesSentModal()">OK</button>
+        <button type="button" class="buttons-danger-primary" (click)="toggleMessagesSentModal('click')">OK</button>
       </div>
     </div>
   </div>

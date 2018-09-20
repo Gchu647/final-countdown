@@ -10,6 +10,8 @@ export class BackendService {
 
   constructor(private http: HttpClient) {}
 
+  // ------------------------------------------------------------------------ //
+
   login(data) {
     // Data object properties must be named "username" and "password":
     const loginUrl = this.url + 'login';
@@ -38,10 +40,24 @@ export class BackendService {
     return this.http.post(registerUrl, input).toPromise();
   }
 
+  // ------------------------------------------------------------------------ //
+
   fetchRelationships() {
     const relationshipsUrl = this.url + 'relationships';
     return this.http.get(relationshipsUrl).toPromise();
   }
+
+  fetchCountries() {
+    const countriesUrl = this.url + 'countries';
+    return this.http.get(countriesUrl).toPromise();
+  }
+
+  fetchStates() {
+    const statesUrl = this.url + 'states';
+    return this.http.get(statesUrl).toPromise();
+  }
+
+  // ------------------------------------------------------------------------ //
 
   fetchProfile(userId) {
     const profileUrl = this.url + `user/${userId}`;
@@ -62,9 +78,11 @@ export class BackendService {
       // Prevents stateId from being 0:
       formData.stateId = null;
     }
-    
+
     return this.http.put(profileUrl, formData).toPromise();
   }
+
+  // ------------------------------------------------------------------------ //
 
   fetchRecipients(userId) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
@@ -72,27 +90,80 @@ export class BackendService {
     return this.http.get(recipientsUrl).toPromise();
   }
 
-  addRecipient(userId) {
+  addRecipient(userId, formData) {
     const recipientsUrl = this.url + `user/${userId}/recipients`;
+    formData.groupId = Number(formData.groupId);
 
-    return Promise.resolve({});
+    if (formData.groupId < 1) {
+      // Prevents groupId from being 0:
+      formData.groupId = null;
+    }
+
+    return this.http.post(recipientsUrl, formData).toPromise();
   }
 
   fetchRecipientById(userId, recipientId) {
-    const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
+    const recipientIdUrl =
+      this.url + `user/${userId}/recipients/${recipientId}`;
 
     return this.http.get(recipientIdUrl).toPromise();
   }
 
   editRecipientById(userId, recipientId, formData) {
-    const recipientIdUrl = this.url + `user/${userId}/recipients/${recipientId}`;
- 
-    return this.http.put(recipientIdUrl, formData).toPromise();;
+    const recipientIdUrl =
+      this.url + `user/${userId}/recipients/${recipientId}`;
+    formData.groupId = Number(formData.groupId);
+
+    if (formData.groupId < 1) {
+      // Prevents groupId from being 0:
+      formData.groupId = null;
+    }
+
+    return this.http.put(recipientIdUrl, formData).toPromise();
   }
+
+  // ------------------------------------------------------------------------ //
+
+  fetchGroups(userId) {
+    const groupsUrl = this.url + `user/${userId}/groups`;
+
+    return this.http.get(groupsUrl).toPromise();
+  }
+
+  fetchGroup(userId, groupId) {
+    const groupUrl = this.url + `user/${userId}/groups/${groupId}`;
+
+    return this.http.get(groupUrl).toPromise();
+  }
+
+  fetchGroupMembers(userId, groupId) {
+    const groupMembersUrl =
+      this.url + `user/${userId}/groups/${groupId}/members`;
+
+    return this.http.get(groupMembersUrl).toPromise();
+  }
+
+  // ------------------------------------------------------------------------ //
+
+  addPackage(userId, formData) {
+    const packageUrl = this.url + `user/${userId}/packages`;
+
+    console.log('backend.service: ', formData);
+    return this.http.post(packageUrl, formData).toPromise();
+  }
+
+  // WORKING ON
+  fetchPackageById() {
+    const packageIdUrl = this.url;
+  }
+
+  // ------------------------------------------------------------------------ //
 
   fetchTrigger(userId) {
     const triggerUrl = this.url + `user/${userId}/trigger`;
-    return this.http.get(triggerUrl).toPromise();
+    const params = new HttpParams().set('origin', 'frontEnd');
+
+    return this.http.get(triggerUrl, { params }).toPromise();
   }
 
   activateTrigger(userId, countdownDays) {
@@ -104,8 +175,20 @@ export class BackendService {
     return this.http.post(triggerUrl, null, { params }).toPromise();
   }
 
-  deactivateTrigger(userId) {
+  deactivateTrigger(userId, manualDeactivation) {
     const triggerUrl = this.url + `user/${userId}/trigger`;
-    return this.http.delete(triggerUrl).toPromise();
+    // manualDeactivation accepts a string rather than a boolean because the
+    // boolean value will be converted to a string when set in HttpParams():
+    const params = new HttpParams()
+      .set('origin', 'frontEnd')
+      .set('manualDeactivation', manualDeactivation);
+
+    return this.http.delete(triggerUrl, { params }).toPromise();
+  }
+
+  acknowledgeNotification(userId) {
+    const triggerUrl = this.url + `user/${userId}/trigger/acknowledge`;
+
+    return this.http.put(triggerUrl, null).toPromise();
   }
 }

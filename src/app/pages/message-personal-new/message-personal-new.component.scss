@@ -35,7 +35,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 45px 0;
+        margin: 45px 0 30px;
 
         .message-new-add-recipient-form {
           display: flex;
@@ -90,6 +90,15 @@
               border-radius: 2px;
               border: 1px solid #206060;
             }
+
+            span {
+              text-align: left;
+            }
+
+            .message-new-add-recipient-form-input-error {
+              padding-bottom: 7.5px;
+              color: #bf4040;
+            }
           }
         }
       }
@@ -115,47 +124,39 @@
             padding: 0 0 30px;
           }
 
-          label {
-            padding-bottom: 7.5px;
-            color: #666;
-            width: 90%;
-          }
-
-          textarea {
-            font-size: 1rem;
-            letter-spacing: 1px;
-            padding: 15px;
-            width: 90%;
-            border-radius: 2px;
-            border: 1px solid #206060;
-          }
-
-          .message-new-text-form-buttons {
+          .message-new-text-form-input {
             display: flex;
             flex-direction: column;
+            letter-spacing: 1px;
+            width: 90%;
+            padding-bottom: 15px;
 
-            * {
-              z-index: 1;
-              font-size: 1.25rem;
-              line-height: 1.25rem;
-              letter-spacing: 2px;
-              margin-top: 30px;
-              padding: 15px 30px;
-              border: 0;
+            label {
+              padding-bottom: 7.5px;
+              color: #666;
+              width: 90%;
+            }
+
+            input {
+              font-size: 1rem;
+              letter-spacing: 1px;
+              padding: 15px;
               border-radius: 2px;
+              border: 1px solid #206060;
             }
 
-            .message-new-text-form-buttons-submit {
-              color: #fbfbfb;
-              background-color: #478585;
-              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+            textarea {
+              font-size: 1rem;
+              letter-spacing: 1px;
+              padding: 15px;
+              border-radius: 2px;
+              border: 1px solid #206060;
             }
 
-            .message-new-text-form-buttons-cancel {
-              color: #478585;
-              background-color: #fbfbfb;
-              border: 1px solid #478585;
-              box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
+            .message-new-text-form-input-error {
+              text-align: left !important;
+              padding-bottom: 7.5px !important;
+              color: #bf4040 !important;
             }
           }
         }

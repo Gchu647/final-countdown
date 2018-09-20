@@ -1,9 +1,8 @@
+import * as moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { BackendService } from '../../services/backend.service';
 import { SessionsService } from './../../services/sessions.service';
-
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-auth-home-page',
@@ -16,24 +15,27 @@ export class AuthHomePageComponent implements OnInit {
     email: string;
     userId: number;
   };
+  groups: object[];
+  groupToFilter: number = 0;
   recipients: object[];
-  relationships: object[];
-  relationshipToFilter: number = 0;
   displayedRecipients: object[];
-  triggerData: object;
 
   // Modals:
   activationModalEnabled: boolean;
   deactivationModalEnabled: boolean;
   messagesSentModalEnabled: boolean;
 
-  // Countdown:
+  // Trigger/Countdown:
+  triggerData: object;
   countdownActive: boolean;
   countdownDayValue: number = 7;
   countdownDays: number[] = [];
   countdownDisplay: object;
   countdownIntervalId: number;
   countdownExpired: boolean;
+  enRouteNotificationPending: boolean;
+
+  // ------------------------------------------------------------------------ //
 
   constructor(
     private auth: AuthService,
@@ -49,23 +51,36 @@ export class AuthHomePageComponent implements OnInit {
     this.messagesSentModalEnabled = false;
     this.countdownActive = false;
     this.countdownExpired = false;
+    this.countdownDisplay = {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0
+    };
 
     // Fill countdownDays with preset values (1-30) to be selected by user:
     for (let i = 1; i <= 30; i++) {
       this.countdownDays.push(i);
     }
 
-    // Get relationships from server and capitalize first letter of each:
-    this.backend.fetchRelationships().then((response: object[]) => {
-      const capitalizedRelationships = response.map(relationship => {
-        const capitalizedRelationship = Object.assign(relationship);
-        capitalizedRelationship['name'] =
-          capitalizedRelationship.name.charAt(0).toUpperCase() +
-          capitalizedRelationship.name.substr(1);
-        return capitalizedRelationship;
+    // Get user's groups from server and capitalize first letter of each:
+    this.backend.fetchGroups(this.user['userId']).then((response: object[]) => {
+      const groups = response.map(group => {
+        return {
+          id: group['id'],
+          name: group['relationship']['name']
+        };
       });
 
-      this.relationships = capitalizedRelationships;
+      const capitalizedGroups = groups.map(group => {
+        const capitalizedGroup = Object.assign(group);
+        capitalizedGroup['name'] =
+          capitalizedGroup.name.charAt(0).toUpperCase() +
+          capitalizedGroup.name.substr(1);
+        return capitalizedGroup;
+      });
+
+      this.groups = capitalizedGroups;
     });
 
     // Gets recipients from server:
@@ -90,6 +105,29 @@ export class AuthHomePageComponent implements OnInit {
       .catch(err => console.log(err));
   }
 
+  // ------------------------------------------------------------------------ //
+
+  setRelationshipToFilter(value) {
+    this.groupToFilter = Number(value);
+    this.filterDisplayedRecipients(Number(value));
+  }
+
+  filterDisplayedRecipients(value) {
+    if (Number(value) === 0) {
+      this.displayedRecipients = this.recipients;
+    } else {
+      this.displayedRecipients = this.recipients.filter(
+        recipient => Number(recipient['group_id']) === Number(value)
+      );
+    }
+  }
+
+  stopPropagation(event) {
+    event.stopPropagation();
+  }
+
+  // ------------------------------------------------------------------------ //
+
   setActiveCountdown() {
     this.countdownActive = true;
     // Set initial countdown display:
@@ -113,11 +151,10 @@ export class AuthHomePageComponent implements OnInit {
         seconds: Math.floor((timeRemaining / 1000) % 60)
       };
     } else if (this.countdownActive) { // Prevent attempt to delete null trigger
-      this.backend
-        .deactivateTrigger(this.user['userId'])
+      this.backend.deactivateTrigger(this.user['userId'], 'false')
         .then(response => {
           window.clearInterval(this.countdownIntervalId);
-          this.toggleMessagesSentModal();
+
           this.triggerData = response;
           this.countdownActive = false;
           this.countdownExpired = true;
@@ -127,8 +164,12 @@ export class AuthHomePageComponent implements OnInit {
             minutes: 0,
             seconds: 0
           };
+          this.toggleMessagesSentModal(null);
         })
         .catch(err => console.log(err));
+    } else if (isNaN(timeRemaining)) {
+      // Stop countdown if this.triggerData['countdown'] is "null":
+      window.clearInterval(this.countdownIntervalId);
     }
   }
 
@@ -149,21 +190,7 @@ export class AuthHomePageComponent implements OnInit {
     return num < 10 ? '0' + num : num;
   }
 
-  setRelationshipToFilter(value) {
-    this.relationshipToFilter = Number(value);
-    this.filterDisplayedRecipients(Number(value));
-  }
-
-  filterDisplayedRecipients(value) {
-    if (Number(value) === 0) {
-      this.displayedRecipients = this.recipients;
-    } else {
-      this.displayedRecipients = this.recipients.filter(
-        // might have to have add in a withRelated later
-        recipient => Number(recipient['group_id']) === Number(value)
-      );
-    }
-  }
+  // ------------------------------------------------------------------------ //
 
   toggleActivationModal() {
     this.activationModalEnabled = !this.activationModalEnabled;
@@ -173,13 +200,23 @@ export class AuthHomePageComponent implements OnInit {
     this.deactivationModalEnabled = !this.deactivationModalEnabled;
   }
 
-  toggleMessagesSentModal() {
+  toggleMessagesSentModal(typeStr) {
     // Close deactivation modal if open, as trigger can no longer be canceled:
     if (this.deactivationModalEnabled) {
       this.toggleDeactivationModal();
     }
 
-    this.messagesSentModalEnabled = !this.messagesSentModalEnabled;
+    if (typeStr === 'click') {
+      this.backend.acknowledgeNotification(this.user['userId'])
+        .then(response => {
+          this.messagesSentModalEnabled = !this.messagesSentModalEnabled;
+        })
+        .catch(err => console.log(err));
+    } else if (typeStr === 'open') {
+      this.messagesSentModalEnabled = !this.messagesSentModalEnabled;
+    } else if (typeStr === null) {
+      this.messagesSentModalEnabled = !this.messagesSentModalEnabled;
+    }
   }
 
   toggleActiveCountdown() {
@@ -198,7 +235,7 @@ export class AuthHomePageComponent implements OnInit {
 
     if (this.deactivationModalEnabled) {
       return this.backend
-        .deactivateTrigger(this.user['userId'])
+        .deactivateTrigger(this.user['userId'], 'true')
         .then(response => {
           this.triggerData = response;
           this.countdownActive = false;
@@ -206,9 +243,5 @@ export class AuthHomePageComponent implements OnInit {
         })
         .catch(err => console.log(err));
     }
-  }
-
-  stopPropagation(event) {
-    event.stopPropagation();
   }
 }

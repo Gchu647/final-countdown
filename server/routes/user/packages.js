@@ -25,13 +25,14 @@ router
       });
   })
   .post(isAuthenticated, (req, res) => {
-    // req.body includes (1) a recipient ID and (2) a message:
+    // req.body includes a message:
     const userId = req.params.id;
-    const recipientId = req.body.recipientId;
+    // const recipientId = req.body.recipientId;
+    console.log('posting package: ', req.body);
 
     const packageInput = {
       package_maker_id: userId,
-      recipient_id: recipientId
+      // recipient_id: recipientId
     };
 
     // First, create a new package:
@@ -44,15 +45,15 @@ router
         // Second, create an encrypted file using the package ID as foreign key:
         return new EncryptedFile()
           .save({
-            name: 'Message',
-            aws_url: req.body.message,
+            name: req.body.title? req.body.title : 'Message',
+            aws_url: req.body.message ? req.body.message.trim() : null,
             package_id: package.attributes.id
           })
           .then(response => {
             return response.refresh();
           })
-          .then(() => {
-            res.json({ message: 'message saved' });
+          .then(file => {
+            res.json({ 'packageId': file.attributes.package_id });
           });
       })
       .catch(err => {
