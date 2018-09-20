@@ -5,10 +5,15 @@ const EncryptedFile = require('../db/models/EncryptedFile');
 const Group = require('../db/models/Group');
 const Trigger = require('../db/models/Trigger');
 const moment = require('moment');
+const types = require('pg').types;
 const crypto = require('crypto'),
   algorithm = 'aes-256-cbc',
   password = 'passwordpasswordpasswordpassword',
   iv = 'passwordpassword';
+
+// types.setTypeParser(1114, str => {
+//   return moment.utc(str).format();
+// });
 
 const encrypt = crypto.createCipheriv(algorithm, password, iv);
 const decrypt = crypto.createDecipheriv(algorithm, password, iv);
@@ -19,15 +24,18 @@ class ActiveTriggerQueue {
     this.head = null;
     this.tail = null;
     this.lastUpdate = moment.utc(0);
+    this.lastChange = false;
+    this.first = true;
   }
 
   async getTriggers() {
-    console.log('last update', this.lastUpdate);
-    return await Trigger.query('where', 'created_at', '>', `${this.lastUpdate}`)
-      .fetchAll({ countdown: !null })
+    return await Trigger.query('whereNotNull', 'countdown')
+      .fetchAll()
       .then(response => {
-        console.log('getTriggers response', response);
-        return response.toJSON();
+        if (response) {
+          return response.toJSON();
+        }
+        return null;
       })
       .catch(err => {
         console.log('error: ', err);
@@ -39,12 +47,26 @@ class ActiveTriggerQueue {
   async updateQueue() {
     return await this.getTriggers()
       .then(trigArr => {
+        trigArr = trigArr.filter(trigger => {
+          return trigger.created_at > this.lastUpdate;
+        });
+        console.log('trigArr afterFilter',trigArr);
+        if (trigArr.length < 1) {
+          console.log(`No new updates since  ${this.lastUpdate}`);
+          return null;
+        }
         console.log('update', trigArr);
         trigArr.map(trigger => {
-          console.log('trigger v last', trigger.created_at, this.lastUpdate);
+          console.log(
+            'trigger v last',
+            trigger.created_at,
+            this.lastUpdate,
+            trigger.created_at > this.lastUpdate
+          );
           if (trigger.created_at > this.lastUpdate) {
             console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!');
             this.lastUpdate = trigger.created_at;
+            this.lastChange = !this.lastChange;
           }
           this.insertToQueue({
             userId: trigger.user_id,
@@ -64,36 +86,22 @@ class ActiveTriggerQueue {
     if (!this.head) {
       return null;
     }
-    console.log(
-      'head v now',
-      this.head.value.timeToExecute,
-      moment.utc(Date.now()).format()
-    );
-
-    if (this.head.value.timeToExecute < moment.utc(Date.now()).format()) {
+    console.log('top trigger send', moment.utc(this.head.value.timeToExecute) < moment.utc(), 'tte', this.head.value.timeToExecute, 'now', moment.utc());
+    if (moment.utc(this.head.value.timeToExecute) < moment.utc()) {
       let temp = this.head;
       this.delete(this.head.value.userId);
-      console.log('executableTrigger', temp);
       let userInfo;
       return await this.getUserData(temp.value.userId)
         .then(response => {
           userInfo = response.toJSON();
           if (userInfo) {
-            console.log('UserInfo', userInfo);
-            // console.log('UserInfo.groups.members', userInfo.groups[0].members);
-            console.log(`user full name: ${userInfo.f_name} ${userInfo.l_name}`);
             executableTriggers = userInfo.recipients.map(recipient => {
               if (!recipient) {
                 return null;
               }
-              console.log('recipient', recipient);
-              console.log('recipient.package', recipient.package.file[0]);
               let subjectStr = recipient.package.file[0].name;
               let bodyStr = recipient.package.file[0].aws_url;
-              // let enc = encrypt.update(bodyStr, 'utf8', 'hex');
-              // let dec = decrypt.update(bodyStr, 'hex', 'utf8');
-              // console.log('subj enc', enc);
-              // console.log('subj dec', dec);
+
               return {
                 recipientName: `${recipient.f_name} ${recipient.l_name}`,
                 recipientEmail: recipient.email,
@@ -103,9 +111,7 @@ class ActiveTriggerQueue {
                 body: bodyStr
               };
             });
-            console.log(`recipient ${userInfo.recipients.id}`);
           }
-          console.log('executableTriggerArr', executableTriggers);
           return executableTriggers;
         })
         .catch(err => {
@@ -117,7 +123,6 @@ class ActiveTriggerQueue {
   }
 
   getUserData(userId) {
-    console.log('userId', userId);
     return User.where({ id: userId })
       .fetch({ withRelated: ['recipients.package.file', 'groups.members.package.file'] })
       .then(response => {
