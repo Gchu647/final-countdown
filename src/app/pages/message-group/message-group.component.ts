@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SessionsService } from '../../services/sessions.service';
 import { BackendService } from '../../services/backend.service';
 
@@ -9,23 +9,29 @@ import { BackendService } from '../../services/backend.service';
   styleUrls: ['./message-group.component.scss']
 })
 export class MessageGroupComponent implements OnInit {
-  // Temporary variable(s) (until database integrated):
-  message: string =
-    'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum facilis, ipsa ipsam unde, veniam assumenda iste saepe cumque similique tenetur provident perspiciatis rem harum. Incidunt explicabo perspiciatis alias quis ipsa!';
-
   user: {
     loggedIn: boolean;
     email: string;
     userId: number;
   };
 
-  groups: object[];
+  formData: {
+    title: string;
+    message: string;
+  } = {
+    title: '',
+    message: ''
+  };
+
+  // Group:
   groupId: number;
   groupName: object;
   groupMembers: object;
+  groupPackageContents: object;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private session: SessionsService,
     private backend: BackendService
   ) {
@@ -37,32 +43,51 @@ export class MessageGroupComponent implements OnInit {
       this.groupId = Number(params['id']);
     });
 
-    this.getGroups();
     this.getGroupName();
     this.getGroupMembers();
+    this.getGroupPackage();
   }
 
-  getGroups() {
-    this.backend.fetchGroups(this.user['userId']).then(response => {
-      console.log('GROUPS', response);
-    });
+  save() {
+    return this.backend.editPackageEncryptedFile(
+        this.user['userId'],
+        this.groupPackageContents['id'],
+        this.formData
+      )
+      .then(() => {
+        this.router.navigate(['/messages']);
+      })
+      .catch(err => console.log(err));
   }
+
+  // ------------------------------------------------------------------------ //
 
   getGroupName() {
-    this.backend
-      .fetchGroup(this.user['userId'], this.groupId)
+    this.backend.fetchGroup(this.user['userId'], this.groupId)
       .then(response => {
-        console.log('groupName', response['relationship']['name']);
         this.groupName = response['relationship']['name'];
-      });
+      })
+      .catch(err => console.log(err));
   }
 
   getGroupMembers() {
-    this.backend
-      .fetchGroupMembers(this.user['userId'], this.groupId)
+    this.backend.fetchGroupMembers(this.user['userId'], this.groupId)
       .then(response => {
-        console.log('groupMembers', response['members']);
         this.groupMembers = response['members'];
-      });
+      })
+      .catch(err => console.log(err));
+  }
+
+  getGroupPackage() {
+    this.backend.fetchGroupPackage(this.user['userId'], this.groupId)
+      .then(response => {
+        console.log('groupPackage', response);
+        this.groupPackageContents = response['package']['file'][0];
+        this.formData = {
+          title: this.groupPackageContents['name'],
+          message: this.groupPackageContents['aws_url']
+        };
+      })
+      .catch(err => console.log(err));
   }
 }

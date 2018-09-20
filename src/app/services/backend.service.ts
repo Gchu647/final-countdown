@@ -143,6 +143,13 @@ export class BackendService {
     return this.http.get(groupMembersUrl).toPromise();
   }
 
+  fetchGroupPackage(userId, groupId) {
+    const groupPackageUrl =
+      this.url + `user/${userId}/groups/${groupId}/package`;
+
+    return this.http.get(groupPackageUrl).toPromise();
+  }
+
   // ------------------------------------------------------------------------ //
 
   addPackage(userId, formData) {
@@ -153,16 +160,25 @@ export class BackendService {
 
   fetchPackageById(userId, packageId) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-  
+
     return this.http.get(packageIdUrl).toPromise();
   }
 
+  // Creating when developing Personal Messages:
   editPackageById(userId, packageId, formData) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
     console.log('backend.service edit: ', formData);
     return this.http.put(packageIdUrl, formData).toPromise();
   }
 
+  // Alternative to the above method (created when developing Group Messages).
+  // One of these methods should replace the other during a future refactor:
+  editPackageEncryptedFile(userId, packageId, formData) {
+    const editPackageEncryptedFileUrl =
+      this.url + `user/${userId}/packages/${packageId}`;
+
+    return this.http.put(editPackageEncryptedFileUrl, formData).toPromise();
+  }
   // ------------------------------------------------------------------------ //
 
   fetchTrigger(userId) {
