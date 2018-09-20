@@ -22,10 +22,14 @@ export class RecipientViewComponent implements OnInit {
     phoneNumber: '',
     groupId: ''
   };
+  messageData: object = {
+    title: '',
+    message: '',
+  };
   groups: object[];
   recipientId: number;
   packageId: number;
-  message: string;
+  // message: string;
 
   // Errors:
   firstNameError: string = '';
@@ -91,12 +95,13 @@ export class RecipientViewComponent implements OnInit {
   fetchPackageById(packageId) {
     return this.auth.fetchPackageById(packageId).then((response: object) => {
       console.log('fetchPackageById: ', response['file'][0]['aws_url']);
-      this.message = response['file'][0]['aws_url'];
+      this.messageData['message'] = response['file'][0]['aws_url'];
     });
   }
 
   // WORKING ON EDITING PACKAGES
   saveChanges() {
+    console.log(this.messageData)
     this.auth.editPackageById(this.packageId)
     .then((response: object) => {
       console.log('recipient-view: ', response);
