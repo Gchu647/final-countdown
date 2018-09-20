@@ -23,6 +23,7 @@ import { RecipientViewComponent } from './pages/recipient-view/recipient-view.co
 import { BackendService } from './services/backend.service';
 import { SessionsService } from './services/sessions.service';
 import { AuthService } from './services/auth.service';
+import { AuthGuardService } from './services/auth-guard.service';
 import { AnonymousGuardService } from './services/anonymous-guard.service';
 
 @NgModule({
@@ -43,20 +44,54 @@ import { AnonymousGuardService } from './services/anonymous-guard.service';
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      { path: '', component: UnauthHomePageComponent, canActivate: [AnonymousGuardService] },
-      { path: 'register', component: RegisterComponent, canActivate: [AnonymousGuardService] },
-      { path: 'login', component: LoginComponent, canActivate: [AnonymousGuardService] },
-      { path: 'profile', component: ProfileComponent },
-      { path: 'messages/group/:id', component: MessageGroupComponent },
-      { path: 'messages/personal/new', component: MessagePersonalNewComponent },
-      { path: 'messages/personal/:id', component: RecipientViewComponent },
-      { path: 'messages', component: AuthHomePageComponent }
+      {
+        path: '',
+        component: UnauthHomePageComponent,
+        canActivate: [AnonymousGuardService]
+      },
+      {
+        path: 'register',
+        component: RegisterComponent,
+        canActivate: [AnonymousGuardService]
+      },
+      {
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [AnonymousGuardService]
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuardService]
+      },
+      {
+        path: 'messages/group/:id',
+        component: MessageGroupComponent,
+        canActivate: [AuthGuardService]
+      },
+      {
+        path: 'messages/personal/new',
+        component: MessagePersonalNewComponent,
+        canActivate: [AuthGuardService]
+      },
+      {
+        path: 'messages/personal/:id',
+        component: RecipientViewComponent,
+        canActivate: [AuthGuardService]
+      },
+      {
+        path: 'messages',
+        component: AuthHomePageComponent,
+        canActivate: [AuthGuardService]
+      }
     ])
   ],
   providers: [
     BackendService,
     SessionsService,
-    AuthService
+    AuthService,
+    AuthGuardService,
+    AnonymousGuardService
   ],
   bootstrap: [AppComponent]
 })
