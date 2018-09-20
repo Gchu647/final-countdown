@@ -35,7 +35,7 @@
         <span *ngIf="passwordError" class="register-form-inner-input-error">{{passwordError}}</span>
 
         <input type="password" name="password" class="register-form-inner-input-password" [(ngModel)]="registerFormData.password"
-          (ngModelChange)="validateInputLength('register-form-inner-input-password')" required>
+        (ngModelChange)="validatePassword('ngModelChange')" (blur)="validatePassword('blur')" required>
       </div>
 
       <div class="register-form-inner-input">

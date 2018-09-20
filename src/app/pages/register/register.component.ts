@@ -36,7 +36,7 @@ export class RegisterComponent {
     this.validateEmail('blur');
     this.validateInputLength('register-form-inner-input-first-name');
     this.validateInputLength('register-form-inner-input-last-name');
-    this.validateInputLength('register-form-inner-input-password');
+    this.validatePassword('blur');
     this.validatePasswordConfirm('blur');
 
     const errorMessages = [
@@ -51,7 +51,8 @@ export class RegisterComponent {
     if (errorMessages.some(errorMessage => errorMessage.length > 0)) {
       return;
     } else {
-      return this.backend.register(this.registerFormData)
+      return this.backend
+        .register(this.registerFormData)
         .then(response => {
           console.log('Response @register_component: ', response);
         })
@@ -70,7 +71,7 @@ export class RegisterComponent {
 
   // ------------------------------------------------------------------------ //
 
-  // Ensure "First Name", "Last Name", and "Password" fields contain values:
+  // Ensure "First Name" and "Last Name" fields contain values:
   validateInputLength(classNameStr) {
     const errorMessage = 'Required';
     const inputValue = document
@@ -92,15 +93,6 @@ export class RegisterComponent {
           this.lastNameError = errorMessage;
         } else {
           this.lastNameError = '';
-        }
-        this.toggleSubmitButton();
-        break;
-
-      case 'register-form-inner-input-password':
-        if (this.checkEmptyInputField(inputValue)) {
-          this.passwordError = errorMessage;
-        } else {
-          this.passwordError = '';
         }
         this.toggleSubmitButton();
         break;
@@ -164,6 +156,39 @@ export class RegisterComponent {
           validAlphaRegex.test(splitEmail[2])
         ) {
           this.emailError = '';
+        }
+        this.toggleSubmitButton();
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  validatePassword(eventTypeStr) {
+    const errorMessage = 'Must be 8-16 characters in length';
+    const password = document
+      .getElementsByClassName('register-form-inner-input-password')[0]
+      ['value'];
+
+    switch (eventTypeStr) {
+      case 'blur':
+        // Display error if input does not satisfy the following tests:
+        if (password.length < 8 || password.length > 16) {
+          this.passwordError = errorMessage;
+        } else {
+          this.passwordError = '';
+        }
+        this.toggleSubmitButton();
+        break;
+
+      case 'ngModelChange':
+        // Immediately remove existing error message once valid input entered:
+        if (
+          this.passwordError &&
+          (password.length >= 8 || password.length <= 16)
+        ) {
+          this.passwordError = '';
         }
         this.toggleSubmitButton();
         break;
