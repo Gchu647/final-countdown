@@ -120,7 +120,7 @@ export class RecipientViewComponent implements OnInit {
 
   // WORKING on
   deleteRecipient() {
-    return this.backend.deletePackageById(this.user['userId'], this.packageId, this.messageData)
+    return this.backend.deletePackageById(this.user['userId'], this.packageId)
       .then((response) => {
         console.log('recipient-view: ', response);
       })

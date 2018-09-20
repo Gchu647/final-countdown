@@ -180,10 +180,10 @@ export class BackendService {
     return this.http.put(editPackageEncryptedFileUrl, formData).toPromise();
   }
 
-  deletePackageById(userId, packageId, formData) {
+  deletePackageById(userId, packageId) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-    console.log('backend.service delete: ', formData);
-    return Promise.resolve({'message': packageIdUrl});
+    console.log('backend.service delete.');
+    return this.http.delete(packageIdUrl).toPromise();
   }
 
   // ------------------------------------------------------------------------ //
