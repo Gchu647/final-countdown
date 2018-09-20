@@ -18,11 +18,19 @@
       <form class="group-message-text-form">
         <span>WRITE A GROUP MESSAGE</span>
 
-        <label for="message">Message:</label>
-        <textarea rows="16" name="message">{{message}}</textarea>
+        <div class="group-message-text-form-input">
+          <label for="title">Title:</label>
+          <input type="text" name="title" class="group-message-text-form-input-title" [(ngModel)]="formData.title">
+        </div>
+
+        <div class="group-message-text-form-input">
+          <label for="message">Message:</label>
+
+          <textarea rows="16" name="message" class="group-message-text-form-input-message" [(ngModel)]="formData.message"></textarea>
+        </div>
 
         <div class="group-message-text-form-buttons">
-          <button type="button" class="group-message-text-form-buttons-save">SAVE&nbsp;&nbsp;MESSAGE</button>
+          <button type="button" class="group-message-text-form-buttons-save" (click)="save()">SAVE&nbsp;&nbsp;MESSAGE</button>
           <button type="button" class="group-message-text-form-buttons-cancel" routerLink="/messages">CANCEL</button>
         </div>
       </form>
