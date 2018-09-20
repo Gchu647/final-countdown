@@ -122,6 +122,13 @@ export class BackendService {
     return this.http.put(recipientIdUrl, formData).toPromise();
   }
 
+  deleteRecipientById(userId, recipientId) {
+    const recipientIdUrl =
+    this.url + `user/${userId}/recipients/${recipientId}`;
+    console.log('backend.service delete recipient.');
+    return this.http.delete(recipientIdUrl).toPromise();
+  }
+
   // ------------------------------------------------------------------------ //
 
   fetchGroups(userId) {
@@ -164,21 +171,19 @@ export class BackendService {
     return this.http.get(packageIdUrl).toPromise();
   }
 
-  // Creating when developing Personal Messages:
-  editPackageById(userId, packageId, formData) {
-    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-    console.log('backend.service edit: ', formData);
-    return this.http.put(packageIdUrl, formData).toPromise();
-  }
-
-  // Alternative to the above method (created when developing Group Messages).
-  // One of these methods should replace the other during a future refactor:
   editPackageEncryptedFile(userId, packageId, formData) {
     const editPackageEncryptedFileUrl =
       this.url + `user/${userId}/packages/${packageId}`;
 
     return this.http.put(editPackageEncryptedFileUrl, formData).toPromise();
   }
+
+  deletePackageById(userId, packageId) {
+    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
+    
+    return this.http.delete(packageIdUrl).toPromise();
+  }
+
   // ------------------------------------------------------------------------ //
 
   fetchTrigger(userId) {

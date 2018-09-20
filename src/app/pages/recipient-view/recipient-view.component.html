@@ -45,18 +45,22 @@
             <input type="tel" name="phone" class="recipient-view-form-inner-input-phone" [(ngModel)]="formData.phoneNumber" (ngModelChange)="validatePhoneNumber('ngModelChange')" (blur)="validatePhoneNumber('blur')">
           </div>
 
-          <div class="recipient-view-form-input">
+          <h3>Message</h3>
+
+          <div class="recipient-view-form-inner-input">
             <label for="title">Title:</label>
             <input type="text" name="title" class="recipient-view-form-input-title" [(ngModel)]="messageData.title">
           </div>
 
           <div class="recipient-view-form-inner-input">
-            <label for="message">Message:</label>
+            <label for="message">Content:</label>
             <textarea rows="16" name="message" [(ngModel)]="messageData.message" class="recipient-view-form-inner-input-message"></textarea>
           </div>
 
           <div class="buttons">
             <button type="button" class="buttons-primary" (click)='saveChanges()'>SAVE&nbsp;&nbsp;CHANGES</button>
+            <!-- Make delete button red like the trigger button -->
+            <button type="button" class="buttons-secondary" (click)="deleteRecipient()" >DELETE</button>
             <button type="button" class="buttons-secondary" routerLink="/messages">CANCEL</button>
           </div>
         </form>
