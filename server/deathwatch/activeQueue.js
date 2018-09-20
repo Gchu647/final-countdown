@@ -5,10 +5,15 @@ const EncryptedFile = require('../db/models/EncryptedFile');
 const Group = require('../db/models/Group');
 const Trigger = require('../db/models/Trigger');
 const moment = require('moment');
+const types = require('pg').types;
 const crypto = require('crypto'),
   algorithm = 'aes-256-cbc',
   password = 'passwordpasswordpasswordpassword',
   iv = 'passwordpassword';
+
+// types.setTypeParser(1114, str => {
+//   return moment.utc(str).format();
+// });
 
 const encrypt = crypto.createCipheriv(algorithm, password, iv);
 const decrypt = crypto.createDecipheriv(algorithm, password, iv);
@@ -18,24 +23,51 @@ class ActiveTriggerQueue {
   constructor() {
     this.head = null;
     this.tail = null;
+    this.lastUpdate = moment.utc(0);
+    this.lastChange = false;
+    this.first = true;
   }
 
   async getTriggers() {
-    return await Trigger.fetchAll()
+    return await Trigger.query('whereNotNull', 'countdown')
+      .fetchAll()
       .then(response => {
-        console.log('getTriggers response', response);
-        return response.toJSON();
+        if (response) {
+          return response.toJSON();
+        }
+        return null;
       })
       .catch(err => {
         console.log('error: ', err);
       });
   }
 
-  async initialize() {
+  /** ActiveTrigger updateQueue: This function runs periodically and retrieves any new triggers from the trigger
+   * database and inserts them into the ActiveTrigger Queue */
+  async updateQueue() {
     return await this.getTriggers()
       .then(trigArr => {
-        console.log('initialize', trigArr);
+        trigArr = trigArr.filter(trigger => {
+          return trigger.created_at > this.lastUpdate;
+        });
+        console.log('trigArr afterFilter',trigArr);
+        if (trigArr.length < 1) {
+          console.log(`No new updates since  ${this.lastUpdate}`);
+          return null;
+        }
+        console.log('update', trigArr);
         trigArr.map(trigger => {
+          console.log(
+            'trigger v last',
+            trigger.created_at,
+            this.lastUpdate,
+            trigger.created_at > this.lastUpdate
+          );
+          if (trigger.created_at > this.lastUpdate) {
+            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+            this.lastUpdate = trigger.created_at;
+            this.lastChange = !this.lastChange;
+          }
           this.insertToQueue({
             userId: trigger.user_id,
             timeToExecute: trigger.countdown
@@ -46,43 +78,30 @@ class ActiveTriggerQueue {
         console.log('Initialization Error:', err);
       });
   }
-  /** Active Trigger getExecutableTriggers: This function searchs the
+
+  /** ActiveTrigger getExecutableTriggers: This function searchs the
    * linkedlist and returns an array of the triggers to execute **/
   async getExecutableTriggers() {
     let executableTriggers = [];
     if (!this.head) {
       return null;
     }
-    console.log(
-      'head v now',
-      this.head.value.timeToExecute,
-      moment.utc(Date.now()).format()
-    );
-
-    if (this.head.value.timeToExecute < moment.utc(Date.now()).format()) {
+    console.log('top trigger send', moment.utc(this.head.value.timeToExecute) < moment.utc(), 'tte', this.head.value.timeToExecute, 'now', moment.utc());
+    if (moment.utc(this.head.value.timeToExecute) < moment.utc()) {
       let temp = this.head;
       this.delete(this.head.value.userId);
-      console.log('executableTrigger', temp);
       let userInfo;
       return await this.getUserData(temp.value.userId)
         .then(response => {
           userInfo = response.toJSON();
           if (userInfo) {
-            console.log('UserInfo', userInfo);
-            // console.log('UserInfo.groups.members', userInfo.groups[0].members);
-            console.log(`user full name: ${userInfo.f_name} ${userInfo.l_name}`);
             executableTriggers = userInfo.recipients.map(recipient => {
               if (!recipient) {
                 return null;
               }
-              console.log('recipient', recipient);
-              console.log('recipient.package', recipient.package.file[0]);
               let subjectStr = recipient.package.file[0].name;
               let bodyStr = recipient.package.file[0].aws_url;
-              // let enc = encrypt.update(bodyStr, 'utf8', 'hex');
-              // let dec = decrypt.update(bodyStr, 'hex', 'utf8');
-              // console.log('subj enc', enc);
-              // console.log('subj dec', dec);
+
               return {
                 recipientName: `${recipient.f_name} ${recipient.l_name}`,
                 recipientEmail: recipient.email,
@@ -92,9 +111,7 @@ class ActiveTriggerQueue {
                 body: bodyStr
               };
             });
-            console.log(`recipient ${userInfo.recipients.id}`);
           }
-          console.log('executableTriggerArr', executableTriggers);
           return executableTriggers;
         })
         .catch(err => {
@@ -106,7 +123,6 @@ class ActiveTriggerQueue {
   }
 
   getUserData(userId) {
-    console.log('userId', userId);
     return User.where({ id: userId })
       .fetch({ withRelated: ['recipients.package.file', 'groups.members.package.file'] })
       .then(response => {
@@ -118,7 +134,7 @@ class ActiveTriggerQueue {
       });
   }
 
-  /*** Active Trigger Search: This function searches the structure
+  /*** ActiveTrigger Search: This function searches the structure
    * for a specific user's trigger. Uses the userId field to find
    * the trigger.***/
   search(userId) {
@@ -134,7 +150,7 @@ class ActiveTriggerQueue {
     return currentTrigger;
   }
 
-  /*** Active Trigger Search Previous: This function searches the structure
+  /*** ActiveTrigger Search Previous: This function searches the structure
    * for a specific user's trigger and returns the previous trigger. Uses the userId field to find
    * the trigger.***/
   searchPrevious(userId) {
@@ -151,13 +167,13 @@ class ActiveTriggerQueue {
     //This will return a trigger or ''
     return previousTrigger;
   }
-  /*** Active Trigger Edit: This function edits an active trigger modifying
+  /*** ActiveTrigger Edit: This function edits an active trigger modifying
    * the timeToExecute. It returns true if edit was successful else false***/
   edit(userId, newTimeToExecute) {
     this.delete(userId);
     return this.insertToQueue({ userId, timeToExecute: newTimeToExecute });
   }
-  /*** Active Trigger Delete: This function deletes an active trigger.
+  /*** ActiveTrigger Delete: This function deletes an active trigger.
    * It returns true if delete was successful else false***/
   delete(userId) {
     let success = false;
@@ -180,7 +196,7 @@ class ActiveTriggerQueue {
     return success;
   }
 
-  /*** Active Trigger Insert: This function inserts a new trigger into
+  /*** ActiveTrigger Insert: This function inserts a new trigger into
    *  the structure. The trigger is inserted based on timeToExecute***/
   insertToQueue(value) {
     let previousTrigger = null;
@@ -235,7 +251,7 @@ class ActiveTriggerQueue {
   }
 }
 
-/*** Active Trigger: This is a node in the linked-list that
+/*** ActiveTrigger: This is a node in the linked-list that
  * represents an active trigger. Value should be an object
  * containing { userId, timeToExecute} ***/
 function ActiveTrigger(value, next) {
