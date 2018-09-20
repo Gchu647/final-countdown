@@ -4,6 +4,7 @@ const router = express.Router();
 const knex = require('../../db/knex');
 const isAuthenticated = require('../../middleware/isAuthenticated');
 const Package = require('../../db/models/Package');
+const User = require('../../db/models/User');
 const EncryptedFile = require('../../db/models/EncryptedFile');
 
 router
@@ -25,9 +26,9 @@ router
       });
   })
   .post(isAuthenticated, (req, res) => {
-    // req.body includes a message:
+    // req.body includes a message and a title:
     const userId = req.params.id;
-    // const recipientId = req.body.recipientId;
+    let packageId;
     console.log('posting package: ', req.body);
 
     const packageInput = {
@@ -42,20 +43,31 @@ router
         return response.refresh();
       })
       .then(package => {
-        // Second, create an encrypted file using the package ID as foreign key:
-        // encryption happens here where you get the user's hashed password
-        return new EncryptedFile()
-          .save({
-            name: req.body.title? req.body.title : 'Message',
-            aws_url: req.body.message ? req.body.message.trim() : null,
-            package_id: package.attributes.id
-          })
-          .then(response => {
-            return response.refresh();
-          })
-          .then(file => {
-            res.json({ 'packageId': file.attributes.package_id });
+        // WORKING on encryption happens here where you get the user's hashed password
+        packageId = package.attributes.id;
+        
+        return new User()
+          .where({ 'id': userId })
+          .fetch()
+          .then(user => {
+            return  user.attributes.password
           });
+      })
+      .then(userPass => {
+        // Third, create an encrypted file using the package ID as foreign key:
+        console.log('encrypt got user pass: ', userPass);
+        return new EncryptedFile()
+        .save({
+          name: req.body.title? req.body.title : 'Message',
+          aws_url: req.body.message ? req.body.message.trim() : null,
+          package_id: packageId
+        })
+        .then(response => {
+          return response.refresh();
+        })
+        .then(file => {
+          res.json({ 'packageId': file.attributes.package_id });
+        });
       })
       .catch(err => {
         console.log(err.message);
