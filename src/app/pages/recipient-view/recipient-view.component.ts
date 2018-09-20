@@ -72,7 +72,9 @@ export class RecipientViewComponent implements OnInit {
       })
       .then(() => {
         // Get the package file message
-        return this.fetchPackageById(this.packageId)
+        if(!this.packageId) {
+          return this.fetchPackageById(this.packageId)
+        }
       })
       .catch(err => console.log(err));
 
@@ -90,7 +92,7 @@ export class RecipientViewComponent implements OnInit {
 
   fetchPackageById(packageId) {
     return this.auth.fetchPackageById(packageId).then((response: object) => {
-      console.log('fetchPackageById: ', response['file']);
+      console.log('fetchPackageById: ', response);
     });
   }
 
