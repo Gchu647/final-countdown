@@ -91,6 +91,7 @@ router.route('/:id/packages/:packageId')
     // Fetch package by ID:
     const userId = req.params.id;
     const packageId = req.params.packageId;
+    let messageTitle;
     let encryptedMessage;
     let decryptedMessage;
 
@@ -100,20 +101,30 @@ router.route('/:id/packages/:packageId')
       })
       .fetch({ withRelated: ['file'] })
       .then(packages => {
+        // Stores the encrypted message and title from db
         encryptedMessage = packages.toJSON().file[0].aws_url;
+        messageTitle = packages.toJSON().file[0].name;
         console.log('fetch encrypted: ', packages.toJSON().file[0].aws_url);
 
+        // Gets user password for decryption
         return new User()
         .where({ 'id': userId })
         .fetch()
         .then(user => {
           return  user.attributes.password
         });
-        // return res.json(packages);
+        
       })
       .then( userPass => {
+        // Sends back a decrypted message
         decryptedMessage = decryptStr(encryptedMessage, userPass)
-        res.send(decryptedMessage);
+
+        const messageData = {
+          title: messageTitle,
+          message: decryptedMessage
+        }
+
+        res.json(messageData);
       })
       .catch(err => {
         return res.status(400).json({ message: err.message });
@@ -122,6 +133,7 @@ router.route('/:id/packages/:packageId')
   .put(isAuthenticated, (req, res) => {
     // Edit encrypted file by package ID:
     const packageId = req.params.packageId;
+    console.log('putting message', req.body);
 
     return new EncryptedFile()
       .where({ package_id: packageId })
