@@ -51,7 +51,7 @@ const sendMessages = function(recipientArray) {
       text: `${recipientArray.body}`,
       html: `<h1>From: ${recipientArray.userFullName} To: ${
         recipientArray.recipientName
-      } Body:${recipientArray.body} Sent:${moment.utc()} </h1>`
+      } Body:${recipientArray.body} Sent:${moment.utc().format()} </h1>`
     })
     .then(msg => console.log(msg))
     .catch(err => console.log(err));

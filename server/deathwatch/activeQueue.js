@@ -50,7 +50,7 @@ class ActiveTriggerQueue {
         trigArr = trigArr.filter(trigger => {
           return trigger.created_at > this.lastUpdate;
         });
-        console.log('trigArr afterFilter',trigArr);
+        console.log('trigArr afterFilter', trigArr);
         if (trigArr.length < 1) {
           console.log(`No new updates since  ${this.lastUpdate}`);
           return null;
@@ -86,7 +86,16 @@ class ActiveTriggerQueue {
     if (!this.head) {
       return null;
     }
-    console.log('top trigger send', moment.utc(this.head.value.timeToExecute) < moment.utc(), 'tte', this.head.value.timeToExecute, 'now', moment.utc());
+
+    console.log(
+      'top trigger send',
+      moment.utc(this.head.value.timeToExecute) < moment.utc(),
+      'tte',
+      this.head.value.timeToExecute,
+      'now',
+      moment.utc()
+    );
+
     if (moment.utc(this.head.value.timeToExecute) < moment.utc()) {
       let temp = this.head;
       this.delete(this.head.value.userId);
@@ -177,23 +186,43 @@ class ActiveTriggerQueue {
    * It returns true if delete was successful else false***/
   delete(userId) {
     let success = false;
+
     if (this.head.value.userId === userId) {
-      this.head = this.head.next;
+      if (this.head.next) {
+        this.head = this.head.next;
+      } else {
+        this.head = this.tail = null;
+      }
+      this.deleteTriggerFromDB(userId);
       return (success = true);
     }
-
     let precedingTrigger = this.searchPrevious(userId);
 
     if (this.tail === precedingTrigger.next) {
       this.tail = precedingTrigger;
       this.tail.next = null;
+      this.deleteTriggerFromDB(userId);
       return (success = true);
     }
 
     precedingTrigger = precedingTrigger.next.next;
     success = precedingTrigger ? true : false;
+    if (success) {
+      this.deleteTriggerFromDB(userId);
+    }
 
     return success;
+  }
+
+  deleteTriggerFromDB(userId) {
+    return new Trigger({ id: userId })
+      .save({ countdown: null }, { patch: true })
+      .then(response => {
+        console.log('delete model response', response);
+      })
+      .catch(err => {
+        console.log('delete Error: ', err);
+      });
   }
 
   /*** ActiveTrigger Insert: This function inserts a new trigger into
