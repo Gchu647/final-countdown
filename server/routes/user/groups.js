@@ -114,7 +114,12 @@ router.route('/:id/groups/:groupId/package')
         encryptedMessage = group.toJSON().package.file[0].aws_url;
         messageTitle = group.toJSON().package.file[0].name;
 
-        return res.json(group);
+        const messageData = {
+          title: messageTitle,
+          message: encryptedMessage
+        }
+
+        return res.json(messageData);
       })
       .catch(err => {
         return res.status(400).json({ message: err.message });
