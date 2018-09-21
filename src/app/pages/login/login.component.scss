@@ -71,20 +71,19 @@
           border-radius: 2px;
           border: 1px solid #206060;
         }
+
+        .login-form-inner-input-error {
+          padding-bottom: 7.5px;
+          color: #bf4040;
+        }
       }
 
-      .login-form-inner-submit {
-        z-index: 1;
-        font-size: 1.25rem;
-        line-height: 1.25rem;
-        letter-spacing: 2px;
-        margin-top: 15px;
-        padding: 15px 30px;
-        border: 0;
-        border-radius: 2px;
-        color: #fbfbfb;
-        background-color: #478585;
-        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+      .login-form-inner-credentials-error {
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-align: center;
+        padding-bottom: 7.5px;
+        color: #bf4040;
       }
     }
   }
