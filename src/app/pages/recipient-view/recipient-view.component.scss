@@ -76,8 +76,10 @@
             }
 
             select {
+              -webkit-appearance: none;
               font-size: 1rem;
               letter-spacing: 1px;
+              height: 50px;
               padding: 15px;
               border-radius: 2px;
               border: 1px solid #206060;
