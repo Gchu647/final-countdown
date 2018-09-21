@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit, DoCheck {
   countries: object[];
   states: object[];
   showStates: boolean = false;
-  
+
   firstNameError: string = '';
   lastNameError: string = '';
   phoneError: string = '';
@@ -49,14 +49,18 @@ export class ProfileComponent implements OnInit, DoCheck {
       });
     });
 
-    this.backend.fetchStates().then((response: object[]) => {
-      this.states = response.map(state => {
-        return {
-          id: state['id'],
-          name: state['name']
-        };
+    this.backend.fetchStates()
+      .then((response: object[]) => {
+        this.states = response.map(state => {
+          return {
+            id: state['id'],
+            name: state['name']
+          };
+        });
+      })
+      .then(() => {
+        this.toggleStates(); // Ensures state dropdown menu displays on load.
       });
-    });
   }
 
   ngDoCheck() {

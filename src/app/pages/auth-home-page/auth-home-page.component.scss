@@ -58,8 +58,10 @@
           }
 
           select {
+            -webkit-appearance: none;
             font-size: 1rem;
             letter-spacing: 1px;
+            height: 50px;
             padding: 15px;
             border-radius: 2px;
             border: 1px solid #206060;
@@ -290,13 +292,15 @@
         padding-bottom: 15px;
 
         select {
+          -webkit-appearance: none;
           font-family: 'Lato', sans-serif;
           font-size: 1.25rem;
           font-weight: bold;
           letter-spacing: 1px;
           text-align-last: center;
           margin-right: 15px;
-          padding: 12px 0 12px 12px;
+          padding: 12px;
+          height: 50px;
           border-radius: 2px;
           border: 1px solid #bf4040;
           box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
@@ -334,5 +338,13 @@
         }
       }
     }
+  }
+}
+
+@media (min-width: 415px) {
+  .activation-modal,
+  .deactivation-modal,
+  .messages-sent-modal {
+    max-width: 415px;
   }
 }

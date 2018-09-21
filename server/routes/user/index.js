@@ -33,7 +33,7 @@ router.route('/user/:id')
           city: user.attributes.city,
           phoneNumber: user.attributes.phone_num //phone_num
         };
-        
+
         return res.json(userResponse);
       })
       .catch(err => {
@@ -53,7 +53,7 @@ router.route('/user/:id')
       country: req.body.countryId, // adding Number() breaks it
       state: req.body.stateId, // adding Number() breaks it
       city: req.body.city ? req.body.city.trim() : null,
-      phone_num: req.body.phoneNumber ? req.body.trim() : null
+      phone_num: req.body.phoneNumber ? req.body.phoneNumber.trim() : null
     };
 
     // Edit using bookshelf

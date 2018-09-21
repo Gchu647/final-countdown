@@ -105,3 +105,16 @@
     }
   }
 }
+
+@media (min-width: 415px) {
+  .background-image {
+    position: relative;
+    top: 0;
+    max-width: 415px;
+}
+
+  .login {
+    max-width: 415px;
+    background-color: #fcfdfd;
+  }
+}
