@@ -50,7 +50,6 @@ class ActiveTriggerQueue {
         trigArr = trigArr.filter(trigger => {
           return trigger.created_at > this.lastUpdate;
         });
-        console.log('trigArr afterFilter', trigArr);
         if (trigArr.length < 1) {
           console.log(`No new updates since  ${this.lastUpdate}`);
           return null;
