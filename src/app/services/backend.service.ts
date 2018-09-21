@@ -122,6 +122,13 @@ export class BackendService {
     return this.http.put(recipientIdUrl, formData).toPromise();
   }
 
+  deleteRecipientById(userId, recipientId) {
+    const recipientIdUrl =
+    this.url + `user/${userId}/recipients/${recipientId}`;
+
+    return this.http.delete(recipientIdUrl).toPromise();
+  }
+
   // ------------------------------------------------------------------------ //
 
   fetchGroups(userId) {
@@ -143,18 +150,38 @@ export class BackendService {
     return this.http.get(groupMembersUrl).toPromise();
   }
 
+  fetchGroupPackage(userId, groupId) {
+    const groupPackageUrl =
+      this.url + `user/${userId}/groups/${groupId}/package`;
+
+    return this.http.get(groupPackageUrl).toPromise();
+  }
+
   // ------------------------------------------------------------------------ //
 
   addPackage(userId, formData) {
     const packageUrl = this.url + `user/${userId}/packages`;
 
-    console.log('backend.service: ', formData);
     return this.http.post(packageUrl, formData).toPromise();
   }
 
-  // WORKING ON
-  fetchPackageById() {
-    const packageIdUrl = this.url;
+  fetchPackageById(userId, packageId) {
+    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
+
+    return this.http.get(packageIdUrl).toPromise();
+  }
+
+  editPackageEncryptedFile(userId, packageId, formData) {
+    const editPackageEncryptedFileUrl =
+      this.url + `user/${userId}/packages/${packageId}`;
+
+    return this.http.put(editPackageEncryptedFileUrl, formData).toPromise();
+  }
+
+  deletePackageById(userId, packageId) {
+    const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
+
+    return this.http.delete(packageIdUrl).toPromise();
   }
 
   // ------------------------------------------------------------------------ //

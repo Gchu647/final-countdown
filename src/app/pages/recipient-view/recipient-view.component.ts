@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BackendService } from '../../services/backend.service';
 import { SessionsService } from '../../services/sessions.service';
 import { AuthService } from '../../services/auth.service';
@@ -22,19 +22,25 @@ export class RecipientViewComponent implements OnInit {
     phoneNumber: '',
     groupId: ''
   };
+  messageData: object = {
+    title: '',
+    message: ''
+  };
   groups: object[];
-  recipientId: number;
 
-  // Temporary variable (until integrated with database):
-  message: string = 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.';
+  // Tracking IDs:
+  recipientId: number;
+  packageId: number;
 
   // Errors:
   firstNameError: string = '';
   lastNameError: string = '';
   emailError: string = '';
   phoneError: string = '';
+  messageError: string = '';
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private backend: BackendService,
     private session: SessionsService,
@@ -44,6 +50,9 @@ export class RecipientViewComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Set recipientId based upon route info provivded by "ActivatedRoute":
+    this.recipientId = Number(this.route.params['value']['id']);
+
     // Get user's groups from server and capitalize first letter of each:
     this.backend.fetchGroups(this.user['userId'])
       .then((response: object[]) => {
@@ -67,65 +76,112 @@ export class RecipientViewComponent implements OnInit {
       .then(() => {
         // This step must occur after groups have been fetched to ensure that
         // the "Relationship" dropdown menu is populated appropriately:
-        this.getRecipientById(this.recipientId);
+        return this.getRecipientById(this.recipientId);
+      })
+      .then(() => {
+        // Get the package file message if packageId is not null:
+        if (this.packageId) {
+          return this.fetchPackageById(this.packageId);
+        }
       })
       .catch(err => console.log(err));
-
-    // Get recipientId from window URL:
-    let index = window.location.pathname.lastIndexOf('/');
-    this.recipientId = Number(window.location.pathname.slice(index + 1));
   }
 
   getRecipientById(recipientId) {
-    this.auth.fetchRecpientById(recipientId).then((response: object) => {
+    return this.auth.fetchRecpientById(recipientId).then((response: object) => {
+      this.packageId = response['packageId'];
       this.formData = response;
     });
   }
 
+  fetchPackageById(packageId) {
+    return this.auth.fetchPackageById(packageId).then((response: object) => {
+      this.messageData['title'] = response['title'];
+      this.messageData['message'] = response['message'];
+      // this.messageData['message'] = response['file'][0]['aws_url'];
+      // this.messageData['title'] = response['file'][0]['name'];
+    });
+  }
+
   saveChanges() {
-    this.auth.editRecipientById(this.recipientId, this.formData)
-      .then((response: object) => {
-        this.formData = response;
+    // Edits a recipient's package by packageId:
+    return this.backend.editPackageEncryptedFile(
+        this.user['userId'],
+        this.packageId,
+        this.messageData
+      )
+      .then(() => {
+        // Save changes to recipient's info:
+        return this.auth.editRecipientById(this.recipientId, this.formData)
+          .then((response: object) => {
+            this.formData = response;
+          });
       })
       .then(() => {
         this.router.navigate(['/messages']);
+      });
+  }
+
+  deleteRecipient() {
+    // Deletes (flags) a package by packageId:
+    return this.backend.deletePackageById(this.user['userId'], this.packageId)
+      .then(() => {
+        // Deletes (flags) a recipient by recipientId:
+        return this.backend.deleteRecipientById(
+          this.user['userId'],
+          this.recipientId
+        );
       })
-      .catch(err => console.log(err));
+      .then(() => {
+        this.router.navigate(['/messages']);
+      });
   }
 
   // ------------------------------------------------------------------------ //
 
-  validateName(classNameStr) {
-    const nameErrorMessage = 'Required';
-    const name = document
+  // Validates input length of "First Name", "Last Name", and "Message":
+  validateInputLength(classNameStr) {
+    const errorMessage = 'Required';
+    const inputValue = document
       .getElementsByClassName(classNameStr)[0]
       ['value'].trim();
 
-    // Display error if first or last name input field is empty:
+    // Display error if input field is empty:
     switch (classNameStr) {
       case 'recipient-view-form-inner-input-first-name':
-        if (this.checkEmptyNameField(name)) {
-          this.firstNameError = nameErrorMessage;
+        if (this.checkEmptyInputField(inputValue)) {
+          this.firstNameError = errorMessage;
         } else {
           this.firstNameError = '';
         }
         this.toggleSubmitButton();
         break;
+
       case 'recipient-view-form-inner-input-last-name':
-        if (this.checkEmptyNameField(name)) {
-          this.lastNameError = nameErrorMessage;
+        if (this.checkEmptyInputField(inputValue)) {
+          this.lastNameError = errorMessage;
         } else {
           this.lastNameError = '';
         }
         this.toggleSubmitButton();
         break;
+
+      case 'recipient-view-form-inner-input-message':
+        if (this.checkEmptyInputField(inputValue)) {
+          this.messageError = errorMessage;
+        } else {
+          this.messageError = '';
+        }
+        this.toggleSubmitButton();
+        break;
+
       default:
         break;
     }
   }
 
-  checkEmptyNameField(name) {
-    return name.length < 1 ? true : false;
+  checkEmptyInputField(str) {
+    return str.length < 1 ? true : false;
   }
 
   validateEmail(eventTypeStr) {
@@ -153,8 +209,8 @@ export class RecipientViewComponent implements OnInit {
     const validAlphaNumericRegex = /^[a-z0-9]+$/i;
 
     switch (eventTypeStr) {
+      // Display error if input does not satisfy the following tests:
       case 'blur':
-        // Display error if input does not satisfy the following tests:
         if (email === '') {
           this.emailError = emailErrorMessages[0];
         } else if (
@@ -166,11 +222,11 @@ export class RecipientViewComponent implements OnInit {
         } else {
           this.emailError = '';
         }
-
         this.toggleSubmitButton();
         break;
+
+      // Immediately removes existing error message once valid input entered:
       case 'ngModelChange':
-        // Immediately removes existing error message once valid input entered:
         if (
           this.emailError &&
           validAlphaNumericRegex.test(splitEmail[0]) &&
@@ -181,6 +237,7 @@ export class RecipientViewComponent implements OnInit {
         }
         this.toggleSubmitButton();
         break;
+
       default:
         break;
     }
@@ -200,9 +257,9 @@ export class RecipientViewComponent implements OnInit {
     ];
 
     switch (eventTypeStr) {
+      // Display error if (1) user enters text into phone number input, and
+      // (2) text input does not match any regular expressions above:
       case 'blur':
-        // Display error if (1) user enters text into phone number input, and
-        // (2) text input does not match any regular expressions above:
         if (phoneNumber === '') {
           this.phoneError = '';
         } else {
@@ -212,8 +269,9 @@ export class RecipientViewComponent implements OnInit {
         }
         this.toggleSubmitButton();
         break;
+
+      // Immediately removes existing error message once valid input entered:
       case 'ngModelChange':
-        // Immediately removes existing error message once valid input entered:
         if (
           this.phoneError &&
           // An empty input is also deemed valid (as input is not required):
@@ -224,6 +282,7 @@ export class RecipientViewComponent implements OnInit {
         }
         this.toggleSubmitButton();
         break;
+
       default:
         break;
     }
@@ -236,7 +295,8 @@ export class RecipientViewComponent implements OnInit {
       this.firstNameError,
       this.lastNameError,
       this.emailError,
-      this.phoneError
+      this.phoneError,
+      this.messageError
     ];
 
     if (errorMessages.some(errorMessage => errorMessage.length > 0)) {
@@ -244,7 +304,8 @@ export class RecipientViewComponent implements OnInit {
     } else if (
       !this.formData['firstName'] ||
       !this.formData['lastName'] ||
-      !this.formData['email']
+      !this.formData['email'] ||
+      !this.messageData['message']
     ) {
       submitButton.setAttribute('disabled', '');
     } else {

@@ -1,21 +1,23 @@
-// This route is reponsible for registration, login, and logout
+// This route is reponsible for registration, login, and logout:
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const router = express.Router();
+
 const User = require('../db/models/User');
-const Package = require('../db/models/Package');
 const Group = require('../db/models/Group');
+const Package = require('../db/models/Package');
+const EncryptedFile = require('../db/models/EncryptedFile');
+
 const saltedRounds = 12;
 
-// Register new user
+// Register new user:
 router.post('/register', (req, res) => {
-  console.log('request to register', req.body);
-  // taking out info from incoming request
+  // Extract relevant data from incoming request:
   let { email, password, fName, lName } = req.body;
-  // setting a default count down timer
-  const defaultCountDown = 14;
   let newUser = {};
+  let newFileId;
+  let newPackageId;
 
   bcrypt.genSalt(saltedRounds, (err, salt) => {
     if (err) {
@@ -26,96 +28,149 @@ router.post('/register', (req, res) => {
       if (err) {
         return res.status(500);
       }
-      // Needs email(unique) and password to register:
-      return new User({
-        email: email ? email.trim() : null,
-        password: hashedPassword,
-        f_name: fName ? fName.trim() : null,
-        l_name: lName ? lName.trim() : null,
-        default_timer: 604800, // 7 days
-      })
-        .save()
-        .then(result => {
-          newUser = result.attributes;
-          console.log('newUser', newUser);
-
-          // return res.json(result.attributes.email)
+      // Registration requires email(unique) and password:
+      return (
+        new User({
+          email: email ? email.trim() : null,
+          password: hashedPassword,
+          f_name: fName ? fName.trim() : null,
+          l_name: lName ? lName.trim() : null,
+          default_timer: 604800 // 7 days
         })
-        // Making Group(family) with a package
-        .then(() => {
-          return new Package()
-            .save({
-              'package_maker_id': newUser.id,
-            })
-            .then(response => {
-              return response.refresh();
-            })
-            .then(package => {
-              console.log('package.attributes.id', package.attributes.id);
-              return new Group()
-                .save({
-                  'relationship_id': 1, // family
-                  'package_id': package.attributes.id,
-                  'owner_id': newUser.id,
+          .save()
+          .then(result => {
+            newUser = result.attributes;
+          })
+          // Create FAMILY group with related package and encrypted file:
+          .then(() => {
+            return new EncryptedFile()
+              .save({
+                name: '',
+                aws_url: ''
+              })
+              .then(response => {
+                newFileId = response.attributes.id;
+                return response.refresh();
+              })
+              .then(file => {
+                return new Package().save({
+                  package_maker_id: newUser.id,
+                  file_id: file.attributes.id
                 });
-            })
-        })
-        // Making Group(friends) with a package
-        .then(() => {
-          return new Package()
-            .save({
-              'package_maker_id': newUser.id,
-            })
-            .then(response => {
-              return response.refresh();
-            })
-            .then(package => {
-              console.log('package.attributes.id', package.attributes.id);
-              return new Group()
-                .save({
-                  'relationship_id': 2, // friends
-                  'package_id': package.attributes.id,
-                  'owner_id': newUser.id,
+              })
+              .then(response => {
+                newPackageId = response.attributes.id;
+                return response.refresh();
+              })
+              .then(() => {
+                return new EncryptedFile({ id: newFileId }).save(
+                  { package_id: newPackageId },
+                  { patch: true }
+                );
+              })
+              .then(() => {
+                return new Group().save({
+                  relationship_id: 1, // FAMILY
+                  package_id: newPackageId,
+                  owner_id: newUser.id
                 });
-          })          
-        })
-        // Making Group(haters) with a package
-        .then(() => {
-          return new Package()
-            .save({
-              'package_maker_id': newUser.id,
-            })
-            .then(response => {
-              return response.refresh();
-            })
-            .then(package => {
-              console.log('package.attributes.id', package.attributes.id);
-              return new Group()
-                .save({
-                  'relationship_id': 3, // haters
-                  'package_id': package.attributes.id,
-                  'owner_id': newUser.id,
+              })
+              .then(response => {
+                return response.refresh();
+              });
+          })
+          // Create FRIENDS group with related package and encrypted file:
+          .then(() => {
+            return new EncryptedFile()
+              .save({
+                name: '',
+                aws_url: ''
+              })
+              .then(response => {
+                newFileId = response.attributes.id;
+                return response.refresh();
+              })
+              .then(file => {
+                return new Package().save({
+                  package_maker_id: newUser.id,
+                  file_id: file.attributes.id
                 });
-          })          
-        })
-        .then(() => {
-          return res.json(newUser);
-        })
-        .catch(err => {
-          res.status(400).json({ message: err.message });
-        });
+              })
+              .then(response => {
+                newPackageId = response.attributes.id;
+                return response.refresh();
+              })
+              .then(() => {
+                return new EncryptedFile({ id: newFileId }).save(
+                  { package_id: newPackageId },
+                  { patch: true }
+                );
+              })
+              .then(() => {
+                return new Group().save({
+                  relationship_id: 2, // FRIENDS
+                  package_id: newPackageId,
+                  owner_id: newUser.id
+                });
+              })
+              .then(response => {
+                return response.refresh();
+              });
+          })
+          // Create HATERS group with related package and encrypted file:
+          .then(() => {
+            return new EncryptedFile()
+              .save({
+                name: '',
+                aws_url: ''
+              })
+              .then(response => {
+                newFileId = response.attributes.id;
+                return response.refresh();
+              })
+              .then(file => {
+                return new Package().save({
+                  package_maker_id: newUser.id,
+                  file_id: file.attributes.id
+                });
+              })
+              .then(response => {
+                newPackageId = response.attributes.id;
+                return response.refresh();
+              })
+              .then(() => {
+                return new EncryptedFile({ id: newFileId }).save(
+                  { package_id: newPackageId },
+                  { patch: true }
+                );
+              })
+              .then(() => {
+                return new Group().save({
+                  relationship_id: 3, // HATER
+                  package_id: newPackageId,
+                  owner_id: newUser.id
+                });
+              })
+              .then(response => {
+                return response.refresh();
+              });
+          })
+          .then(() => {
+            return res.json(newUser);
+          })
+          .catch(err => {
+            res.status(400).json({ message: err.message });
+          })
+      );
     });
   });
 });
 
-// Login in with a username(the email) and password
+// Log in with a username (i.e., email address) and password:
 router.post('/login', (req, res, next) => {
   // If user is logged in, then instruct the user to log out first:
-  console.log('login in server!', req.body);
   if (req.user) {
-    res
-      .status(400)
-      .json({ message: `${req.user.email} is already logged in` });
+    res.status(400).json({ message: `${req.user.email} is already logged in` });
   } else {
     passport.authenticate('local', (err, user) => {
       if (err) {
@@ -136,9 +191,8 @@ router.post('/login', (req, res, next) => {
   }
 });
 
-// Logout user
+// Log out user:
 router.get('/logout', (req, res) => {
-  console.log('logging out in server!');
   req.logout();
   res.json({ success: true });
 });

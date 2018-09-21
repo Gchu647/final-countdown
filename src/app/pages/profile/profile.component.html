@@ -45,7 +45,7 @@
           <div class="profile-form-inner-input" *ngIf="showStates">
             <label for="state">State:</label>
             <select name="state" class="profile-form-inner-input-state" [(ngModel)]="formData.stateId">
-              <option value="null" class="profile-form-inner-input-country-blank">---</option>
+              <option value="null" class="profile-form-inner-input-state-blank">---</option>
               <option *ngFor="let state of states" value="{{state.id}}">{{state.name}}</option>
             </select>
           </div>

@@ -55,7 +55,8 @@ export class MessagePersonalNewComponent implements OnInit {
     this.validateEmail('blur');
 
     // Get user's groups from server and capitalize first letter of each:
-    this.backend.fetchGroups(this.user['userId'])
+    this.backend
+      .fetchGroups(this.user['userId'])
       .then((response: object[]) => {
         const groups = response.map(group => {
           return {
@@ -79,15 +80,13 @@ export class MessagePersonalNewComponent implements OnInit {
 
   save() {
     // Saves a package first with a message for aws_url
-    return this.auth.addPackage(this.messageData)
+    return this.auth
+      .addPackage(this.messageData)
       .then((response: object) => {
         // Save the recipient with the new packageId
-        console.log('added package', response);
         this.recipientData['packageId'] = response['packageId'];
 
-        this.auth.addRecipient(this.recipientData).then(response => {
-          console.log('recipient save: ', response);
-        });
+        return this.auth.addRecipient(this.recipientData);
       })
       .then(() => {
         this.router.navigate(['/messages']);
@@ -96,7 +95,7 @@ export class MessagePersonalNewComponent implements OnInit {
 
   // ------------------------------------------------------------------------ //
 
-  // Validates the input length of "First Name", "Last Name", and "Message":
+  // Validates input length of "First Name", "Last Name", and "Message":
   validateInputLength(classNameStr) {
     const errorMessage = 'Required';
     const inputValue = document
@@ -166,8 +165,8 @@ export class MessagePersonalNewComponent implements OnInit {
     const validAlphaNumericRegex = /^[a-z0-9]+$/i;
 
     switch (eventTypeStr) {
+      // Display error if input does not satisfy the following tests:
       case 'blur':
-        // Display error if input does not satisfy the following tests:
         if (email === '') {
           this.emailError = emailErrorMessages[0];
         } else if (
@@ -179,11 +178,11 @@ export class MessagePersonalNewComponent implements OnInit {
         } else {
           this.emailError = '';
         }
-
         this.toggleSubmitButton();
         break;
+
+      // Immediately removes existing error message once valid input entered:
       case 'ngModelChange':
-        // Immediately removes existing error message once valid input entered:
         if (
           this.emailError &&
           validAlphaNumericRegex.test(splitEmail[0]) &&
@@ -194,6 +193,7 @@ export class MessagePersonalNewComponent implements OnInit {
         }
         this.toggleSubmitButton();
         break;
+
       default:
         break;
     }

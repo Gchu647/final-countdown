@@ -8,15 +8,25 @@
     <form class="login-form-inner">
       <div class="login-form-inner-input">
         <label for="email">Email: </label>
-        <input type="email" name="email" class="login-form-inner-input-email" [(ngModel)]='loginFormData.email'required>
+        <span *ngIf="emailError" class="login-form-inner-input-error">{{emailError}}</span>
+
+        <input type="email" name="email" class="login-form-inner-input-email" [(ngModel)]="loginFormData.email"
+          (ngModelChange)="validateEmail('ngModelChange')" (blur)="validateEmail('blur')" autocomplete="off" required>
       </div>
 
       <div class="login-form-inner-input">
-        <label for="password">Password: </label>
-        <input type="password" name="password" class="login-form-inner-input-password" [(ngModel)]='loginFormData.password' required>
+        <label for="password">Password:</label>
+        <span *ngIf="passwordError" class="login-form-inner-input-error">{{passwordError}}</span>
+
+        <input type="password" name="password" class="login-form-inner-input-password" [(ngModel)]="loginFormData.password"
+          (ngModelChange)="validatePassword('ngModelChange')" (blur)="validatePassword('blur')" required>
       </div>
 
-      <button type="button" class="login-form-inner-submit" (click)='login()'>LOGIN</button>
+      <span *ngIf="credentialsError" class="login-form-inner-credentials-error">{{credentialsError}}</span>
+
+      <div class="buttons">
+        <button type="button" class="buttons-primary" (click)="login()">LOGIN</button>
+      </div>
     </form>
   </div>
 

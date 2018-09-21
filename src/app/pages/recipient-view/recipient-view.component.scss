@@ -43,6 +43,17 @@
           align-items: center;
           width: 100%;
 
+          span {
+            text-align: center;
+            letter-spacing: 1px;
+            font-weight: bold;
+            padding: 0 0 30px;
+
+            &:nth-of-type(2) {
+              padding: 45px 0 30px;
+            }
+          }
+
           .recipient-view-form-inner-input {
             display: flex;
             flex-direction: column;
@@ -65,14 +76,17 @@
             }
 
             select {
+              -webkit-appearance: none;
               font-size: 1rem;
               letter-spacing: 1px;
+              height: 50px;
               padding: 15px;
               border-radius: 2px;
               border: 1px solid #206060;
             }
 
             .recipient-view-form-inner-input-error {
+              text-align: left;
               padding-bottom: 7.5px;
               color: #bf4040;
             }

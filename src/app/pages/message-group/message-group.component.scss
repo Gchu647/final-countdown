@@ -46,9 +46,11 @@
         }
 
         select {
+          -webkit-appearance: none;
           font-size: 1rem;
           letter-spacing: 1px;
           padding: 15px;
+          height: 50px;
           min-width: 228.14px;
           max-width: 90%;
           border-radius: 2px;
@@ -71,19 +73,33 @@
           padding: 0 0 30px;
         }
 
-        label {
-          padding-bottom: 7.5px;
-          color: #666;
-          width: 90%;
-        }
-
-        textarea {
-          font-size: 1rem;
+        .group-message-text-form-input {
+          display: flex;
+          flex-direction: column;
           letter-spacing: 1px;
-          padding: 15px;
           width: 90%;
-          border-radius: 2px;
-          border: 1px solid #206060;
+          padding-bottom: 15px;
+
+          label {
+            padding-bottom: 7.5px;
+            color: #666;
+          }
+
+          input {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            padding: 15px;
+            border-radius: 2px;
+            border: 1px solid #206060;
+          }
+
+          textarea {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            padding: 15px;
+            border-radius: 2px;
+            border: 1px solid #206060;
+          }
         }
 
         .group-message-text-form-buttons {

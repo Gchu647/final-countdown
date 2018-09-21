@@ -43,6 +43,10 @@ passport.deserializeUser((user, done) => {
   new User({ id: user.id })
     .fetch()
     .then(user => {
+      // Possible candidate for deletion (after successful deployment):
+      if (!user) {
+        return;
+      }
       user = user.toJSON();
       return done(null, {
         // You can get more data from DB:
@@ -63,14 +67,14 @@ passport.use(
       .fetch()
       .then(user => {
         if (!user) {
-          return done({ message: 'Wrong email' });
+          return done({ message: 'Invalid Email' });
         } else {
           user = user.toJSON();
           bcrypt.compare(password, user.password).then(samePassword => {
             if (samePassword) {
               return done(null, user);
             } else {
-              return done({ message: 'Wrong Password' });
+              return done({ message: 'Invalid Password' });
             }
           });
         }
