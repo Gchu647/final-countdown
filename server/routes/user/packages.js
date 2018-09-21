@@ -31,14 +31,9 @@ router
     let packageId;
     console.log('posting package: ', req.body);
 
-    const packageInput = {
-      package_maker_id: userId,
-      // recipient_id: recipientId
-    };
-
     // First, create a new package:
     return new Package()
-      .save(packageInput)
+      .save({ 'package_maker_id': userId })
       .then(response => {
         return response.refresh();
       })
