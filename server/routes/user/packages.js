@@ -6,6 +6,8 @@ const isAuthenticated = require('../../middleware/isAuthenticated');
 const Package = require('../../db/models/Package');
 const User = require('../../db/models/User');
 const EncryptedFile = require('../../db/models/EncryptedFile');
+// Encryption function
+const encryptStr = require('../../deathwatch/encrypt');
 
 router
   .route('/:id/packages')
@@ -51,10 +53,21 @@ router
       .then(userPass => {
         // Third, create an encrypted file using the package ID as foreign key:
         console.log('encrypt got user pass: ', userPass);
+        // trims down the req.body message or set it to null
+        const message = req.body.message ? req.body.message.trim() : null;
+        let encryptedMessage = null;
+
+        // if message is not falsy, encrypt it
+        if(message) {
+          encryptedMessage = encryptStr(message,userPass);
+        }
+        
+        console.log('encrypted message: ', encryptedMessage);
+        
         return new EncryptedFile()
         .save({
           name: req.body.title? req.body.title : 'Message',
-          aws_url: req.body.message ? req.body.message.trim() : null,
+          aws_url: encryptedMessage,
           package_id: packageId
         })
         .then(response => {
