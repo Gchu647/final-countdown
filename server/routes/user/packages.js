@@ -89,7 +89,10 @@ router
 router.route('/:id/packages/:packageId')
   .get(isAuthenticated, (req, res) => {
     // Fetch package by ID:
+    const userId = req.params.id;
     const packageId = req.params.packageId;
+    let encryptedMessage;
+    let decryptedMessage;
 
     return new Package()
       .query(qb => {
@@ -97,8 +100,20 @@ router.route('/:id/packages/:packageId')
       })
       .fetch({ withRelated: ['file'] })
       .then(packages => {
+        encryptedMessage = packages.toJSON().file[0].aws_url;
         console.log('fetch encrypted: ', packages.toJSON().file[0].aws_url);
-        return res.json(packages);
+
+        return new User()
+        .where({ 'id': userId })
+        .fetch()
+        .then(user => {
+          return  user.attributes.password
+        });
+        // return res.json(packages);
+      })
+      .then( userPass => {
+        decryptedMessage = decryptStr(encryptedMessage, userPass)
+        res.send(decryptedMessage);
       })
       .catch(err => {
         return res.status(400).json({ message: err.message });
