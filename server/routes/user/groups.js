@@ -115,7 +115,6 @@ router.route('/:id/groups/:groupId/package')
         ]
       })
       .then(group => {
-        console.log('GET group packages: ', group.toJSON().package);
         encryptedMessage = group.toJSON().package.file[0].aws_url;
         messageTitle = group.toJSON().package.file[0].name;
         packageId = group.toJSON().package.id;
@@ -128,10 +127,8 @@ router.route('/:id/groups/:groupId/package')
           });
       })
       .then(userPass => {
-        console.log('userPass: ', userPass);
         // Sends back a decrypted message
         decryptedMessage = decryptStr(encryptedMessage, userPass)
-        console.log('decryptedMessage: ', decryptedMessage);
 
         const messageData = {
           packageId: packageId,

@@ -53,7 +53,6 @@ router
       })
       .then(userPass => {
         // Third, create an encrypted file using the package ID as foreign key:
-        console.log('encrypt got user pass: ', userPass);
         // trims down the req.body message or set it to null
         const message = req.body.message ? req.body.message.trim() : null;
         let encryptedMessage = null;
@@ -104,7 +103,6 @@ router.route('/:id/packages/:packageId')
         // Stores the encrypted message and title from db
         encryptedMessage = packages.toJSON().file[0].aws_url;
         messageTitle = packages.toJSON().file[0].name;
-        console.log('fetch encrypted: ', packages.toJSON().file[0].aws_url);
 
         // Gets user password for decryption
         return new User()
@@ -134,7 +132,6 @@ router.route('/:id/packages/:packageId')
     // Edit encrypted file by package ID:
     const userId = req.params.id;
     const packageId = req.params.packageId;
-    console.log('putting message', req.body);
 
     return new User()
       .where({ 'id': userId })
