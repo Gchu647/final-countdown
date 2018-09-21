@@ -82,10 +82,17 @@ export class MessageGroupComponent implements OnInit {
     this.backend.fetchGroupPackage(this.user['userId'], this.groupId)
       .then(response => {
         this.groupPackageContents = response['package'];
-        this.formData = {
-          title: this.groupPackageContents['file'][0]['name'],
-          message: this.groupPackageContents['file'][0]['aws_url']
-        };
+        if (this.groupPackageContents['file']) {
+          this.formData = {
+            title: this.groupPackageContents['file'][0]['name'],
+            message: this.groupPackageContents['file'][0]['aws_url']
+          };
+        } else {
+          this.formData = {
+            title: '',
+            message: ''
+          };
+        }
       })
       .catch(err => console.log(err));
   }

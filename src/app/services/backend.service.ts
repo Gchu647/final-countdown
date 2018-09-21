@@ -180,7 +180,7 @@ export class BackendService {
 
   deletePackageById(userId, packageId) {
     const packageIdUrl = this.url + `user/${userId}/packages/${packageId}`;
-    
+
     return this.http.delete(packageIdUrl).toPromise();
   }
 
