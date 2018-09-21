@@ -63,7 +63,7 @@ router
           encryptedMessage = encryptStr(message,userPass);
         }
         
-        console.log('encrypted message: ', encryptedMessage);
+        console.log('POSt encrypted message: ', encryptedMessage);
         
         return new EncryptedFile()
         .save({
@@ -132,18 +132,39 @@ router.route('/:id/packages/:packageId')
   })
   .put(isAuthenticated, (req, res) => {
     // Edit encrypted file by package ID:
+    const userId = req.params.id;
     const packageId = req.params.packageId;
     console.log('putting message', req.body);
 
-    return new EncryptedFile()
-      .where({ package_id: packageId })
-      .save(
-        {
-          name: req.body.title,
-          aws_url: req.body.message
-        },
-        { patch: true }
-      )
+    return new User()
+      .where({ 'id': userId })
+      .fetch()
+      .then(user => {
+        return  user.attributes.password
+      })
+      .then(userPass => {
+        // Using userPass to encrypt message
+        const message = req.body.message ? req.body.message.trim() : null;
+        let encryptedMessage = null;
+
+        // if message is not falsy, encrypt it
+        if(message) {
+          encryptedMessage = encryptStr(message,userPass);
+        }
+        
+        console.log('EDIT encrypted message: ', encryptedMessage);
+
+        // Save file with encrypted message
+        return new EncryptedFile()
+        .where({ package_id: packageId })
+        .save(
+          {
+            name: req.body.title,
+            aws_url: encryptedMessage
+          },
+          { patch: true }
+        );
+      })
       .then(() => {
         res.json({ message: 'message has being edited' });
       })
