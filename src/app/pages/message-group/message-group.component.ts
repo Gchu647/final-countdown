@@ -51,7 +51,7 @@ export class MessageGroupComponent implements OnInit {
   save() {
     return this.backend.editPackageEncryptedFile(
         this.user['userId'],
-        this.groupPackageContents['id'],
+        this.groupPackageContents['packageId'],
         this.formData
       )
       .then(() => {
@@ -81,11 +81,13 @@ export class MessageGroupComponent implements OnInit {
   getGroupPackage() {
     this.backend.fetchGroupPackage(this.user['userId'], this.groupId)
       .then(response => {
-        this.groupPackageContents = response['package'];
-        if (this.groupPackageContents['file']) {
+        console.log('getGroupPackage: ', response);
+        this.groupPackageContents = response;
+        
+        if (this.groupPackageContents) {
           this.formData = {
-            title: this.groupPackageContents['file'][0]['name'],
-            message: this.groupPackageContents['file'][0]['aws_url']
+            title: this.groupPackageContents['title'],
+            message: this.groupPackageContents['message']
           };
         } else {
           this.formData = {
