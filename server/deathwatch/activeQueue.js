@@ -126,14 +126,21 @@ class ActiveTriggerQueue {
           if (userInfo.groups) {
             console.log('userInfo.groups', userInfo.groups);
             executableTriggerGroups = userInfo.groups.map(group => {
+              console.log('group.', group);
               if (group.members.length < 1) {
                 console.log('no members');
-                return null;
-              }else {
-                let bodyStr = group.members.package.file[0].aws_url;
-                let subjectStr = group.members.package.file[0].name;
-
+                return;
+              } else {
+                console.log('package', group.package);
+                if (!group.package) {
+                  return null;
+                }
+                let bodyStr = group.package.file[0].aws_url;
+                let subjectStr = group.package.file[0].name;
+                console.log('members', group.members);
                 return group.members.map(member => {
+                  console.log('members', member);
+
                   return {
                     recipientName: `${member.f_name} ${member.l_name}`,
                     recipientEmail: member.email,
@@ -141,13 +148,25 @@ class ActiveTriggerQueue {
                     relationshipId: member.id,
                     subject: subjectStr,
                     body: bodyStr,
-                    hash: `${userInfo.password}`
+                    hash: `${userInfo.password}`,
+                    packageId: group.package.id
                   };
                 });
               }
             });
           }
-          return executableTriggerIndividuals.concat(executableTriggerGroups);
+          executableTriggerGroups = executableTriggerGroups.filter(trigger => trigger);
+          console.log(
+            'individuals',
+            executableTriggerIndividuals,
+            'groups',
+            executableTriggerGroups
+          );
+          console.log(
+            'concat',
+            executableTriggerIndividuals.concat(...executableTriggerGroups)
+          );
+          return executableTriggerIndividuals.concat(...executableTriggerGroups);
         })
         .catch(err => {
           console.log('err: ', err);
@@ -159,7 +178,7 @@ class ActiveTriggerQueue {
 
   getUserData(userId) {
     return User.where({ id: userId })
-      .fetch({ withRelated: ['recipients.package.file', 'groups.members.package.file'] })
+      .fetch({ withRelated: ['recipients.package.file', 'groups.members', 'groups.package.file'] })
       .then(response => {
         console.log('getUserData response', response);
         return response;
@@ -212,7 +231,9 @@ class ActiveTriggerQueue {
    * It returns true if delete was successful else false***/
   delete(userId) {
     let success = false;
-
+    if (!this.head) {
+      return success;
+    }
     if (this.head.value.userId === userId) {
       if (this.head.next) {
         this.head = this.head.next;
@@ -241,9 +262,8 @@ class ActiveTriggerQueue {
   }
 
   deleteTriggerFromDB(userId) {
-    return new Trigger()
-      .where({ id: userId })
-      .save({ countdown: null }, { patch: true })
+    return Trigger.where({ user_id: userId })
+      .save({ countdown: null }, { method: 'update', patch: true })
       .then(response => {
         console.log('delete model response', response);
       })
