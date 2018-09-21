@@ -6,8 +6,9 @@ const isAuthenticated = require('../../middleware/isAuthenticated');
 const Package = require('../../db/models/Package');
 const User = require('../../db/models/User');
 const EncryptedFile = require('../../db/models/EncryptedFile');
-// Encryption function
+// Encryption & Decrypt functions
 const encryptStr = require('../../deathwatch/encrypt');
+const decryptStr = require('../../deathwatch/decrypt');
 
 router
   .route('/:id/packages')
@@ -40,7 +41,7 @@ router
         return response.refresh();
       })
       .then(package => {
-        // WORKING on encryption happens here where you get the user's hashed password
+        // Second, we are fetching the hashed password to encrypt the message
         packageId = package.attributes.id;
         
         return new User()
@@ -96,6 +97,7 @@ router.route('/:id/packages/:packageId')
       })
       .fetch({ withRelated: ['file'] })
       .then(packages => {
+        console.log('fetch encrypted: ', packages.toJSON().file[0].aws_url);
         return res.json(packages);
       })
       .catch(err => {
