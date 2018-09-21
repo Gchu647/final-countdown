@@ -36,8 +36,6 @@ router.route('/:id/recipients')
       group_id: req.body.groupId,
     };
 
-    console.log('post new recipient', recipientInput);
-
     // Save using bookshelf
     return new Recipient()
       .save(recipientInput)
@@ -67,8 +65,6 @@ router.route('/:id/recipients/:recipientId')
       })
       .fetch()
       .then(recipient => {
-        console.log('Getting a recipient: ', recipient.attributes);
-
         const recipientResponse = {
           id: recipient.attributes.id,
           email: recipient.attributes.email,

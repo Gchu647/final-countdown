@@ -81,7 +81,6 @@ export class MessageGroupComponent implements OnInit {
   getGroupPackage() {
     this.backend.fetchGroupPackage(this.user['userId'], this.groupId)
       .then(response => {
-        console.log('getGroupPackage: ', response);
         this.groupPackageContents = response;
 
         if (this.groupPackageContents) {

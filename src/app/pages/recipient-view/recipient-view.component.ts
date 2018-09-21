@@ -96,7 +96,6 @@ export class RecipientViewComponent implements OnInit {
 
   fetchPackageById(packageId) {
     return this.auth.fetchPackageById(packageId).then((response: object) => {
-      console.log('fetchPackageById: ', response);
       this.messageData['title'] = response['title'];
       this.messageData['message'] = response['message'];
       // this.messageData['message'] = response['file'][0]['aws_url'];
@@ -126,13 +125,12 @@ export class RecipientViewComponent implements OnInit {
   deleteRecipient() {
     // Deletes (flags) a package by packageId:
     return this.backend.deletePackageById(this.user['userId'], this.packageId)
-      .then(response => {
+      .then(() => {
         // Deletes (flags) a recipient by recipientId:
-        return this.backend
-          .deleteRecipientById(this.user['userId'], this.recipientId)
-          .then(() => {
-            console.log('recipient deleted');
-          });
+        return this.backend.deleteRecipientById(
+          this.user['userId'],
+          this.recipientId
+        );
       })
       .then(() => {
         this.router.navigate(['/messages']);

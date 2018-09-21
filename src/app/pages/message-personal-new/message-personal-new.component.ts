@@ -55,7 +55,8 @@ export class MessagePersonalNewComponent implements OnInit {
     this.validateEmail('blur');
 
     // Get user's groups from server and capitalize first letter of each:
-    this.backend.fetchGroups(this.user['userId'])
+    this.backend
+      .fetchGroups(this.user['userId'])
       .then((response: object[]) => {
         const groups = response.map(group => {
           return {
@@ -79,15 +80,13 @@ export class MessagePersonalNewComponent implements OnInit {
 
   save() {
     // Saves a package first with a message for aws_url
-    return this.auth.addPackage(this.messageData)
+    return this.auth
+      .addPackage(this.messageData)
       .then((response: object) => {
         // Save the recipient with the new packageId
-        console.log('added package', response);
         this.recipientData['packageId'] = response['packageId'];
 
-        return this.auth.addRecipient(this.recipientData).then(response => {
-          console.log('recipient save: ', response);
-        });
+        return this.auth.addRecipient(this.recipientData);
       })
       .then(() => {
         this.router.navigate(['/messages']);
