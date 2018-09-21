@@ -90,6 +90,9 @@ router.route('/:id/groups/:groupId/package')
     // Fetches a single user group, its members, and its package file:
     const userId = req.params.id;
     const groupId = req.params.groupId;
+    let messageTitle;
+    let encryptedMessage;
+    let decryptedMessage;
 
     return new Group()
       .query(qb => {
@@ -107,6 +110,10 @@ router.route('/:id/groups/:groupId/package')
         ]
       })
       .then(group => {
+        console.log('GET group packages: ', group.toJSON().package.file[0]);
+        encryptedMessage = group.toJSON().package.file[0].aws_url;
+        messageTitle = group.toJSON().package.file[0].name;
+
         return res.json(group);
       })
       .catch(err => {
