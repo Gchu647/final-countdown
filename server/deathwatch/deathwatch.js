@@ -33,9 +33,13 @@ const deathWatch = schedule.scheduleJob('* * * * * *', async function() {
     // console.log('if recip', recipientArr);
     recipientArr.map(recipient => {
       // console.log('recipient', recipient);
-      sendMessages(recipient).catch(err => {
-        console.log('recipient error:', err);
-      });
+      sendMessages(recipient)
+        .then(response => {
+          console.log('sendMessageStatus', response);
+        })
+        .catch(err => {
+          console.log('recipient error:', err);
+        });
     });
   }
   count += 1;
@@ -43,6 +47,10 @@ const deathWatch = schedule.scheduleJob('* * * * * *', async function() {
 
 const sendMessages = function(recipientArray) {
   // console.log('send triggered', recipientArray);
+  if (!recipientArray || !recipientArray.recipientName) {
+    return null;
+  }
+  console.log('recipArr', recipientArray);
   let decryptedText = decrypt(recipientArray.body, recipientArray.hash);
   // console.log('dec', decrypt(recipientArray.body, recipientArray.hash));
   return mg.messages
