@@ -6,6 +6,7 @@ const app = express();
 const routes = require('./routes');
 const env = process.env;
 const PORT = process.env.PORT || 8080;
+const path = require('path');
 
 // Auth Imports:
 const session = require('express-session');
@@ -15,7 +16,7 @@ const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const User = require('./db/models/User');
 
-app.use(express.static('./public'));
+app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.json());
 
 // ---------------------=[   PASSPORT Config Start   ]=--------------------- //
@@ -86,7 +87,8 @@ app.use('/api', routes);
 
 // 404 Handler:
 app.get('*', (req, res) => {
-  res.status(404).send({ message: 'Page not found!' });
+  res.sendFile(path.join(__dirname,'public','index.html'));
+  //res.status(404).send({ message: 'Page not found!' });
 });
 
 // Catch-All Error Handler:
@@ -94,7 +96,8 @@ app.use(function(err, req, res, next) {
   console.error(err.stack);
 
   if (err) {
-    res.status(500).json({ error: err });
+    console.log('error', err);
+//    res.status(500).json({ error: err });
   }
 
   next();
