@@ -69,7 +69,8 @@ class ActiveTriggerQueue {
           }
           this.insertToQueue({
             userId: trigger.user_id,
-            timeToExecute: trigger.countdown
+            timeToExecute: trigger.countdown,
+            triggerId: trigger.id
           });
         });
       })
@@ -119,7 +120,8 @@ class ActiveTriggerQueue {
                 subject: subjectStr,
                 body: bodyStr,
                 hash: `${userInfo.password}`,
-                userId: temp.value.userId
+                userId: temp.value.userId,
+                triggerId: temp.value.triggerId
               };
             });
           }
@@ -151,7 +153,8 @@ class ActiveTriggerQueue {
                     body: bodyStr,
                     hash: `${userInfo.password}`,
                     packageId: group.package.id,
-                    userId: temp.value.userId
+                    userId: temp.value.userId,
+                    triggerId: temp.value.triggerId
                   };
                 });
               }
@@ -244,7 +247,7 @@ class ActiveTriggerQueue {
       } else {
         this.head = this.tail = null;
       }
-      this.deleteTriggerFromDB(userId);
+      // this.deleteTriggerFromDB(userId);
       return (success = true);
     }
     let precedingTrigger = this.searchPrevious(userId);
@@ -252,21 +255,21 @@ class ActiveTriggerQueue {
     if (this.tail === precedingTrigger.next) {
       this.tail = precedingTrigger;
       this.tail.next = null;
-      this.deleteTriggerFromDB(userId);
+      // this.deleteTriggerFromDB(userId);
       return (success = true);
     }
 
     precedingTrigger = precedingTrigger.next.next;
     success = precedingTrigger ? true : false;
-    if (success) {
-      this.deleteTriggerFromDB(userId);
-    }
+    // if (success) {
+    //   this.deleteTriggerFromDB(userId);
+    // }
 
     return success;
   }
 
-  deleteTriggerFromDB(userId) {
-    return Trigger.where({ user_id: userId })
+  deleteTriggerFromDB(triggerId) {
+    return Trigger.where({ id: triggerId })
       .save({ countdown: null }, { method: 'update', patch: true })
       .then(response => {
         console.log('delete model response', response);

@@ -1,3 +1,4 @@
+const Trigger = require('../db/models/Trigger');
 require('dotenv').config({ path: '../../.env' });
 // const triggerQueue = require('./test.js');
 const triggerQueue = require('./activeQueue');
@@ -31,7 +32,7 @@ const deathWatch = schedule.scheduleJob('* * * * * *', async function() {
     // console.log('count: ', count, 'triggers', recipientArr);
     // console.log('executeableTrigger', recipientArr);
     // console.log('if recip', recipientArr);
-    recipientArr.map(recipient => {
+    await recipientArr.map(recipient => {
       // console.log('recipient', recipient);
       sendMessages(recipient)
         .then(response => {
@@ -41,11 +42,12 @@ const deathWatch = schedule.scheduleJob('* * * * * *', async function() {
           console.log('recipient error:', err);
         });
     });
+    this.delete(recipientArr.userId);
   }
   count += 1;
 });
 
-const sendMessages = function(recipientArray) {
+const sendMessages = async function(recipientArray) {
   // console.log('send triggered', recipientArray);
   if (!recipientArray || !recipientArray.recipientName) {
     return null;
@@ -53,30 +55,41 @@ const sendMessages = function(recipientArray) {
   console.log('recipArr', recipientArray);
   let decryptedText = decrypt(recipientArray.body, recipientArray.hash);
   // console.log('dec', decrypt(recipientArray.body, recipientArray.hash));
-  validateTriggerActive(recipientArray.userId);
-  return mg.messages
-    .create(process.env.MAILGUN_DOMAIN, {
-      from: process.env.MAILGUN_NOREPLY,
-      to: `${recipientArray.recipientEmail}`,
-      subject: `${recipientArray.subject}`,
-      text: `${decryptedText}`,
-      // text: `${recipientArray.body}`,
-      //${recipientArray.userFullName} To: ${
-      //recipientArray.recipientName
-      //}
-      html: `<h3>Dear ${recipientArray.recipientName}, </h3>
-       <h3>${decryptedText} </h3>
-       <h3>Sincerely, ${recipientArray.userFullName}</h3>
-       Sent:${moment.utc().format()}`
-    })
-    .then(msg => console.log(msg))
-    .catch(err => console.log(err));
+  console.log('validate', await validateTriggerActive(recipientArray.userId));
+  if (await validateTriggerActive(recipientArray.triggerId)) {
+    return mg.messages
+      .create(process.env.MAILGUN_DOMAIN, {
+        from: process.env.MAILGUN_NOREPLY,
+        to: `${recipientArray.recipientEmail}`,
+        subject: `${recipientArray.subject}`,
+        text: `${decryptedText}`,
+        // text: `${recipientArray.body}`,
+        //${recipientArray.userFullName} To: ${
+        //recipientArray.recipientName
+        //}
+        html: `<h3>Dear ${recipientArray.recipientName}, </h3>
+         <h3>${decryptedText} </h3>
+         <h3>Sincerely, ${recipientArray.userFullName}</h3>
+         Sent:${moment.utc().format()}`
+      })
+      .then(msg => console.log(msg))
+      .catch(err => console.log(err));
+  }
+  triggerQueue.deleteTriggerFromDB(recipientArray.triggerId);
+  return new Error('Trigger was deactivated');
 };
 
-const validateTriggerActive = function(userId) {
-  return Trigger({ user_id: userId })
+const validateTriggerActive = async function(triggerId) {
+  return await Trigger.where({ id: triggerId })
     .fetch()
     .then(trigger => {
-      console.log('trigger', trigger);
+      console.log('trigger', trigger, 'countdown', trigger.toJSON().countdown);
+      if (!trigger.toJSON().countdown) {
+        return false;
+      }
+      return true;
+    })
+    .catch(err => {
+      console.log('validate trigger error:', err);
     });
 };
