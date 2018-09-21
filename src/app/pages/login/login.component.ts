@@ -35,9 +35,6 @@ export class LoginComponent {
       return;
     } else {
       return this.auth.login(this.loginFormData)
-        .then(response => {
-          console.log('Response @login_component: ', response);
-        })
         .then(() => {
           this.router.navigate(['/messages']);
         })

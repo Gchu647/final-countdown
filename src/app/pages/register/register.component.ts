@@ -51,11 +51,7 @@ export class RegisterComponent {
     if (errorMessages.some(errorMessage => errorMessage.length > 0)) {
       return;
     } else {
-      return this.backend
-        .register(this.registerFormData)
-        .then(response => {
-          console.log('Response @register_component: ', response);
-        })
+      return this.backend.register(this.registerFormData)
         .then(() => this.router.navigate(['/login']))
         .catch(response => {
           const errorMessage: string = response.error.message;

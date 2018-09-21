@@ -32,7 +32,6 @@ router
     // req.body includes a message and a title:
     const userId = req.params.id;
     let packageId;
-    console.log('posting package: ', req.body);
 
     // First, create a new package:
     return new Package()

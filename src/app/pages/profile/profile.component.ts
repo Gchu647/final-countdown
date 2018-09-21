@@ -70,9 +70,6 @@ export class ProfileComponent implements OnInit, DoCheck {
   saveProfile() {
     this.auth
       .editProfile(this.formData)
-      .then(response => {
-        console.log('profile got: ', response);
-      })
       .then(() => {
         this.router.navigate(['/messages']);
       });
