@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({path: '../../.env'});
 // const triggerQueue = require('./test.js');
 const triggerQueue = require('./activeQueue');
 const schedule = require('node-schedule');
@@ -21,7 +21,7 @@ let recipientArr;
 
 const deathWatch = schedule.scheduleJob('* * * * * *', async function() {
   triggerQueue.updateQueue();
-  console.log(triggerQueue);
+  // console.log(triggerQueue);
   console.log('count: ', count, 'current time: ', moment.utc().format());
   recipientArr = await triggerQueue.getExecutableTriggers().catch(err => {
     console.log('top trigger error', err);
