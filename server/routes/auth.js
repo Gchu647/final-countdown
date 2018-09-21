@@ -16,6 +16,8 @@ router.post('/register', (req, res) => {
   // Extract relevant data from incoming request:
   let { email, password, fName, lName } = req.body;
   let newUser = {};
+  let newFileId;
+  let newPackageId;
 
   bcrypt.genSalt(saltedRounds, (err, salt) => {
     if (err) {
@@ -26,7 +28,6 @@ router.post('/register', (req, res) => {
       if (err) {
         return res.status(500);
       }
-
       // Registration requires email(unique) and password:
       return (
         new User({
@@ -42,88 +43,116 @@ router.post('/register', (req, res) => {
           })
           // Create FAMILY group with related package and encrypted file:
           .then(() => {
-            return new Package()
+            return new EncryptedFile()
               .save({
-                package_maker_id: newUser.id
+                name: '',
+                aws_url: ''
               })
               .then(response => {
-                return response.refresh();
-              })
-              .then(package => {
-                // Create encrypted file to be associated with group package:
-                return new EncryptedFile().save({
-                  name: '',
-                  aws_url: '',
-                  package_id: package.attributes.id
-                });
-              })
-              .then(response => {
+                newFileId = response.attributes.id;
                 return response.refresh();
               })
               .then(file => {
-                return new Group().save({
-                  relationship_id: 1, // FAMILY
-                  package_id: file.attributes.package_id,
-                  owner_id: newUser.id
+                return new Package().save({
+                  package_maker_id: newUser.id,
+                  file_id: file.attributes.id
                 });
-              }).then(response => {
+              })
+              .then(response => {
+                newPackageId = response.attributes.id;
                 return response.refresh();
               })
+              .then(() => {
+                return new EncryptedFile({ id: newFileId }).save(
+                  { package_id: newPackageId },
+                  { patch: true }
+                );
+              })
+              .then(() => {
+                return new Group().save({
+                  relationship_id: 1, // FAMILY
+                  package_id: newPackageId,
+                  owner_id: newUser.id
+                });
+              })
+              .then(response => {
+                return response.refresh();
+              });
           })
           // Create FRIENDS group with related package and encrypted file:
           .then(() => {
-            return new Package()
+            return new EncryptedFile()
               .save({
-                package_maker_id: newUser.id
+                name: '',
+                aws_url: ''
               })
               .then(response => {
-                return response.refresh();
-              })
-              .then(package => {
-                // Create encrypted file to be associated with group package:
-                return new EncryptedFile().save({
-                  name: '',
-                  aws_url: '',
-                  package_id: package.attributes.id
-                });
-              })
-              .then(response => {
+                newFileId = response.attributes.id;
                 return response.refresh();
               })
               .then(file => {
+                return new Package().save({
+                  package_maker_id: newUser.id,
+                  file_id: file.attributes.id
+                });
+              })
+              .then(response => {
+                newPackageId = response.attributes.id;
+                return response.refresh();
+              })
+              .then(() => {
+                return new EncryptedFile({ id: newFileId }).save(
+                  { package_id: newPackageId },
+                  { patch: true }
+                );
+              })
+              .then(() => {
                 return new Group().save({
                   relationship_id: 2, // FRIENDS
-                  package_id: file.attributes.package_id,
+                  package_id: newPackageId,
                   owner_id: newUser.id
                 });
+              })
+              .then(response => {
+                return response.refresh();
               });
           })
           // Create HATERS group with related package and encrypted file:
           .then(() => {
-            return new Package()
+            return new EncryptedFile()
               .save({
-                package_maker_id: newUser.id
+                name: '',
+                aws_url: ''
               })
               .then(response => {
-                return response.refresh();
-              })
-              .then(package => {
-                // Create encrypted file to be associated with group package:
-                return new EncryptedFile().save({
-                  name: '',
-                  aws_url: '',
-                  package_id: package.attributes.id
-                });
-              })
-              .then(response => {
+                newFileId = response.attributes.id;
                 return response.refresh();
               })
               .then(file => {
+                return new Package().save({
+                  package_maker_id: newUser.id,
+                  file_id: file.attributes.id
+                });
+              })
+              .then(response => {
+                newPackageId = response.attributes.id;
+                return response.refresh();
+              })
+              .then(() => {
+                return new EncryptedFile({ id: newFileId }).save(
+                  { package_id: newPackageId },
+                  { patch: true }
+                );
+              })
+              .then(() => {
                 return new Group().save({
-                  relationship_id: 3, // HATERS
-                  package_id: file.attributes.package_id,
+                  relationship_id: 3, // HATER
+                  package_id: newPackageId,
                   owner_id: newUser.id
                 });
+              })
+              .then(response => {
+                return response.refresh();
               });
           })
           .then(() => {

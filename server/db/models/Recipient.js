@@ -16,7 +16,7 @@ class Recipient extends bookshelf.Model {
   }
 
   package() {
-    return this.hasOne('Package', 'id');
+    return this.belongsTo('Package', 'package_id');
   }
 
   group() {

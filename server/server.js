@@ -42,6 +42,10 @@ passport.deserializeUser((user, done) => {
   new User({ id: user.id })
     .fetch()
     .then(user => {
+      // Possible candidate for deletion (after successful deployment):
+      if (!user) {
+        return;
+      }
       user = user.toJSON();
       return done(null, {
         // You can get more data from DB:
