@@ -186,7 +186,7 @@ export class RegisterComponent {
         // Immediately remove existing error message once valid input entered:
         if (
           this.passwordError &&
-          (password.length >= 8 || password.length <= 16)
+          (password.length >= 8 && password.length <= 16)
         ) {
           this.passwordError = '';
         }
