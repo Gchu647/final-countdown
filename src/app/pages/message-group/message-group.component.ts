@@ -51,7 +51,7 @@ export class MessageGroupComponent implements OnInit {
   save() {
     return this.backend.editPackageEncryptedFile(
         this.user['userId'],
-        this.groupPackageContents['id'],
+        this.groupPackageContents['packageId'],
         this.formData
       )
       .then(() => {

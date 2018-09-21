@@ -3,6 +3,10 @@ const router = express.Router();
 
 const isAuthenticated = require('../../middleware/isAuthenticated');
 const Group = require('../../db/models/Group');
+const User = require('../../db/models/User');
+
+// Decryption file
+const decryptStr = require('../../deathwatch/decrypt');
 
 router.route('/:id/groups')
   .get(isAuthenticated, (req, res) => {
@@ -90,6 +94,7 @@ router.route('/:id/groups/:groupId/package')
     // Fetches a single user group, its members, and its package file:
     const userId = req.params.id;
     const groupId = req.params.groupId;
+    let packageId;
     let messageTitle;
     let encryptedMessage;
     let decryptedMessage;
@@ -110,13 +115,28 @@ router.route('/:id/groups/:groupId/package')
         ]
       })
       .then(group => {
-        console.log('GET group packages: ', group.toJSON().package.file[0]);
+        console.log('GET group packages: ', group.toJSON().package);
         encryptedMessage = group.toJSON().package.file[0].aws_url;
         messageTitle = group.toJSON().package.file[0].name;
+        packageId = group.toJSON().package.id;
+        // Gets user password for decryption
+        return new User()
+          .where({ 'id': userId })
+          .fetch()
+          .then(user => {
+            return  user.attributes.password
+          });
+      })
+      .then(userPass => {
+        console.log('userPass: ', userPass);
+        // Sends back a decrypted message
+        decryptedMessage = decryptStr(encryptedMessage, userPass)
+        console.log('decryptedMessage: ', decryptedMessage);
 
         const messageData = {
+          packageId: packageId,
           title: messageTitle,
-          message: encryptedMessage
+          message: decryptedMessage
         }
 
         return res.json(messageData);
