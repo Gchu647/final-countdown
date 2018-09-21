@@ -18,7 +18,7 @@ function encryptStr(str, password) {
   encrypt.setAutoPadding(true);
   tempStr = encrypt.update(buff, 'utf8', 'hex');
   tempStr += encrypt.final('hex');
-  return `${iv}:${tempStr}`;
+  return `${iv}_|_${tempStr}`;
 }
 
 module.exports = encryptStr;

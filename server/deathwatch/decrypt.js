@@ -7,7 +7,8 @@ const { Buffer } = require('buffer');
  * The function returns a derypted string.
  */
 function decryptStr(str, password) {
-  let splitStr = str.split(':');
+  
+  let splitStr = str.split('_|_');
   let iv = new Buffer(splitStr[0], 'binary');
   let buff = new Buffer(splitStr[1], 'hex');
   let tempStr = buff.toString('utf8');

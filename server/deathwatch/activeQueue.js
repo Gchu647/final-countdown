@@ -118,7 +118,8 @@ class ActiveTriggerQueue {
                 relationshipId: recipient.id,
                 subject: subjectStr,
                 body: bodyStr,
-                hash: `${userInfo.password}`
+                hash: `${userInfo.password}`,
+                userId: temp.value.userId
               };
             });
           }
@@ -149,7 +150,8 @@ class ActiveTriggerQueue {
                     subject: subjectStr,
                     body: bodyStr,
                     hash: `${userInfo.password}`,
-                    packageId: group.package.id
+                    packageId: group.package.id,
+                    userId: temp.value.userId
                   };
                 });
               }
@@ -178,7 +180,9 @@ class ActiveTriggerQueue {
 
   getUserData(userId) {
     return User.where({ id: userId })
-      .fetch({ withRelated: ['recipients.package.file', 'groups.members', 'groups.package.file'] })
+      .fetch({
+        withRelated: ['recipients.package.file', 'groups.members', 'groups.package.file']
+      })
       .then(response => {
         console.log('getUserData response', response);
         return response;

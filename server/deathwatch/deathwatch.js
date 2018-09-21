@@ -53,6 +53,7 @@ const sendMessages = function(recipientArray) {
   console.log('recipArr', recipientArray);
   let decryptedText = decrypt(recipientArray.body, recipientArray.hash);
   // console.log('dec', decrypt(recipientArray.body, recipientArray.hash));
+  validateTriggerActive(recipientArray.userId);
   return mg.messages
     .create(process.env.MAILGUN_DOMAIN, {
       from: process.env.MAILGUN_NOREPLY,
@@ -70,4 +71,12 @@ const sendMessages = function(recipientArray) {
     })
     .then(msg => console.log(msg))
     .catch(err => console.log(err));
+};
+
+const validateTriggerActive = function(userId) {
+  return Trigger({ user_id: userId })
+    .fetch()
+    .then(trigger => {
+      console.log('trigger', trigger);
+    });
 };
