@@ -20,9 +20,6 @@ export class HeaderComponent implements DoCheck {
 
   logout() {
     return this.auth.logout()
-      .then(response => {
-        console.log('Response @header_component: ', response);
-      })
       .then(() => {
         this.router.navigate(['/']);
       })

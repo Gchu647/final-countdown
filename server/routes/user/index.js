@@ -41,8 +41,6 @@ router.route('/user/:id')
       });
   })
   .put(isAuthenticated, (req, res) => {
-    console.log('user route edit', req.body);
-
     // edits user information by id
     const userId = req.params.id;
     // Initailize edited info

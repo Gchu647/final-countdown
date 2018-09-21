@@ -57,6 +57,15 @@
         letter-spacing: 1px;
         line-height: 200%;
         padding: 30px;
+
+        .unauth-homepage-info-title {
+          font-size: 1.5rem;
+        }
+
+        .unauth-homepage-info-caption {
+          width: 66.67%;
+          margin: 0 auto 30px;
+        }
       }
     }
   }
