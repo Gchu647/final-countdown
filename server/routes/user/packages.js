@@ -36,19 +36,19 @@ router
 
     // First, create a new package:
     return new Package()
-      .save({ 'package_maker_id': userId })
+      .save({ package_maker_id: userId })
       .then(response => {
         return response.refresh();
       })
       .then(package => {
         // Second, we are fetching the hashed password to encrypt the message
         packageId = package.attributes.id;
-        
+
         return new User()
-          .where({ 'id': userId })
+          .where({ id: userId })
           .fetch()
           .then(user => {
-            return  user.attributes.password
+            return user.attributes.password;
           });
       })
       .then(userPass => {
@@ -58,24 +58,26 @@ router
         let encryptedMessage = null;
 
         // if message is not falsy, encrypt it
-        if(message) {
-          encryptedMessage = encryptStr(message,userPass);
+        if (message) {
+          encryptedMessage = encryptStr(message, userPass);
         }
-        
-        console.log('POSt encrypted message: ', encryptedMessage);
-        
+
         return new EncryptedFile()
-        .save({
-          name: req.body.title? req.body.title : 'Message',
-          aws_url: encryptedMessage,
-          package_id: packageId
-        })
-        .then(response => {
-          return response.refresh();
-        })
-        .then(file => {
-          res.json({ 'packageId': file.attributes.package_id });
-        });
+          .save({
+            name: req.body.title ? req.body.title : 'Message',
+            aws_url: encryptedMessage,
+            package_id: packageId
+          })
+          .then(response => {
+            return response.refresh();
+          })
+          .then(file => {
+            return new Package({ id: packageId })
+              .save({ file_id: file.attributes.id }, { patch: true })
+          })
+          .then(() => {
+            res.json({ packageId });
+          });
       })
       .catch(err => {
         console.log(err.message);
@@ -106,21 +108,20 @@ router.route('/:id/packages/:packageId')
 
         // Gets user password for decryption
         return new User()
-        .where({ 'id': userId })
-        .fetch()
-        .then(user => {
-          return  user.attributes.password
-        });
-        
+          .where({ id: userId })
+          .fetch()
+          .then(user => {
+            return user.attributes.password;
+          });
       })
-      .then( userPass => {
+      .then(userPass => {
         // Sends back a decrypted message
-        decryptedMessage = decryptStr(encryptedMessage, userPass)
+        decryptedMessage = decryptStr(encryptedMessage, userPass);
 
         const messageData = {
           title: messageTitle,
           message: decryptedMessage
-        }
+        };
 
         res.json(messageData);
       })
@@ -134,10 +135,10 @@ router.route('/:id/packages/:packageId')
     const packageId = req.params.packageId;
 
     return new User()
-      .where({ 'id': userId })
+      .where({ id: userId })
       .fetch()
       .then(user => {
-        return  user.attributes.password
+        return user.attributes.password;
       })
       .then(userPass => {
         // Using userPass to encrypt message
@@ -145,16 +146,12 @@ router.route('/:id/packages/:packageId')
         let encryptedMessage = null;
 
         // if message is not falsy, encrypt it
-        if(message) {
-          encryptedMessage = encryptStr(message,userPass);
+        if (message) {
+          encryptedMessage = encryptStr(message, userPass);
         }
-        
-        console.log('EDIT encrypted message: ', encryptedMessage);
 
         // Save file with encrypted message
-        return new EncryptedFile()
-        .where({ package_id: packageId })
-        .save(
+        return new EncryptedFile().where({ package_id: packageId }).save(
           {
             name: req.body.title,
             aws_url: encryptedMessage

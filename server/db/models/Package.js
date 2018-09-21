@@ -20,7 +20,7 @@ class Package extends bookshelf.Model {
   }
 
   file() {
-    return this.hasMany('EncryptedFile', 'package_id');
+    return this.hasMany('EncryptedFile', 'id', 'file_id');
   }
 }
 
