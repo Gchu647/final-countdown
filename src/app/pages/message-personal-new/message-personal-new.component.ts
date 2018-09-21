@@ -96,7 +96,7 @@ export class MessagePersonalNewComponent implements OnInit {
 
   // ------------------------------------------------------------------------ //
 
-  // Validates the input length of "First Name", "Last Name", and "Message":
+  // Validates input length of "First Name", "Last Name", and "Message":
   validateInputLength(classNameStr) {
     const errorMessage = 'Required';
     const inputValue = document
@@ -166,8 +166,8 @@ export class MessagePersonalNewComponent implements OnInit {
     const validAlphaNumericRegex = /^[a-z0-9]+$/i;
 
     switch (eventTypeStr) {
+      // Display error if input does not satisfy the following tests:
       case 'blur':
-        // Display error if input does not satisfy the following tests:
         if (email === '') {
           this.emailError = emailErrorMessages[0];
         } else if (
@@ -179,11 +179,11 @@ export class MessagePersonalNewComponent implements OnInit {
         } else {
           this.emailError = '';
         }
-
         this.toggleSubmitButton();
         break;
+
+      // Immediately removes existing error message once valid input entered:
       case 'ngModelChange':
-        // Immediately removes existing error message once valid input entered:
         if (
           this.emailError &&
           validAlphaNumericRegex.test(splitEmail[0]) &&
@@ -194,6 +194,7 @@ export class MessagePersonalNewComponent implements OnInit {
         }
         this.toggleSubmitButton();
         break;
+
       default:
         break;
     }
