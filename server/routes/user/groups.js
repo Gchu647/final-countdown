@@ -127,7 +127,16 @@ router.route('/:id/groups/:groupId/package')
           });
       })
       .then(userPass => {
-        // Sends back a decrypted message
+        // Prevent attempt to decrypt if there is no encrypted message:
+        if (!encryptedMessage) {
+          return res.json ({
+            packageId: packageId,
+            title: '',
+            message: ''
+          });
+        }
+
+        // Sends back a decrypted message:
         decryptedMessage = decryptStr(encryptedMessage, userPass)
 
         const messageData = {

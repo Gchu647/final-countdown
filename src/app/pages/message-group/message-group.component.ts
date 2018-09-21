@@ -83,7 +83,7 @@ export class MessageGroupComponent implements OnInit {
       .then(response => {
         console.log('getGroupPackage: ', response);
         this.groupPackageContents = response;
-        
+
         if (this.groupPackageContents) {
           this.formData = {
             title: this.groupPackageContents['title'],
