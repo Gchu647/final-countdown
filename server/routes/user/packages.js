@@ -4,7 +4,11 @@ const router = express.Router();
 const knex = require('../../db/knex');
 const isAuthenticated = require('../../middleware/isAuthenticated');
 const Package = require('../../db/models/Package');
+const User = require('../../db/models/User');
 const EncryptedFile = require('../../db/models/EncryptedFile');
+// Encryption & Decrypt functions
+const encryptStr = require('../../deathwatch/encrypt');
+const decryptStr = require('../../deathwatch/decrypt');
 
 router
   .route('/:id/packages')
@@ -25,36 +29,54 @@ router
       });
   })
   .post(isAuthenticated, (req, res) => {
-    // req.body includes a message:
+    // req.body includes a message and a title:
     const userId = req.params.id;
-    // const recipientId = req.body.recipientId;
+    let packageId;
     console.log('posting package: ', req.body);
-
-    const packageInput = {
-      package_maker_id: userId,
-      // recipient_id: recipientId
-    };
 
     // First, create a new package:
     return new Package()
-      .save(packageInput)
+      .save({ 'package_maker_id': userId })
       .then(response => {
         return response.refresh();
       })
       .then(package => {
-        // Second, create an encrypted file using the package ID as foreign key:
-        return new EncryptedFile()
-          .save({
-            name: req.body.title? req.body.title : 'Message',
-            aws_url: req.body.message ? req.body.message.trim() : null,
-            package_id: package.attributes.id
-          })
-          .then(response => {
-            return response.refresh();
-          })
-          .then(file => {
-            res.json({ 'packageId': file.attributes.package_id });
+        // Second, we are fetching the hashed password to encrypt the message
+        packageId = package.attributes.id;
+        
+        return new User()
+          .where({ 'id': userId })
+          .fetch()
+          .then(user => {
+            return  user.attributes.password
           });
+      })
+      .then(userPass => {
+        // Third, create an encrypted file using the package ID as foreign key:
+        console.log('encrypt got user pass: ', userPass);
+        // trims down the req.body message or set it to null
+        const message = req.body.message ? req.body.message.trim() : null;
+        let encryptedMessage = null;
+
+        // if message is not falsy, encrypt it
+        if(message) {
+          encryptedMessage = encryptStr(message,userPass);
+        }
+        
+        console.log('POSt encrypted message: ', encryptedMessage);
+        
+        return new EncryptedFile()
+        .save({
+          name: req.body.title? req.body.title : 'Message',
+          aws_url: encryptedMessage,
+          package_id: packageId
+        })
+        .then(response => {
+          return response.refresh();
+        })
+        .then(file => {
+          res.json({ 'packageId': file.attributes.package_id });
+        });
       })
       .catch(err => {
         console.log(err.message);
@@ -67,7 +89,11 @@ router
 router.route('/:id/packages/:packageId')
   .get(isAuthenticated, (req, res) => {
     // Fetch package by ID:
+    const userId = req.params.id;
     const packageId = req.params.packageId;
+    let messageTitle;
+    let encryptedMessage;
+    let decryptedMessage;
 
     return new Package()
       .query(qb => {
@@ -75,7 +101,30 @@ router.route('/:id/packages/:packageId')
       })
       .fetch({ withRelated: ['file'] })
       .then(packages => {
-        return res.json(packages);
+        // Stores the encrypted message and title from db
+        encryptedMessage = packages.toJSON().file[0].aws_url;
+        messageTitle = packages.toJSON().file[0].name;
+        console.log('fetch encrypted: ', packages.toJSON().file[0].aws_url);
+
+        // Gets user password for decryption
+        return new User()
+        .where({ 'id': userId })
+        .fetch()
+        .then(user => {
+          return  user.attributes.password
+        });
+        
+      })
+      .then( userPass => {
+        // Sends back a decrypted message
+        decryptedMessage = decryptStr(encryptedMessage, userPass)
+
+        const messageData = {
+          title: messageTitle,
+          message: decryptedMessage
+        }
+
+        res.json(messageData);
       })
       .catch(err => {
         return res.status(400).json({ message: err.message });
@@ -83,17 +132,39 @@ router.route('/:id/packages/:packageId')
   })
   .put(isAuthenticated, (req, res) => {
     // Edit encrypted file by package ID:
+    const userId = req.params.id;
     const packageId = req.params.packageId;
+    console.log('putting message', req.body);
 
-    return new EncryptedFile()
-      .where({ package_id: packageId })
-      .save(
-        {
-          name: req.body.title,
-          aws_url: req.body.message
-        },
-        { patch: true }
-      )
+    return new User()
+      .where({ 'id': userId })
+      .fetch()
+      .then(user => {
+        return  user.attributes.password
+      })
+      .then(userPass => {
+        // Using userPass to encrypt message
+        const message = req.body.message ? req.body.message.trim() : null;
+        let encryptedMessage = null;
+
+        // if message is not falsy, encrypt it
+        if(message) {
+          encryptedMessage = encryptStr(message,userPass);
+        }
+        
+        console.log('EDIT encrypted message: ', encryptedMessage);
+
+        // Save file with encrypted message
+        return new EncryptedFile()
+        .where({ package_id: packageId })
+        .save(
+          {
+            name: req.body.title,
+            aws_url: encryptedMessage
+          },
+          { patch: true }
+        );
+      })
       .then(() => {
         res.json({ message: 'message has being edited' });
       })

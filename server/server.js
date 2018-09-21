@@ -62,14 +62,14 @@ passport.use(
       .fetch()
       .then(user => {
         if (!user) {
-          return done({ message: 'Wrong email' });
+          return done({ message: 'Invalid Email' });
         } else {
           user = user.toJSON();
           bcrypt.compare(password, user.password).then(samePassword => {
             if (samePassword) {
               return done(null, user);
             } else {
-              return done({ message: 'Wrong Password' });
+              return done({ message: 'Invalid Password' });
             }
           });
         }

@@ -86,6 +86,7 @@ class ActiveTriggerQueue {
     if (!this.head) {
       return null;
     }
+
     console.log(
       'top trigger send',
       moment.utc(this.head.value.timeToExecute) < moment.utc(),
@@ -94,6 +95,7 @@ class ActiveTriggerQueue {
       'now',
       moment.utc()
     );
+
     if (moment.utc(this.head.value.timeToExecute) < moment.utc()) {
       let temp = this.head;
       this.delete(this.head.value.userId);
@@ -222,6 +224,7 @@ class ActiveTriggerQueue {
         console.log('delete Error: ', err);
       });
   }
+
   /*** ActiveTrigger Insert: This function inserts a new trigger into
    *  the structure. The trigger is inserted based on timeToExecute***/
   insertToQueue(value) {
