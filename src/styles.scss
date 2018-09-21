@@ -2,6 +2,9 @@
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
 html {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
 }
 
@@ -17,6 +20,8 @@ body {
   padding: 0;
   color: #2b2b2b;
   background-color: #fbfbfb;
+  height: 100%;
+  width: 100%;
 }
 
 .active-link {
@@ -84,6 +89,20 @@ body {
   .disabled {
     color: #616b6b;
     background-color: #293d3d;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
+  }
+}
+
+@media (min-width: 415px) {
+  html {
+    overflow: hidden;
+    background-color: #e3e8e8;
+  }
+
+  body {
+    max-width: 415px;
+    border-left: 1px solid #293d3d80;
+    border-right: 1px solid #293d3d80;
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.125);
   }
 }
