@@ -81,7 +81,8 @@ class ActiveTriggerQueue {
   /** ActiveTrigger getExecutableTriggers: This function searchs the
    * linkedlist and returns an array of the triggers to execute **/
   async getExecutableTriggers() {
-    let executableTriggers = [];
+    let executableTriggerIndividuals = [];
+    let executableTriggerGroups = [];
     if (!this.head) {
       return null;
     }
@@ -102,8 +103,8 @@ class ActiveTriggerQueue {
       return await this.getUserData(temp.value.userId)
         .then(response => {
           userInfo = response.toJSON();
-          if (userInfo) {
-            executableTriggers = userInfo.recipients.map(recipient => {
+          if (userInfo.recipients) {
+            executableTriggerIndividuals = userInfo.recipients.map(recipient => {
               if (!recipient) {
                 return null;
               }
@@ -116,11 +117,37 @@ class ActiveTriggerQueue {
                 userFullName: `${userInfo.f_name} ${userInfo.l_name}`,
                 relationshipId: recipient.id,
                 subject: subjectStr,
-                body: bodyStr
+                body: bodyStr,
+                hash: `${userInfo.password}`
               };
             });
           }
-          return executableTriggers;
+
+          if (userInfo.groups) {
+            console.log('userInfo.groups', userInfo.groups);
+            executableTriggerGroups = userInfo.groups.map(group => {
+              if (group.members.length < 1) {
+                console.log('no members');
+                return null;
+              }else {
+                let bodyStr = group.members.package.file[0].aws_url;
+                let subjectStr = group.members.package.file[0].name;
+
+                return group.members.map(member => {
+                  return {
+                    recipientName: `${member.f_name} ${member.l_name}`,
+                    recipientEmail: member.email,
+                    userFullName: `${userInfo.f_name} ${userInfo.l_name}`,
+                    relationshipId: member.id,
+                    subject: subjectStr,
+                    body: bodyStr,
+                    hash: `${userInfo.password}`
+                  };
+                });
+              }
+            });
+          }
+          return executableTriggerIndividuals.concat(executableTriggerGroups);
         })
         .catch(err => {
           console.log('err: ', err);
@@ -214,7 +241,8 @@ class ActiveTriggerQueue {
   }
 
   deleteTriggerFromDB(userId) {
-    return new Trigger({ id: userId })
+    return new Trigger()
+      .where({ id: userId })
       .save({ countdown: null }, { patch: true })
       .then(response => {
         console.log('delete model response', response);

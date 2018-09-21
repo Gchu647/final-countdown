@@ -60,7 +60,7 @@ router
 
         // if message is not falsy, encrypt it
         if (message) {
-          encryptedMessage = encryptStr(message, userPass);
+          encryptedMessage =encryptStr(message, userPass);
         }
 
         return new EncryptedFile()
